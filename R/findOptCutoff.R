@@ -58,7 +58,11 @@ findOptCutoff <- function(data, srv, delta=0.1, minGrpSize=1) {
                        median1=summary(fit)$table[1,"median"],
                        median2=summary(fit)$table[2,"median"],
                        delta=delta,
-                       coxph=summary(fit)$coeff)
+                       coxph_name=rownames(summary(fit2)$conf.int)[1],
+                       coxph_hr=summary(fit2)$conf.int[1,1],
+                       coxph_lower=summary(fit2)$conf.int[1,3],
+                       coxph_upper=summary(fit2)$conf.int[1,4],
+                       coxph_p=summary(fit2)$coeff[1,5])
         }
     }
     coll <- do.call(rbind, out)

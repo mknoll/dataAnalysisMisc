@@ -4,7 +4,7 @@
 \alias{findOptCutoff}
 \title{Find two differening groups in survival data}
 \usage{
-findOptCutoff(data, srv, delta = 0.1)
+findOptCutoff(data, srv, delta = 0.1, minGrpSize = 1)
 }
 \arguments{
 \item{data}{vector with value to analyze}
@@ -13,6 +13,8 @@ findOptCutoff(data, srv, delta = 0.1)
 
 \item{delta}{proportion in which group splitting should 
 be performed}
+
+\item{minGrpSize}{minimum group size for cutoffs}
 }
 \value{
 data.frame with the calculated survival values 

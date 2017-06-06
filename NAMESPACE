@@ -2,7 +2,9 @@
 
 export(findHCLSurv)
 export(findOptCutoff)
+export(minimizeMissclassificationHCL)
 import(doParallel)
 import(foreach)
 import(parallel)
+import(pheatmap)
 import(plyr)

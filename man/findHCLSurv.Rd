@@ -4,7 +4,8 @@
 \alias{findHCLSurv}
 \title{Find hierarchical cluster-based groups for survival differences.}
 \usage{
-findHCLSurv(data, srv, depth = 7, minGrSize = 3, p.valCutoff = 0.1)
+findHCLSurv(data, srv, depth = 7, minGrSize = 3, p.valCutoff = 0.1,
+  dist = NULL)
 }
 \description{
 Expectes data which can be clustered as well as corresponding survival
