@@ -33,6 +33,10 @@ findOptCutoff <- function(data, srv, delta=0.1, minGrpSize=1) {
     ##calculate all cutoffs to test
     sq <- seq(from=min(data,na.rm=T), to=max(data,na.rm=T), by=step)
     sq <- sq[which(apply(data.frame(sq), 1, function(x) length(which(data > x)) > minGrpSize  & length(which(data < x)) > minGrpSize ))]
+    if(length(sq) == 0) { 
+        ## min group size not reached
+        return (NULL) 
+    }
     
     ##use parallel computing
     no_cores <- parallel::detectCores() - 1
@@ -41,7 +45,7 @@ findOptCutoff <- function(data, srv, delta=0.1, minGrpSize=1) {
     
     out <- foreach(cutoff=sq) %dopar% {
         print(cutoff)
-        grp <- ifelse(data > cutoff, 2, 1)
+        grp <- ifelse(data > cutoff, "high", "low")
         cutoff <- cutoff-step
         if (length(levels(factor(grp))) == 2 ) {
             fit <- survfit(srv~grp)
@@ -49,20 +53,25 @@ findOptCutoff <- function(data, srv, delta=0.1, minGrpSize=1) {
             p.val <- 1 - pchisq(sdf$chisq, length(sdf$n) - 1)
             
             ##univariate coxph
-            fit2 <- coxph(srv~grp)
+            grp <- factor(grp)
+            grp <- relevel(grp, "low")
+            fit2 <- coxph(srv~factor(grp))
             
             data.frame(cutoff=cutoff+step, 
                        p.val=p.val,
-                       n1=length(grp[grp == 1]), 
-                       n2=length(grp[grp == 2]), 
-                       median1=summary(fit)$table[1,"median"],
-                       median2=summary(fit)$table[2,"median"],
+                       nHigh=length(grp[grp == "high"]), 
+                       nLow=length(grp[grp == "low"]), 
+                       medianHigh=summary(fit)$table["grp=high","median"],
+                       medianLow=summary(fit)$table["grp=low","median"],
                        delta=delta,
                        coxph_name=rownames(summary(fit2)$conf.int)[1],
                        coxph_hr=summary(fit2)$conf.int[1,1],
                        coxph_lower=summary(fit2)$conf.int[1,3],
                        coxph_upper=summary(fit2)$conf.int[1,4],
-                       coxph_p=summary(fit2)$coeff[1,5])
+                       coxph_p=summary(fit2)$coeff[1,5],
+                       coxph_lrt=summary(fit0)$logtest[[3]],
+                       coxph_score=summary(fit0)$sctest[[3]],
+                       coxph_wald=summary(fit0)$waldtest[[3]])
         }
     }
     coll <- do.call(rbind, out)

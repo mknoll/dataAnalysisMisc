@@ -23,6 +23,10 @@ findHCLSurv <- function(data, srv, depth=7, minGrSize=3, p.valCutoff=0.1, dist=N
         return (NULL)
     }
     
+    if(length(data[,1]) < 2) {
+        return (NULL)
+    }
+    
     ## collect data
     collectHC <- NULL
     for (disM in distances) {
