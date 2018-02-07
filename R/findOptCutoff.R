@@ -12,7 +12,8 @@
 #' @import foreach
 #' @import doParallel
 #' @import parallel
-#' 
+#' @import survival
+#'   
 #' @export
 #' 
 #' @return data.frame with the calculated survival values 
@@ -69,9 +70,9 @@ findOptCutoff <- function(data, srv, delta=0.1, minGrpSize=1) {
                        coxph_lower=summary(fit2)$conf.int[1,3],
                        coxph_upper=summary(fit2)$conf.int[1,4],
                        coxph_p=summary(fit2)$coeff[1,5],
-                       coxph_lrt=summary(fit0)$logtest[[3]],
-                       coxph_score=summary(fit0)$sctest[[3]],
-                       coxph_wald=summary(fit0)$waldtest[[3]])
+                       coxph_lrt=summary(fit2)$logtest[[3]],
+                       coxph_score=summary(fit2)$sctest[[3]],
+                       coxph_wald=summary(fit2)$waldtest[[3]])
         }
     }
     coll <- do.call(rbind, out)

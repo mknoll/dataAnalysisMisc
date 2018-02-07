@@ -4,7 +4,7 @@
 \alias{boxGraph}
 \title{Plot some position preserving boxplots}
 \usage{
-boxGraph(y, x, xSel = NA, xlim = NULL, ylim = NULL, ylab = NA,
-  main = "")
+boxGraph(y, x, fact = NULL, xSel = NA, xlim = NULL, ylim = NULL,
+  ylab = NA, main = "", lines = F, cols = NULL, colsSel = NULL)
 }
 
