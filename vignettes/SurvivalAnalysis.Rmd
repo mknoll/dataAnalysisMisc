@@ -62,11 +62,9 @@ The offsetNRisk variable moves the number at risk table in y axis.
 
 One group KM plots:
 
-The following code works perfectly fine, however, devtools complains
-and does not let me build the vignette if not commented :(
 ```{r out.width='100%', dpi=300, fig.width=5, fig.height=5} 
-#plotKM(srv, rep("All", length(retinopathy[,1])), col="black", offsetNRisk=-0.2,
-#       xlab="Time [months]", ylab="OS")
+plotKM(srv, rep("All", length(retinopathy[,1])), col="black", offsetNRisk=-0.2,
+       xlab="Time [months]", ylab="OS")
 ```
 
 More group KM plots:
