@@ -20,7 +20,11 @@ plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, 
 
 	# plot median os 
 	fit <- survfit(srv~grp)
-	tbl <- data.frame(t(summary(fit)$table))
+    if (length(data.frame(summary(fit)$table)[1,]) == 1) {
+	    tbl <- data.frame(t(summary(fit)$table))
+    } else {
+	    tbl <- data.frame(summary(fit)$table)
+    }
 	for (i in 1:length(tbl[,1])) {
 		segments(0, 0.5, tbl[i,"median"], 0.5, lty=3, col=col[i])
 		segments(tbl[i,"median"], 0.5, tbl[i,"median"], -0.1, lty=3, col=col[i])

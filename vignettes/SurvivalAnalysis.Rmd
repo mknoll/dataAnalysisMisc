@@ -41,7 +41,13 @@ require(dataAnalysisMisc)
 # Exemplary data
 
 We use the retinopathy data from the survival package and construct
-a survival object.
+a survival object. We treat events as death.
+
+It is ignored in this case, that we do have two observations for each 
+patients (left and right eye), we treat them as independent observations
+from two patients. Don't do that with real data, go e.g. for an 
+gee using cluster().
+
 ```{r}
 require(survival)
 data("retinopathy")
@@ -49,9 +55,23 @@ data("retinopathy")
 srv <- Surv(retinopathy$futime, retinopathy$status)
 ```
 
-# Get some nice kaplan meier plots
+# Kaplan Meier
+
+Median OS will be drawn if reached.
+The offsetNRisk variable moves the number at risk table in y axis.
+
+One group KM plots:
+
 ```{r}
-plotKM(srv, rep("All", length(retinopathy[,1])))
+plotKM(srv, rep("All", length(retinopathy[,1])), col="black", offsetNRisk=-0.1,
+       xlab="Time [months]", ylab="OS")
+```
+
+More group KM plots:
+
+```{r}
+source("~/git/dataAnalysisMisc/R/plotKM.R")
+plotKM(srv, retinopathy$laser, offsetNRisk=-0.1, ylab="OS", xlab="Time [months]")
 ```
 
 
