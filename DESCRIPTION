@@ -10,3 +10,12 @@ Description: Functions for easy survival analysis, cutoff determinations,
 License: GPL-3
 LazyData: TRUE
 RoxygenNote: 6.0.1
+Imports: doParallel,
+    foreach,
+    forestplot,
+    pals,
+    pheatmap,
+    plotrix,
+    plyr,
+    stargazer,
+    survival

@@ -1,27 +1,28 @@
 #' @title Create forest plot for multivariate analysis
 #'
 #' @import forestplot
+#' @import survival
 #'
 #' @export
 plotForestMV <- function(srv, data, selection=F) {
     uv <- list()
 
-    fit <- coxph(srv~., data=data)
+    fit <- survival::coxph(srv~., data=data)
     if (selection != F) {
-	if (class(selection)=="numeric") {
-	    selVar <- c()
-	    for (i in 1:length(data[1,])) {
-		fit <- coxph(srv~data[,i])
-		if (summary(fit)$logtest['pvalue'][[1]] < selection) {
-		    selVar <- c(selVar, i)
-		}
-	    }
-	    print("Selected: ")
-	    print(colnames(data)[selVar])
-	    fit <- coxph(srv~., data=data[,selVar,drop=F])
-	} else {
-	    fit <- step(fit, direction=selection)
-	}
+        if (class(selection)=="numeric") {
+            selVar <- c()
+            for (i in 1:length(data[1,])) {
+                fit <- coxph(srv~data[,i])
+                if (summary(fit)$logtest['pvalue'][[1]] < selection) {
+                    selVar <- c(selVar, i)
+                }
+            }
+            print("Selected: ")
+            print(colnames(data)[selVar])
+            fit <- coxph(srv~., data=data[,selVar,drop=F])
+        } else {
+            fit <- step(fit, direction=selection)
+        }
     }
 
     tbl <- cbind(summary(fit)$coef, summary(fit)$conf.int)
@@ -76,7 +77,7 @@ plotForestMV <- function(srv, data, selection=F) {
     tabletext <- tabletext[,-2]
     tabletext[,3] <- gsub("NA-NA", "", tabletext[,3])
 
-    forestplot(tabletext,
+    forestplot::forestplot(tabletext,
       mean  = c(NA, as.numeric(as.character(uv[,3]))),
       lower = c(NA, as.numeric(as.character(uv[,4]))),
       upper = c(NA, as.numeric(as.character(uv[,5]))),
