@@ -19,4 +19,3 @@ minimizeMissclassificationHCL(data, res, class, clst_method = c("complete",
 
 \item{test}{chisq or fisher}
 }
-

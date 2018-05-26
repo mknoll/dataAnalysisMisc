@@ -7,4 +7,3 @@
 boxGraph(y, x, fact = NULL, xSel = NA, xlim = NULL, ylim = NULL,
   ylab = NA, main = "", lines = F, cols = NULL, colsSel = NULL)
 }
-

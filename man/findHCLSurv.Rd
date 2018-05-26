@@ -11,4 +11,3 @@ findHCLSurv(data, srv, depth = 7, minGrSize = 3, p.valCutoff = 0.1,
 Expectes data which can be clustered as well as corresponding survival
 data. Different clusterign methods are then tried on this data.
 }
-

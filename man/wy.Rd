@@ -19,4 +19,3 @@ using a Welch's t-test and a Satterthwaite approximation.
 Might crash with a C stack overflow, if this happens, 
 increase the size with ulimit -s 65535
 }
-

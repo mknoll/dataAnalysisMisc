@@ -8,4 +8,4 @@ Description: Functions for easy survival analysis, cutoff determinations,
     automated testing of different clustering methods.
 License: GPL-3
 LazyData: TRUE
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

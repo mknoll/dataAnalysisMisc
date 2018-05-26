@@ -19,4 +19,3 @@ Separates a continuous variable with different cutoffs
 into two groups and performs a chisquared or Fisher's 
 exact test
 }
-

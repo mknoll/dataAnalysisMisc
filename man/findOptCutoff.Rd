@@ -25,4 +25,3 @@ stepsize)
 Tests different cutoffs on a continuous variable 
 and calculates log-rank tests / survival differences
 }
-
