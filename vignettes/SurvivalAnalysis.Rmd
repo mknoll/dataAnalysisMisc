@@ -62,15 +62,29 @@ The offsetNRisk variable moves the number at risk table in y axis.
 
 One group KM plots:
 
-```{r}
+```{r out.width='100%', dpi=300} 
 plotKM(srv, rep("All", length(retinopathy[,1])), col="black", offsetNRisk=-0.1,
        xlab="Time [months]", ylab="OS")
 ```
 
 More group KM plots:
 
-```{r}
+```{r out.width='100%', dpi=300}
 plotKM(srv, retinopathy$laser, offsetNRisk=-0.1, ylab="OS", xlab="Time [months]")
+```
+
+# "Optimal" cutoff
+
+If you want to know if your data has the potential to allow grouping 
+into prognostically different cohorts by dichotomizing a continuous variable,
+you can search for an "optimal" cutoff, e.g. by varying the respective cutoff
+and test for differences in the resulting groups. Please do not abuse
+this approach ;-) 
+
+```{r dpi=300}
+res <- dataAnalysisMisc::findOptCutoff(retinopathy$age, srv, delta=0.01)
+res[1:4,]
+plotKM(srv, ifelse(retinopathy$age <= res$cutoff[1], "low", "high"), offsetNRisk=-0.1, ylab="OS", xlab="Time [months]")
 ```
 
 # Forestplot 
@@ -84,12 +98,12 @@ data <- retinopathy[,c("laser", "eye", "type", "trt")]
 ```
 
 Conduct univariate analyses:
-```{r}
+```{r out.width='100%', dpi=300}
 plotForest(srv,data)
 ```
 
 And multivariate analysis:
-```{r}
+```{r out.width='100%', dpi=300}
 plotForestMV(srv, data)
 ```
 
@@ -98,7 +112,7 @@ plotForestMV(srv, data)
 We can use the famous step() function to select models, 
 and pass the direction value directly as selection parameter.
 
-```{r}
+```{r out.width='100%', dpi=300}
 plotForestMV(srv, data, selection="both")
 ```
 
@@ -106,7 +120,7 @@ Or, if we do have too many variables, we can give a p-value
 cutoff for the univarate analyses. If passed, the will be included 
 in the multivariate analysis.
 
-```{r}
+```{r out.width='100%', dpi=300} 
 plotForestMV(srv, data, selection=0.4)
 ```
 
@@ -119,9 +133,10 @@ If you do have pdflatex on your machine, a pdf will be created.
 Otherwise, go for the .tex file to do your final adjustments :) 
 
 
-```{r out.width='100%', out.height='1200px'}
+```{r out.width='100%', out.height='1200px', dpi=300}
 res <- createPatChar(data, latex=T, outdir=tempdir())
 knitr::include_graphics(res$pdffile)
+res
 ```
 
 

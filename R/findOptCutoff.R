@@ -45,7 +45,7 @@ findOptCutoff <- function(data, srv, delta=0.1, minGrpSize=1) {
     doParallel::registerDoParallel(no_cores)
     
     out <- foreach(cutoff=sq) %dopar% {
-        print(cutoff)
+        #print(cutoff)
         grp <- ifelse(data > cutoff, "high", "low")
         cutoff <- cutoff-step
         if (length(levels(factor(grp))) == 2 ) {
