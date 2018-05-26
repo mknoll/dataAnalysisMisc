@@ -1,7 +1,7 @@
 #' @title Create patient characteristics table 
 #' @import stargazer
 #' @export 
-createPatChar <- function(data, na.rm=T, latex=T) {
+createPatChar <- function(data, na.rm=T, latex=T, outdir="../reports/") {
     pat <- list()
     ## All
     pat[[length(pat)+1]] <- data.frame(name1="All",
@@ -66,7 +66,7 @@ createPatChar <- function(data, na.rm=T, latex=T) {
 
 	tf <- paste(trimws(tempfile()), ".tex", sep="")
 	write(tex, tf)
-	folder <- paste("../reports/", substr(Sys.time(), 1, 10), sep="")
+	folder <- paste(outdir, substr(Sys.time(), 1, 10), sep="")
 	system(paste("mkdir ", folder, sep=""))
 	pdfF <- strsplit(tf, "\\.")
 	pdfF <- pdfF[[1]][length(pdfF[[1]])-1]

@@ -70,9 +70,61 @@ plotKM(srv, rep("All", length(retinopathy[,1])), col="black", offsetNRisk=-0.1,
 More group KM plots:
 
 ```{r}
-source("~/git/dataAnalysisMisc/R/plotKM.R")
 plotKM(srv, retinopathy$laser, offsetNRisk=-0.1, ylab="OS", xlab="Time [months]")
 ```
+
+# Forestplot 
+
+We want to conduct univariate CoxPH analyses and create
+and forest plot for the different variables.
+
+Let's select the variables of interest.
+```{r}
+data <- retinopathy[,c("laser", "eye", "type", "trt")]
+```
+
+Conduct univariate analyses:
+```{r}
+plotForest(srv,data)
+```
+
+And multivariate analysis:
+```{r}
+plotForestMV(srv, data)
+```
+
+# Model selection
+
+We can use the famous step() function to select models, 
+and pass the direction value directly as selection parameter.
+
+```{r}
+plotForestMV(srv, data, selection="both")
+```
+
+Or, if we do have too many variables, we can give a p-value 
+cutoff for the univarate analyses. If passed, the will be included 
+in the multivariate analysis.
+
+```{r}
+plotForestMV(srv, data, selection=0.4)
+```
+
+# Patient characteristics
+
+Let's create a cool patient characteristics table using the 
+data we just build our models with. 
+
+If you do have pdflatex on your machine, a pdf will be created. 
+Otherwise, go for the .tex file to do your final adjustments :) 
+
+
+```{r  out.width='100%', out.height='1200px'}
+source("~/git/dataAnalysisMisc/R/patCharact.R")
+res <- createPatChar(data, latex=T, outdir=tempdir())
+knitr::include_graphics(res$pdffile)
+```
+
 
 
 
