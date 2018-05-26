@@ -38,7 +38,8 @@ plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, 
     if (nGrp >= 2) {
         fitC <- coxph(srv~grp)
         p <- summary(fitC)$logtest[3][[1]]
-        text(pval[1], pval[2], paste("p=",format(p, scientific=TRUE, digits=3), sep=""), font=2, cex=0.8)
+        p <- paste("p=",format(p, scientific=TRUE, digits=3), sep="")
+        text(pval[1], pval[2], p, font=2, cex=0.8)
     }
 
 	# create no at risk table 
