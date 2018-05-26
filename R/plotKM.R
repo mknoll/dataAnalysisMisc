@@ -10,7 +10,7 @@ plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, 
 
 	if (is.null(xlim)) { xlim <- c(0, max(as.numeric(srv))) }
 	if (is.null(col)) { col <- kelly()[-1] }
-	if (is.null(xyleg)) { xyleg=c(xlim[2]*0.7, 0.8) }
+	if (is.null(xyleg)) { xyleg <- c(xlim[2]*0.7, 0.8) }
     if (is.null(pval)) { pval <- c(xlim[2]*0.7, 0.2) }
 	
 	# margin for number at risk table
@@ -35,9 +35,11 @@ plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, 
 	legend(xyleg[1], xyleg[2], levels(factor(grp)), fill=col, bty='n', cex=0.8)
 
     # pvalue
-    fit <- coxph(srv~grp)
-    p <- summary(fit)$logtest[3][[1]]
-    text(pval[1], pval[2], paste("p=",format(p, scientific=TRUE, digits=3), sep=""), font=2, text=0.8)
+    if (nGrp >= 2) {
+        fitC <- coxph(srv~grp)
+        p <- summary(fitC)$logtest[3][[1]]
+        text(pval[1], pval[2], paste("p=",format(p, scientific=TRUE, digits=3), sep=""), font=2, cex=0.8)
+    }
 
 	# create no at risk table 
 	par(xpd=T)

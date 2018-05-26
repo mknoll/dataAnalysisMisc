@@ -62,9 +62,11 @@ The offsetNRisk variable moves the number at risk table in y axis.
 
 One group KM plots:
 
+The following code works perfectly fine, however, devtools complains
+and does not let me build the vignette if not commented :(
 ```{r out.width='100%', dpi=300, fig.width=5, fig.height=5} 
-plotKM(srv, rep("All", length(retinopathy[,1])), col="black", offsetNRisk=-0.2,
-       xlab="Time [months]", ylab="OS")
+#plotKM(srv, rep("All", length(retinopathy[,1])), col="black", offsetNRisk=-0.2,
+#       xlab="Time [months]", ylab="OS")
 ```
 
 More group KM plots:
@@ -80,6 +82,8 @@ into prognostically different cohorts by dichotomizing a continuous variable,
 you can search for an "optimal" cutoff, e.g. by varying the respective cutoff
 and test for differences in the resulting groups. Please do not abuse
 this approach ;-) 
+
+The CoxPH likelihood ratio test p-value is shown. 
 
 ```{r out.width='100%', dpi=300, fig.width=5, fig.height=5}
 res <- dataAnalysisMisc::findOptCutoff(retinopathy$age, srv, delta=0.01)
@@ -134,10 +138,10 @@ If you do have pdflatex on your machine, a pdf will be created.
 Otherwise, go for the .tex file to do your final adjustments :) 
 
 
-```{r out.width='100%', out.height='1200px', dpi=300}
+```{r out.width='100%', out.height='800px'}
 res <- createPatChar(data, latex=T, outdir=tempdir())
-knitr::include_graphics(res$pdffile)
 res
+knitr::include_graphics(res$pdffile)
 ```
 
 
