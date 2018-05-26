@@ -62,15 +62,15 @@ The offsetNRisk variable moves the number at risk table in y axis.
 
 One group KM plots:
 
-```{r out.width='100%', dpi=300} 
-plotKM(srv, rep("All", length(retinopathy[,1])), col="black", offsetNRisk=-0.1,
+```{r out.width='100%', dpi=300, fig.width=5, fig.height=5} 
+plotKM(srv, rep("All", length(retinopathy[,1])), col="black", offsetNRisk=-0.2,
        xlab="Time [months]", ylab="OS")
 ```
 
 More group KM plots:
 
-```{r out.width='100%', dpi=300}
-plotKM(srv, retinopathy$laser, offsetNRisk=-0.1, ylab="OS", xlab="Time [months]")
+```{r out.width='100%', dpi=300, fig.width=5, fig.height=5}
+plotKM(srv, retinopathy$laser, offsetNRisk=-0.2, ylab="OS", xlab="Time [months]")
 ```
 
 # "Optimal" cutoff
@@ -81,10 +81,11 @@ you can search for an "optimal" cutoff, e.g. by varying the respective cutoff
 and test for differences in the resulting groups. Please do not abuse
 this approach ;-) 
 
-```{r dpi=300}
+```{r out.width='100%', dpi=300, fig.width=5, fig.height=5}
 res <- dataAnalysisMisc::findOptCutoff(retinopathy$age, srv, delta=0.01)
 res[1:4,]
-plotKM(srv, ifelse(retinopathy$age <= res$cutoff[1], "low", "high"), offsetNRisk=-0.1, ylab="OS", xlab="Time [months]")
+
+plotKM(srv, ifelse(retinopathy$age <= res$cutoff[1], "low", "high"), offsetNRisk=-0.2, ylab="OS", xlab="Time [months]")
 ```
 
 # Forestplot 
@@ -98,12 +99,12 @@ data <- retinopathy[,c("laser", "eye", "type", "trt")]
 ```
 
 Conduct univariate analyses:
-```{r out.width='100%', dpi=300}
+```{r out.width='100%', dpi=300, fig.width=8, fig.height=3}
 plotForest(srv,data)
 ```
 
 And multivariate analysis:
-```{r out.width='100%', dpi=300}
+```{r out.width='100%', dpi=300, fig.width=8, fig.height=3}
 plotForestMV(srv, data)
 ```
 
@@ -112,7 +113,7 @@ plotForestMV(srv, data)
 We can use the famous step() function to select models, 
 and pass the direction value directly as selection parameter.
 
-```{r out.width='100%', dpi=300}
+```{r out.width='100%', dpi=300, fig.width=8, fig.height=3}
 plotForestMV(srv, data, selection="both")
 ```
 
@@ -120,7 +121,7 @@ Or, if we do have too many variables, we can give a p-value
 cutoff for the univarate analyses. If passed, the will be included 
 in the multivariate analysis.
 
-```{r out.width='100%', dpi=300} 
+```{r out.width='100%', dpi=300, fig.width=8, fig.height=3} 
 plotForestMV(srv, data, selection=0.4)
 ```
 

@@ -5,5 +5,5 @@
 \title{Plots a Kaplan Meier surivival curve}
 \usage{
 plotKM(srv, grp, xlim = NULL, col = NULL, xyleg = NULL,
-  offsetNRisk = -0.2, ...)
+  offsetNRisk = -0.2, pval = NULL, ...)
 }
