@@ -8,7 +8,7 @@ plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, 
 	# number of groups 
 	nGrp <- length(levels(factor(grp)))
 
-	if (is.null(xlim)) { xlim <- c(0, max(srv)) }
+	if (is.null(xlim)) { xlim <- c(0, max(as.numeric(srv))) }
 	if (is.null(col)) { col <- kelly()[-1] }
 	if (is.null(xyleg)) { xyleg=c(xlim[2]*0.7, 0.8) }
 	
