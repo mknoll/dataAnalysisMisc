@@ -119,8 +119,7 @@ If you do have pdflatex on your machine, a pdf will be created.
 Otherwise, go for the .tex file to do your final adjustments :) 
 
 
-```{r  out.width='100%', out.height='1200px'}
-source("~/git/dataAnalysisMisc/R/patCharact.R")
+```{r out.width='100%', out.height='1200px'}
 res <- createPatChar(data, latex=T, outdir=tempdir())
 knitr::include_graphics(res$pdffile)
 ```
