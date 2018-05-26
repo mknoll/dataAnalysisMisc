@@ -1,0 +1,58 @@
+---
+title: "Survival Analysis"
+author: "Maximilian Knoll"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Demonstration of a survival analysis workflow using the dataAnalysisMisc 
+package.
+
+Aims: 
+Easy survival analysis and visualization using standard tools
+as kaplan-meier plots as well as forest plots for the visualization
+of CoxPH models (uni and multivariate). Automatic model selection 
+(multivariate) is supported. Patient characteristics tables are 
+automatically created (tex file for easy adaption / pdf is pdflatex 
+is available). 
+Standard model assumptions hold true (e.g. no paired observations).
+
+# Install and update the package
+
+As bugs might be eleminated from time to time and functionality
+might increase, an update might be a good idea :)
+
+```{r eval}
+# use devtools to get the package from github
+# devtools installed?
+if (!("devtools" %in% installed.packages())) install.packages("devtools")
+devtools::install_github("mknoll/dataAnalysisMisc", dependencies=T)
+```
+
+# Load the package 
+```{r}
+require(dataAnalysisMisc)
+```
+
+# Exemplary data
+
+We use the retinopathy data from the survival package and construct
+a survival object.
+```{r}
+require(survival)
+data("retinopathy")
+
+srv <- Surv(retinopathy$futime, retinopathy$status)
+```
+
+# Get some nice kaplan meier plots
+```{r}
+plotKM(srv, rep("All", length(retinopathy[,1])))
+```
+
+
+

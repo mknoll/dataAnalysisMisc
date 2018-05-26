@@ -20,3 +20,6 @@ Imports: doParallel,
     plyr,
     stargazer,
     survival
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
