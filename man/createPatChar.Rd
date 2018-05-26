@@ -4,5 +4,5 @@
 \alias{createPatChar}
 \title{Create patient characteristics table}
 \usage{
-createPatChar(data, na.rm = T, latex = T)
+createPatChar(data, na.rm = T, latex = T, outdir = "../reports/")
 }
