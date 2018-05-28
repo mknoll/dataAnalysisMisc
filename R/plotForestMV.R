@@ -63,7 +63,7 @@ plotForestMV <- function(srv, data, selection=F) {
 	}
     }
     uv <- do.call(rbind, uv)
-    uv[which(is.infinite(uv))] <- NA
+    uv <- data.frame(apply(uv, 2, function(x) if (any(is.infinite(x))) { x[which(is.infinite(x))] <- NA } x ))
 
     tabletext<-cbind(c("", as.character(uv[,1])),
 		     c("", as.character(uv[,2])),
