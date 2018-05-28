@@ -60,7 +60,7 @@ createPatChar <- function(data, na.rm=T, latex=T, outdir="../reports/") {
 	}
 	sgOut[[7]] <- "\\begin{tabular}{@{\\extracolsep{5pt}} llcc}"
 
-	tex <- "\\documentclass{article} \n \\begin{document}"
+	tex <- "\\documentclass{article} \n \\usepackage[margin=0pt]{geometry} \n \\pagestyle{empty} \\begin{document}"
 	tex <- paste(tex, paste(sgOut, collapse="\n"), sep="\n")
 	tex <- paste(tex, "\\end{document}", sep="\n")
 
