@@ -4,7 +4,7 @@
 #' @import survival
 #'
 #' @export
-plotForestMV <- function(srv, data, selection=F) {
+plotForestMV <- function(srv, data, selection=F, title="") {
     uv <- list()
 
     fit <- survival::coxph(srv~., data=data)
@@ -63,7 +63,6 @@ plotForestMV <- function(srv, data, selection=F) {
 	}
     }
     uv <- do.call(rbind, uv)
-    print(uv)
 
     tabletext<-cbind(c("", as.character(uv[,1])),
 		     c("", as.character(uv[,2])),
@@ -83,7 +82,7 @@ plotForestMV <- function(srv, data, selection=F) {
       lower = c(NA, as.numeric(as.character(uv[,4]))),
       upper = c(NA, as.numeric(as.character(uv[,5]))),
       new_page = TRUE,
-      title="",
+      title=title,
       is.summary=c(rep(FALSE,length(tabletext[,1]))),
       clip=c(0.1,3.2),
       xlog=F,

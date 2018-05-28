@@ -3,7 +3,7 @@
 #' @import forestplot
 #'
 #' @export
-plotForest <- function(srv, data) {
+plotForest <- function(srv, data, title="") {
     uv <- list()
     for (i in 1:length(data[1,])) {
 	# Add variable
@@ -65,7 +65,7 @@ plotForest <- function(srv, data) {
       lower = c(NA, as.numeric(as.character(uv[,4]))),
       upper = c(NA, as.numeric(as.character(uv[,5]))),
       new_page = TRUE,
-      title="",
+      title=title,
       is.summary=c(rep(FALSE,length(tabletext[,1]))),
       clip=c(0.1,3.2),
       xlog=F,
