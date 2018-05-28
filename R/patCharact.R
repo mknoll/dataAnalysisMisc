@@ -11,7 +11,7 @@ createPatChar <- function(data, na.rm=T, latex=T, outdir="../reports/") {
     nTotal <- length(data[,1])
 
     for (i in 1:length(data[1,])) {
-	if (class(data[,i]) == "factor") {
+	if (class(data[,i]) %in% c("character", "factor")) {
 	    pat[[length(pat)+1]] <- data.frame(name1=colnames(data)[i],
 						       name2=NA,
 						       n=NA,
