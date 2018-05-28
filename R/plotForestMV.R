@@ -63,6 +63,8 @@ plotForestMV <- function(srv, data, selection=F) {
 	}
     }
     uv <- do.call(rbind, uv)
+    uv[which(is.infinite(uv))] <- NA
+
     tabletext<-cbind(c("", as.character(uv[,1])),
 		     c("", as.character(uv[,2])),
 		     c("Hazard Ratio", round(uv[,3],2)),

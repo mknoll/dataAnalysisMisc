@@ -47,7 +47,8 @@ plotForest <- function(srv, data) {
     }
 
     uv <- do.call(rbind, uv)
-    print(uv)
+    uv[which(is.infinite(uv))] <- NA
+
     tabletext<-cbind(c("", as.character(uv[,1])),
 		     c("", as.character(uv[,2])),
 		     c("Hazard Ratio", round(uv[,3],2)),
@@ -73,4 +74,6 @@ plotForest <- function(srv, data) {
       col=fpColors(box="royalblue",line="darkblue", summary="royalblue"),
       align=1,
       zero=1)
+
+    return(uv)
 }
