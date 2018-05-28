@@ -4,63 +4,80 @@
 #' @import survival
 #'
 #' @export
-plotForestMV <- function(srv, data, selection=F, title="") {
+plotForestMV <- function(srv, data, subject=NULL, selection=F, title="") {
     uv <- list()
 
-    fit <- survival::coxph(srv~., data=data)
+    if (is.null(subject)) {
+        fit <- coxph(srv~., data=data)
+    } else {
+        fit <- coxph(srv~.+cluster(subject), data=data)
+    }
     if (selection != F) {
         if (class(selection)=="numeric") {
             selVar <- c()
             for (i in 1:length(data[1,])) {
-                fit <- coxph(srv~data[,i])
+                if (is.null(subject)) {
+                    fit <- coxph(srv~data[,i])
+                } else {
+                    fit <- coxph(srv~data[,i]+cluster(subject))
+                }
                 if (summary(fit)$logtest['pvalue'][[1]] < selection) {
                     selVar <- c(selVar, i)
                 }
             }
             print("Selected: ")
             print(colnames(data)[selVar])
-            fit <- coxph(srv~., data=data[,selVar,drop=F])
+            if (is.null(subject)) {
+                fit <- coxph(srv~., data=data[,selVar,drop=F])
+            } else {
+                fit <- coxph(srv~.+cluster(subject), data=data[,selVar,drop=F])
+            }
         } else {
             fit <- step(fit, direction=selection)
         }
     }
-    tbl <- cbind(summary(fit)$coef, summary(fit)$conf.int)
+    if (is.null(subject)) {
+        tbl <- cbind(summary(fit)$coef, summary(fit)$conf.int)
+    } else {
+        tbl <- cbind(summary(fit)$coef, summary(fit)$conf.int)
+        tbl <- tbl[,-4,drop=F]
+    }
 
     for (i in 1:length(data[1,])) {
-	if (!any(grepl(colnames(data)[i], rownames(tbl)))) { next }
-	if (class(data[,i]) %in% c("factor", "character")) {
-	    uv [[length(uv)+1]] <- data.frame(name1=colnames(data)[i],
-					      name2=NA,
-					      HR=NA, 
-					      LOW=NA,
-					      UP=NA, 
-					      PVAL=NA)
-	    sub <- tbl[which(grepl(colnames(data)[i], rownames(tbl))),,drop=F]
-	    for (j in 1:length(sub[,1])) {
-		var  <- gsub(colnames(data)[i], "", rownames(sub)[j])
-		uv [[length(uv)+1]] <- data.frame(name1=NA,
-						  name2=var,
-						  HR=sub[j,2], 
-						  LOW=sub[j,8],
-						  UP=sub[j,9], 
-						  PVAL=sub[j,5])
-	    }
-	} else if (class(data[,i]) == "numeric") {
-	    uv [[length(uv)+1]] <- data.frame(name1=colnames(data)[i],
-					      name2=NA,
-					      HR=NA, 
-					      LOW=NA,
-					      UP=NA, 
-					      PVAL=NA)
-	    sub <- tbl[which(grepl(colnames(data)[i], rownames(tbl))),,drop=F]
-	    j<-1
-	    uv [[length(uv)+1]] <- data.frame(name1=NA,
-					      name2=NA,
-					      HR=sub[j,2], 
-					      LOW=sub[j,8],
-					      UP=sub[j,9], 
-					      PVAL=sub[j,5])
-	}
+        if (!any(grepl(colnames(data)[i], rownames(tbl)))) { next }
+        if (class(data[,i]) %in% c("factor", "character")) {
+            uv [[length(uv)+1]] <- data.frame(name1=colnames(data)[i],
+                                              name2=NA,
+                                              HR=NA, 
+                                              LOW=NA,
+                                              UP=NA, 
+                                              PVAL=NA)
+            sub <- tbl[which(grepl(colnames(data)[i], rownames(tbl))),,drop=F]
+            for (j in 1:length(sub[,1])) {
+                var  <- gsub(colnames(data)[i], "", rownames(sub)[j])
+                uv [[length(uv)+1]] <- data.frame(name1=NA,
+                                                  name2=var,
+                                                  HR=sub[j,2], 
+                                                  LOW=sub[j,8],
+                                                  UP=sub[j,9], 
+                                                  PVAL=sub[j,5])
+            }
+        } else if (class(data[,i]) == "numeric") {
+            uv [[length(uv)+1]] <- data.frame(name1=colnames(data)[i],
+                                              name2=NA,
+                                              HR=NA, 
+                                              LOW=NA,
+                                              UP=NA, 
+                                              PVAL=NA)
+            sub <- tbl[which(grepl(colnames(data)[i], rownames(tbl))),,drop=F]
+            j<-1
+            uv [[length(uv)+1]] <- data.frame(name1=NA,
+                                              name2=NA,
+                                              HR=sub[j,2], 
+                                              LOW=sub[j,8],
+                                              UP=sub[j,9], 
+                                              PVAL=sub[j,5])
+        }
     }
     uv <- do.call(rbind, uv)
 

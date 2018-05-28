@@ -3,7 +3,7 @@
 #' @import forestplot
 #'
 #' @export
-plotForest <- function(srv, data, title="") {
+plotForest <- function(srv, data, subject=NULL, title="") {
     uv <- list()
     for (i in 1:length(data[1,])) {
 	# Add variable
@@ -15,27 +15,39 @@ plotForest <- function(srv, data, title="") {
 					      LOW=NA,
 					      UP=NA, 
 					      PVAL=NA)
-	    fit <- coxph(srv~factor(data[,i]))
-	    tbl <- cbind(summary(fit)$coef, summary(fit)$conf.int)
+        if (is.null(subject)) {
+            fit <- coxph(srv~factor(data[,i]))
+            tbl <- cbind(summary(fit)$coef, summary(fit)$conf.int)
+        } else {
+            fit <- coxph(srv~factor(data[,i])+cluster(subject))
+            tbl <- cbind(summary(fit)$coef[], summary(fit)$conf.int)
+            tbl <- tbl[,-4,drop=F]
+        }
 	    rownames(tbl) <- substr(rownames(tbl), 18, nchar(rownames(tbl)))
-	    for (j in 1:length(tbl[,1])) {
-		uv [[length(uv)+1]] <- data.frame(name1=NA, 
-						  name2=rownames(tbl)[j],
-						  HR=tbl[j,2],
-						  LOW=tbl[j, 8],
-						  UP=tbl[j, 9],
-						  PVAL=tbl[j, 5])
+        for (j in 1:length(tbl[,1])) {
+            uv [[length(uv)+1]] <- data.frame(name1=NA, 
+                                              name2=rownames(tbl)[j],
+                                              HR=tbl[j,2],
+                                              LOW=tbl[j, 8],
+                                              UP=tbl[j, 9],
+                                              PVAL=tbl[j, 5])
 
-	    }
-	} else if (class(data[,i]) == "numeric") {
+        }
+    } else if (class(data[,i]) == "numeric") {
 	    uv [[length(uv)+1]] <- data.frame(name1=colnames(data)[i],
 					      name2=NA,
 					      HR=NA, 
 					      LOW=NA,
 					      UP=NA, 
 					      PVAL=NA)
-	    fit <- coxph(srv~data[,i])
-	    tbl <- cbind(summary(fit)$coef, summary(fit)$conf.int)
+        if (is.null(subject)) {
+            fit <- coxph(srv~data[,i])
+            tbl <- cbind(summary(fit)$coef, summary(fit)$conf.int)
+        } else {
+            fit <- coxph(srv~data[,i])
+            tbl <- cbind(summary(fit)$coef, summary(fit)$conf.int)
+            tbl <- tbl[,-4,drop=F]
+        }
 	    j<-1
 	    uv [[length(uv)+1]] <- data.frame(name1=NA, 
 						  name2=NA,

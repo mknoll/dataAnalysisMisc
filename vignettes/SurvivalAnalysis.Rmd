@@ -102,21 +102,30 @@ data <- retinopathy[,c("laser", "eye", "type", "trt")]
 
 Conduct univariate analyses:
 ```{r out.width='100%', dpi=300, fig.width=8, fig.height=3}
-plotForest(srv,data)
+res <- plotForest(srv,data)
+```
+
+We can do that with multiple observations per subject as well:
+```{r out.width='100%', dpi=300, fig.width=8, fig.height=3}
+res <- plotForest(srv,data,subject=retinopathy$id)
 ```
 
 And multivariate analysis:
 ```{r out.width='100%', dpi=300, fig.width=8, fig.height=3}
-plotForestMV(srv, data)
+res <- plotForestMV(srv, data)
 ```
 
+Multiple observations / subject:
+```{r out.width='100%', dpi=300, fig.width=8, fig.height=3}
+res <- plotForestMV(srv, data, subject=retinopathy$id)
+```
 # Model selection
 
 We can use the famous step() function to select models, 
 and pass the direction value directly as selection parameter.
 
 ```{r out.width='100%', dpi=300, fig.width=8, fig.height=3}
-plotForestMV(srv, data, selection="both")
+res <- plotForestMV(srv, data, selection="both")
 ```
 
 Or, if we do have too many variables, we can give a p-value 
@@ -124,7 +133,7 @@ cutoff for the univarate analyses. If passed, the will be included
 in the multivariate analysis.
 
 ```{r out.width='100%', dpi=300, fig.width=8, fig.height=3} 
-plotForestMV(srv, data, selection=0.4)
+res <- plotForestMV(srv, data, selection=0.4)
 ```
 
 # Patient characteristics
@@ -142,6 +151,13 @@ res
 knitr::include_graphics(res$pdffile)
 ```
 
+For multiple observations / subject:
+```{r out.width='100%', out.height='800px'}
+subjVar <- list(laser=which(retinopathy$trt==0))
+res <- createPatChar(data, latex=T,subject=retinopathy$id, subjVar=subjVar, outdir=tempdir())
+res
+knitr::include_graphics(res$pdffile)
+```
 
 
 
