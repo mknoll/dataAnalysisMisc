@@ -7,18 +7,17 @@ plotForest <- function(srv, data) {
     uv <- list()
     for (i in 1:length(data[1,])) {
 	# Add variable
-
 	# factors
-	if (class(data[,i]) == "factor") {
+	if (class(data[,i]) %in% c("factor", "character")) {
 	    uv [[length(uv)+1]] <- data.frame(name1=colnames(data)[i],
 					      name2=NA,
 					      HR=NA, 
 					      LOW=NA,
 					      UP=NA, 
 					      PVAL=NA)
-	    fit <- coxph(srv~data[,i])
+	    fit <- coxph(srv~factor(data[,i]))
 	    tbl <- cbind(summary(fit)$coef, summary(fit)$conf.int)
-	    rownames(tbl) <- substr(rownames(tbl), 10, nchar(rownames(tbl)))
+	    rownames(tbl) <- substr(rownames(tbl), 18, nchar(rownames(tbl)))
 	    for (j in 1:length(tbl[,1])) {
 		uv [[length(uv)+1]] <- data.frame(name1=NA, 
 						  name2=rownames(tbl)[j],
@@ -48,6 +47,7 @@ plotForest <- function(srv, data) {
     }
 
     uv <- do.call(rbind, uv)
+    print(uv)
     tabletext<-cbind(c("", as.character(uv[,1])),
 		     c("", as.character(uv[,2])),
 		     c("Hazard Ratio", round(uv[,3],2)),

@@ -24,12 +24,11 @@ plotForestMV <- function(srv, data, selection=F) {
             fit <- step(fit, direction=selection)
         }
     }
-
     tbl <- cbind(summary(fit)$coef, summary(fit)$conf.int)
 
     for (i in 1:length(data[1,])) {
 	if (!any(grepl(colnames(data)[i], rownames(tbl)))) { next }
-	if (class(data[,i]) == "factor") {
+	if (class(data[,i]) %in% c("factor", "character")) {
 	    uv [[length(uv)+1]] <- data.frame(name1=colnames(data)[i],
 					      name2=NA,
 					      HR=NA, 
@@ -89,4 +88,6 @@ plotForestMV <- function(srv, data, selection=F) {
       col=fpColors(box="royalblue",line="darkblue", summary="royalblue"),
       align=1,
       zero=1)
+
+    return(uv)
 }
