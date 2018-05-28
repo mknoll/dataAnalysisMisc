@@ -45,9 +45,7 @@ plotForest <- function(srv, data) {
 						  PVAL=tbl[j, 5])
 	}
     }
-
     uv <- do.call(rbind, uv)
-    print(uv)
 
     tabletext<-cbind(c("", as.character(uv[,1])),
 		     c("", as.character(uv[,2])),
