@@ -86,9 +86,12 @@ createPatChar <- function(data, subject=NULL, subjVar=NULL, subjRef=NULL, na.rm=
     } else {		
         sgOut <- stargazer(pat, summary=F, rownames=F)
         for (i in 1:length(sgOut)) {
+	    #print(paste(i, ": ", sgOut[[i]]))
+	    if (i <= 6)  {
+		sgOut[[i]] <- ""
+	    }
             if (!(i >= 10 && i != 11 && i < length(sgOut)-3)) { next } 
             tmp <- sgOut[[i]]
-            #print(paste("I: ",i, ":", tmp))
             if (substr(tmp,1,1) != " ") {
                 #find first & and remove
                 feat <- substr(tmp, 1, regexpr("&", tmp, fixed=T)[[1]][1]-1)
@@ -97,9 +100,12 @@ createPatChar <- function(data, subject=NULL, subjVar=NULL, subjRef=NULL, na.rm=
                 sgOut[[i]] <- tmp
             }
         }
-        sgOut[[7]] <- "\\begin{tabular}{@{\\extracolsep{5pt}} llcc}"
+        sgOut[[7]] <- "\\begin{longtable}{@{\\extracolsep{5pt}} llcc}"
+	sgOut[[length(sgOut)-1]] <- ""
+	sgOut[[length(sgOut)]] <- "\\end{longtable}"
 
-	tex <- "\\documentclass{article} \n \\usepackage[margin=0pt]{geometry} \n \\pagestyle{empty} \\begin{document} "
+
+	tex <- "\\documentclass{article} \n \\usepackage[margin=0pt]{geometry} \n \\usepackage{longtable} \n \\pagestyle{empty} \\begin{document} "
 	tex <- paste(tex, paste(sgOut, collapse="\n"), sep="\n")
 	tex <- paste(tex, "\\end{document}", sep="\n")
 
