@@ -42,6 +42,7 @@ plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c(
 	tbl <- cbind(summary(fit)$coef, summary(fit)$conf.int)
 	tbl <- tbl[,-4,drop=F]
     }
+    rownames(tbl) <- gsub("`", "", rownames(tbl))
 
     for (i in 1:length(data[1,])) {
 	if (!any(grepl(colnames(data)[i], rownames(tbl)))) { next }
@@ -52,9 +53,11 @@ plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c(
 					      LOW=NA,
 					      UP=NA, 
 					      PVAL=NA)
-	    sub <- tbl[which(grepl(colnames(data)[i], rownames(tbl))),,drop=F]
+	    w <- which(substr(rownames(tbl), 1, nchar(colnames(data)[i])) == colnames(data)[i])
+	    sub <- tbl[w,,drop=F]
+	    #sub <- tbl[which(grepl(colnames(data)[i], rownames(tbl))),,drop=F]
 	    for (j in 1:length(sub[,1])) {
-		var  <- gsub(colnames(data)[i], "", rownames(sub)[j])
+		var <- substr(rownames(sub)[j], nchar(colnames(data)[i])+1, nchar(rownames(sub)[j]))
 		uv [[length(uv)+1]] <- data.frame(name1=NA,
 						  name2=var,
 						  HR=sub[j,2], 
@@ -69,7 +72,9 @@ plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c(
 					      LOW=NA,
 					      UP=NA, 
 					      PVAL=NA)
-	    sub <- tbl[which(grepl(colnames(data)[i], rownames(tbl))),,drop=F]
+	    w <- which(substr(rownames(tbl), 1, nchar(colnames(data)[i])) == colnames(data)[i])
+	    sub <- tbl[w,,drop=F]
+
 	    j<-1
 	    uv [[length(uv)+1]] <- data.frame(name1=NA,
 					      name2=NA,
