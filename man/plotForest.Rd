@@ -4,5 +4,6 @@
 \alias{plotForest}
 \title{Create forest plot}
 \usage{
-plotForest(srv, data)
+plotForest(srv, data, subject = NULL, title = "", col = c("royalblue",
+  "darkblue", "royalblue"))
 }

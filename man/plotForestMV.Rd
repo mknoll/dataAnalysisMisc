@@ -4,5 +4,6 @@
 \alias{plotForestMV}
 \title{Create forest plot for multivariate analysis}
 \usage{
-plotForestMV(srv, data, selection = F)
+plotForestMV(srv, data, subject = NULL, selection = F, title = "",
+  col = c("royalblue", "darkblue", "royalblue"))
 }
