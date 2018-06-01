@@ -3,7 +3,7 @@
 #' @import forestplot
 #'
 #' @export
-plotForest <- function(srv, data, subject=NULL, title="") {
+plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "darkblue", "royalblue")) {
     uv <- list()
     for (i in 1:length(data[1,])) {
 	# Add variable
@@ -80,7 +80,7 @@ plotForest <- function(srv, data, subject=NULL, title="") {
 	       is.summary=c(rep(FALSE,length(tabletext[,1]))),
 	       clip=c(0.1,3.2),
 	       xlog=F,
-	       col=fpColors(box="royalblue",line="darkblue", summary="royalblue"),
+	       col=fpColors(box=col[1],line=col[2], summary=col[3]),
 	       align=1,
 	       zero=1)
 
