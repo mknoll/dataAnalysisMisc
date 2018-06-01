@@ -33,6 +33,10 @@ plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c(
 		fit <- coxph(srv~.+cluster(subject), data=data[,selVar,drop=F])
 	    }
 	} else {
+	    if (!is.null(subject)) {
+		warning("Not working yet, sorry!")
+		return(NULL)
+	    }
 	    fit <- step(fit, direction=selection)
 	}
     }
@@ -43,6 +47,7 @@ plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c(
 	tbl <- tbl[,-4,drop=F]
     }
     rownames(tbl) <- gsub("`", "", rownames(tbl))
+    print(tbl)
 
     for (i in 1:length(data[1,])) {
 	if (!any(grepl(colnames(data)[i], rownames(tbl)))) { next }
