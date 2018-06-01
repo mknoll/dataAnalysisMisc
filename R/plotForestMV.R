@@ -47,7 +47,6 @@ plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c(
 	tbl <- tbl[,-4,drop=F]
     }
     rownames(tbl) <- gsub("`", "", rownames(tbl))
-    print(tbl)
 
     for (i in 1:length(data[1,])) {
 	if (!any(grepl(colnames(data)[i], rownames(tbl)))) { next }
