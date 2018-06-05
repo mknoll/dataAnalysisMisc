@@ -18,9 +18,9 @@ renameVars <- function(data, rename) {
 	}
 	#set reference level?
 	if (any(sub$REFERENCE == 1)) {
-	    ref <- sub$NEW[which(sub$REFERENCE == 1)]
-	    cpy[,i] <- factor(cpy[,i])
-	    cpy[,i] <- relevel(cpy[,i], ref)
+	    ref <- factor(sub$NEW)
+	    ref <- ref[which(sub$REFERENCE == 1)]
+	    cpy[,i] <- relevel(as.factor(cpy[,i]), ref=as.character(ref))
 	}
     }
 
