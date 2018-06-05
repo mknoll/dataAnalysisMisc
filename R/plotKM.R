@@ -4,7 +4,7 @@
 #' @import pals
 #'
 #' @export
-plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, pval=NULL, ...) {
+plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, pleg=NULL, offsetNRisk=-0.2, pval=NULL, ...) {
 	# number of groups 
 	nGrp <- length(levels(factor(grp)))
 
