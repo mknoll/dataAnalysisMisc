@@ -32,7 +32,7 @@ plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "da
 						  UP=tbl[j, 9],
 						  PVAL=tbl[j, 5])
 	    }
-	} else if (class(data[,i]) == "numeric") {
+	} else if (class(data[,i]) %in% c("numeric", "integer")) {
 	    uv [[length(uv)+1]] <- data.frame(name1=colnames(data)[i],
 					      name2=NA,
 					      HR=NA, 
@@ -54,6 +54,8 @@ plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "da
 					      LOW=tbl[j, 8],
 					      UP=tbl[j, 9],
 					      PVAL=tbl[j, 5])
+	} else {
+	    warning(paste("Could not process ", colnames(data)[i]))
 	}
     }
     uv <- do.call(rbind, uv)
