@@ -16,6 +16,12 @@ renameVars <- function(data, rename) {
 	for (j in 1:length(sub[,1])) {
 	    cpy[which(cpy[,i] == as.character(sub$OLD[j])),i] <- as.character(sub$NEW[j])
 	}
+	#set reference level?
+	if (any(sub$REFERENCE == 1)) {
+	    ref <- sub$NEW[which(sub$REFERENCE == 1)]
+	    cpy[,i] <- factor(cpy[,i])
+	    cpy[,i] <- relevel(cpy[,i], ref)
+	}
     }
 
     return(cpy)
