@@ -4,6 +4,6 @@
 \alias{plotKM}
 \title{Plots a Kaplan Meier surivival curve}
 \usage{
-plotKM(srv, grp, xlim = NULL, col = NULL, xyleg = NULL,
+plotKM(srv, grp, xlim = NULL, col = NULL, xyleg = NULL, pleg = NULL,
   offsetNRisk = -0.2, pval = NULL, ...)
 }
