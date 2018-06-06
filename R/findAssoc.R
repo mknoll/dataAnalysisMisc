@@ -22,7 +22,7 @@ findAssoc <- function(grp, data, test=NULL, kat="Fisher",
 	sub <-  list()
 	sub[[length(sub)+1]] <- data.frame(name0=colnames(data)[i], name1=NA, name2=NA, name3=NA, p=NA)
 	p.val <- NA
-	if (class(data[,i]) == "numeric") {
+	if (class(data[,i]) %in% c("numeric","integer")) {
 	    vals <- data[,i]
 	    p.val <- t.test(vals~grp)$p.value
 	    if ("mean" %in% contParam) {
