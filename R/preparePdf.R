@@ -1,6 +1,6 @@
 #' @title Adapts pdf
 #' @export
-preparePdf <- function(pat, outdir, col="llcc") {
+preparePdf <- function(pat, outdir, col="llcc", filename=NULL) {
     sgOut <- stargazer(pat, summary=F, rownames=F)
     for (i in 1:length(sgOut)) {
 	#print(paste(i, ": ", sgOut[[i]]))
@@ -26,7 +26,11 @@ preparePdf <- function(pat, outdir, col="llcc") {
     tex <- paste(tex, paste(sgOut, collapse="\n"), sep="\n")
     tex <- paste(tex, "\\end{document}", sep="\n")
 
-    tf <- paste(trimws(tempfile()), ".tex", sep="")
+    if (is.null(filename)) {
+	tf <- paste(trimws(tempfile()), ".tex", sep="")
+    } else {
+	tf <- filename
+    }
     write(tex, tf)
     folder <- paste(outdir, substr(Sys.time(), 1, 10), sep="")
     system(paste("mkdir ", folder, sep=""))

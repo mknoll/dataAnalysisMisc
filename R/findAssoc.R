@@ -4,7 +4,7 @@
 #' @import Barnard
 #' @import stargazer
 #' @export
-findAssoc <- function(grp, data, test=NULL, kat="Fisher",
+findAssoc <- function(grp, data, test=NULL, kat="Fisher", filename=NULL,
 		      contParam=c("mean", "sd"), latex=F, outdir="../reports/") {
     grp <- as.character(grp)
     if (length(unique(grp)) != 2) {
@@ -84,6 +84,6 @@ findAssoc <- function(grp, data, test=NULL, kat="Fisher",
     if (!latex) {
         return(pat)
     } else {		
-	return (list(tbl=pat, pdffile=preparePdf(pat, outdir, col="llccr"))) 
+	return (list(tbl=pat, pdffile=preparePdf(pat, outdir, col="llccr",filename=filename))) 
     }
 }

@@ -1,6 +1,6 @@
 #' @title Create patient characteristics table 
 #' @export 
-createPatChar <- function(data, subject=NULL, subjVar=NULL, subjRef=NULL, na.rm=T, latex=T, outdir="../reports/") {
+createPatChar <- function(data, subject=NULL, subjVar=NULL, subjRef=NULL, na.rm=T, latex=T, outdir="../reports/", filename=NULL) {
     pat <- list()
     ## All
     if (is.null(subject)) {
@@ -83,7 +83,7 @@ createPatChar <- function(data, subject=NULL, subjVar=NULL, subjRef=NULL, na.rm=
     if (!latex) {
         return(pat)
     } else {		
-	return (list(tbl=pat, pdffile=preparePdf(pat, outdir, col="llcc"))) 
+	return (list(tbl=pat, pdffile=preparePdf(pat, outdir, col="llcc", filename=filename))) 
     }
 }
 
