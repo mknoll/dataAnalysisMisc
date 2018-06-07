@@ -26,11 +26,7 @@ preparePdf <- function(pat, outdir, col="llcc", filename=NULL) {
     tex <- paste(tex, paste(sgOut, collapse="\n"), sep="\n")
     tex <- paste(tex, "\\end{document}", sep="\n")
 
-    if (is.null(filename)) {
-	tf <- paste(trimws(tempfile()), ".tex", sep="")
-    } else {
-	tf <- filename
-    }
+    tf <- paste(trimws(tempfile()), ".tex", sep="")
     write(tex, tf)
     folder <- paste(outdir, substr(Sys.time(), 1, 10), sep="")
     system(paste("mkdir ", folder, sep=""))
@@ -42,6 +38,13 @@ preparePdf <- function(pat, outdir, col="llcc", filename=NULL) {
     cmd <- paste("cd ",folder," && pdflatex ", tf, sep="")
     system(cmd)
     system(paste("cp ", tf, " ", folder,"/", sep=""))
+
+    retName <- paste(folder, "/", pdfF, sep="")
+    if (!is.null(filename)) {
+	system(paste(" mv ", tf, " ", folder, "/", filename, ".tex", sep=""))
+	system(paste(" mv ", folder, "/", pdfF , " ", folder, "/", filename, ".pdf", sep=""))
+	retName <- paste(folder, "/", filename, ".pdf", sep="")
+    } 
     #system(paste("mupdf ", folder, "/",pdfF, sep=""))
-    return(paste(folder, "/",pdfF, sep=""))
+    return(retName)
 }
