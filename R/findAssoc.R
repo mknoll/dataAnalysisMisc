@@ -68,7 +68,12 @@ findAssoc <- function(grp, data, test=NULL, kat="Fisher", filename=NULL,
 		    p.val <- NA
 		    tryCatch({
 			p.val <- fisher.test(tbl)$p.value
-		    }, error=function(e) { })
+		    }, error=function(e) { 
+                ## fallback:; chisquared 
+                tryCatch({
+			    p.val <- chisq.test(tbl)$p.value
+                }, error=function(e) {  })
+            })
 		    for (j in 1:length(tbl[,1])) {
 			sub[[length(sub)+1]] <- data.frame(name0=NA, name1=rownames(tbl)[j], 
 							   name2=as.character(tbl[j,1]), name3=as.character(tbl[j,2]),p=NA)
