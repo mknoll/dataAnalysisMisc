@@ -20,7 +20,9 @@ renameVars <- function(data, rename) {
 	if (!all(is.na(sub$REFERENCE)) && any(sub$REFERENCE == 1)) {
 	    ref <- factor(sub$NEW)
 	    ref <- ref[which(sub$REFERENCE == 1)]
-	    cpy[,i] <- relevel(as.factor(cpy[,i]), ref=as.character(ref))
+	    tryCatch({
+		cpy[,i] <- relevel(as.factor(cpy[,i]), ref=as.character(ref))
+	    }, error=function(e) { })
 	}
     }
 
