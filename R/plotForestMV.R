@@ -13,9 +13,12 @@ plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c(
 	fit <- coxph(srv~.+cluster(subject), data=data)
     }
     if (selection != F) {
-	if (class(selection) %in% c("integer", "numeric")) {
+	if (class(selection) == "numeric") {
 	    selVar <- c()
 	    for (i in 1:length(data[1,])) {
+		if (class(data[,i]) == "factor") { 
+		    data[,i] <- as.character(data[,i])
+		}
 		if (is.null(subject)) {
 		    fit <- coxph(srv~data[,i])
 		} else {
