@@ -6,6 +6,13 @@
 #' @export
 plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c("royalblue", "darkblue", "royalblue")) {
     uv <- list()
+    
+    #preserve level names
+    for (i in 1:length(data[1,])) {
+	if (class(data[,i]) == "factor") { 
+	    data[,i] <- as.character(data[,i])
+	}
+    }
 
     if (is.null(subject)) {
 	fit <- coxph(srv~., data=data)
@@ -16,9 +23,6 @@ plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c(
 	if (class(selection) == "numeric") {
 	    selVar <- c()
 	    for (i in 1:length(data[1,])) {
-		if (class(data[,i]) == "factor") { 
-		    data[,i] <- as.character(data[,i])
-		}
 		if (is.null(subject)) {
 		    fit <- coxph(srv~data[,i])
 		} else {
