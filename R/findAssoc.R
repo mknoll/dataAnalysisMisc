@@ -24,7 +24,10 @@ findAssoc <- function(grp, data, test=NULL, kat="Fisher", filename=NULL,
 	p.val <- NA
 	if (class(data[,i]) %in% c("numeric","integer")) {
 	    vals <- data[,i]
-	    p.val <- t.test(vals~grp)$p.value
+	    p.val <- NA
+	    tryCatch({
+		p.val <- t.test(vals~grp)$p.value
+	    }, error=function(e) {})
 	    if ("mean" %in% contParam) {
 		sub[[length(sub)+1]] <- data.frame(name0=NA, name1="Mean", name2=as.character(round(mean(vals[which(grp == lvs[1])], na.rm=T)),2),
 						   name3=as.character(round(mean(vals[which(grp == lvs[2])], na.rm=T),2)), p=NA)
@@ -51,7 +54,10 @@ findAssoc <- function(grp, data, test=NULL, kat="Fisher", filename=NULL,
 	    if (length(unique(vals)) == 2) {
 		tbl <- table(vals, grp)
 		#Barnard two sided
-		p.val <- barnard.test(tbl[1,1], tbl[1,2], tbl[2,1], tbl[2,2])$p.value[2]  
+		p.val <- NA
+		tryCatch({
+		    p.val <- barnard.test(tbl[1,1], tbl[1,2], tbl[2,1], tbl[2,2])$p.value[2]  
+		}, error=function(e) { } )
 		sub[[length(sub)+1]] <- data.frame(name0=NA, name1=rownames(tbl)[1], 
 						   name2=as.character(tbl[1,1]), name3=as.character(tbl[1,2]),p=NA)
 		sub[[length(sub)+1]] <- data.frame(name0=NA, name1=rownames(tbl)[2], 
