@@ -11,7 +11,7 @@ encCant <- function(text, off=32, maxLen=25) {
         wordR <- rev(strsplit(word, "|")[[1]])
         vals <- sapply(wordR, utf8ToInt)-off
         #max length of words
-        if (length(vals) > maxLen) { next )
+        if (length(vals) > maxLen) { next } 
         out <- c(out, cant(vals))
         wrd <- c(wrd, word)
     }
