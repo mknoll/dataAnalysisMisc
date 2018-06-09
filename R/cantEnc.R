@@ -8,12 +8,14 @@ encCant <- function(text, off=32, maxLen=25) {
     rm <- c()
     wrd <- c()
     for (word in words) {
-        wordR <- rev(strsplit(word, "|")[[1]])
-        vals <- sapply(wordR, utf8ToInt)-off
-        #max length of words
-        if (length(vals) > maxLen) { next } 
-        out <- c(out, cant(vals))
-        wrd <- c(wrd, word)
+        tryCatch({
+            wordR <- rev(strsplit(word, "|")[[1]])
+            vals <- sapply(wordR, utf8ToInt)-off
+            #max length of words
+            if (length(vals) > maxLen) { next } 
+            out <- c(out, cant(vals))
+            wrd <- c(wrd, word)
+        }, error=function(e) { } )
     }
 
     names(out) <- wrd
