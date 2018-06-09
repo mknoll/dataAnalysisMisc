@@ -4,5 +4,5 @@
 \alias{preparePdf}
 \title{Adapts pdf}
 \usage{
-preparePdf(pat, outdir, col = "llcc")
+preparePdf(pat, outdir, col = "llcc", filename = NULL)
 }
