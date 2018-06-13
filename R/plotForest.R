@@ -3,7 +3,7 @@
 #' @import forestplot
 #'
 #' @export
-plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "darkblue", "royalblue")) {
+plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "darkblue", "royalblue"), invalCut=100, removeInval=F) {
     uv <- list()
     for (i in 1:length(data[1,])) {
 	# Add variable
@@ -59,6 +59,14 @@ plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "da
 	}
     }
     uv <- do.call(rbind, uv)
+    ## set invaldi data to NA
+    w <- which(uv[,3] > invalCut)
+    if (length(w) >0) {
+	uv[w,c(3:6)] <- NA
+	if (removeInval) {
+	    uv <- uv[-w,,drop=F]
+	}
+    }
 
     tabletext<-cbind(c("", as.character(uv[,1])),
 		     c("", as.character(uv[,2])),
