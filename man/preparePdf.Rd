@@ -2,7 +2,7 @@
 % Please edit documentation in R/preparePdf.R
 \name{preparePdf}
 \alias{preparePdf}
-\title{Adapts pdf}
+\title{Create tex/pdf files}
 \usage{
 preparePdf(pat, outdir, col = "llcc", filename = NULL)
 }

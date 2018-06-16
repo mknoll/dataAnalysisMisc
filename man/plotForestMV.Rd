@@ -2,8 +2,54 @@
 % Please edit documentation in R/plotForestMV.R
 \name{plotForestMV}
 \alias{plotForestMV}
-\title{Create forest plot for multivariate analysis}
+\title{Calculates multivariate analysis and creates a forest plot}
 \usage{
 plotForestMV(srv, data, subject = NULL, selection = F, title = "",
   col = c("royalblue", "darkblue", "royalblue"))
+}
+\arguments{
+\item{srv}{Survival object as created by survival::Surv() function,
+each observation is linked to one row of the data parameter}
+
+\item{data}{data.frame containing all variables which will be analyzed.
+The class of each column determined the type of analysis: numeric cols 
+will be treated as continous variable, factor and character as factors.}
+
+\item{subject}{vector identifying independent subjects. Does not work 
+with automatic model selection.}
+
+\item{title}{Plot title}
+
+\item{col}{Color vector as expected by the forestplot() function}
+}
+\description{
+Calculates a multivariate analysis, either utilizing all
+provided variables supplied in the data data.frame (default), using 
+the step function for model selection to obtain variables (selection 
+takes values expected by the direction parameter of step) or retaining 
+only variables which show a likelhood ratio p-value below a supplied 
+cutoff in the univariate analysis. Errors might occur if the graphic
+devices dimension is too small (foresplot() fails).
+}
+\examples{
+times <- c(100, 87, 96, 20)
+status <- c(1,1,0,1)
+srv <- Surv(times, status)
+data <- data.frame(Surgery=c("yes","yes","no","no"),
+		Drug=c("no","yes","yes","yes"),
+		Sex=c("M","F","F","F"),
+		Age=c(60,65,50,75))
+subjectIDs <- c(1,2,3,3)
+
+#Use all variables
+plotForestMV(srv,data)
+
+#Univariate Cutoff of p-val < 0.2
+plotForestMV(srv, data, selection=0.2)
+
+#Automatic modell selection
+plotForestMV(srv, data, selection="both")
+
+#Observatons from the same individual
+plotForestMV(srv, data, subject=subjectIDs)
 }

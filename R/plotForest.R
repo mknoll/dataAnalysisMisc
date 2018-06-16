@@ -1,9 +1,31 @@
-#' @title Create forest plot
+#' @title Calculated univariate analysis and creates a forest plot
 #'
+#' @description The function creates a forest plot for a given 
+#' number of variables, expect a srv object and a data.frame containing 
+#' the selected variables as columns. Univariate Cox PH models 
+#' are fitted. A subject vector can be specified to allow for the 
+#' analysis of multiple observations per patient (e.g. paired samples),
+#' by using marginal model [cluster(subject)]. Errors might occur if the graphic
+#' devices dimension is too small (foresplot() fails).
+#'
+#' @param srv Survival object as created by survival::Surv() function,
+#' each observation is linked to one row of the data parameter
+#' @param data data.frame containing all variables which will be analyzed.
+#' The class of each column determined the type of analysis: numeric cols 
+#' will be treated as continous variable, factor and character as factors.
+#' @param subject vector identifying independent subjects
+#' @param title Plot title
+#' @param col Color vector as expected by the forestplot() function
+#' @param invalCut Cutoff to set HR, CI and p-values to empty values
+#' if HR exceeds the provided cutoff (e.g. if models do not converge)
+#' @param removeInval Retain as invalid identified levels (invalCut)
+#' 
 #' @import forestplot
+#' @import sruvival
 #'
 #' @export
-plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "darkblue", "royalblue"), invalCut=100, removeInval=F) {
+plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "darkblue", "royalblue"), 
+		       invalCut=100, removeInval=F) {
     uv <- list()
     for (i in 1:length(data[1,])) {
 	# Add variable
