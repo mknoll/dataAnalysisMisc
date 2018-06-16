@@ -33,9 +33,7 @@ renameVars <- function(data, rename) {
 	lvsOrder <- sub$REFERENCE[match(lvsNew, sub$NEW)]
 	lvsNew <- lvsNew[order(lvsOrder)]
 	tryCatch({
-	    print(levels(factor(cpy[,i])))
 	    cpy[,i] <- factor(cpy[,i], lvsNew) 
-	    print(levels(factor(cpy[,i])))
 	}, error=function(e) {})
     }
 
