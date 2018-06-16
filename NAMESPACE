@@ -3,6 +3,7 @@
 export(boxGraph)
 export(cant)
 export(createPatChar)
+export(determineClass)
 export(drawSpiralPlot)
 export(encCant)
 export(findAssoc)
