@@ -21,7 +21,7 @@
 #' @param removeInval Retain as invalid identified levels (invalCut)
 #' 
 #' @import forestplot
-#' @import sruvival
+#' @import survival
 #'
 #' @export
 plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "darkblue", "royalblue"), 
