@@ -43,14 +43,14 @@ data <- data.frame(Surgery=c("yes","yes","no","no"),
 subjectIDs <- c(1,2,3,3)
 
 #Use all variables
-plotForestMV(srv,data)
+#plotForestMV(srv,data)
 
 #Univariate Cutoff of p-val < 0.2
-plotForestMV(srv, data, selection=0.2)
+#plotForestMV(srv, data, selection=0.2)
 
 #Automatic modell selection
-plotForestMV(srv, data, selection="both")
+#plotForestMV(srv, data, selection="both")
 
 #Observatons from the same individual
-plotForestMV(srv, data, subject=subjectIDs)
+#plotForestMV(srv, data, subject=subjectIDs)
 }
