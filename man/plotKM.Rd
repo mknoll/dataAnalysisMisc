@@ -34,6 +34,7 @@ table and calculates & plots a Cox-PH LRT p-value. Median event times
 are indicted by addiditional lines.
 }
 \examples{
+require(survival)
 time <- c(10,7,8,4,11,14)
 status <- c(1,1,1,0,1,0)
 srv <- Surv(time, status)

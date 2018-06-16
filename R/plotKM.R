@@ -21,6 +21,7 @@
 #' @export
 #' 
 #' @examples
+#'	require(survival)
 #'	time <- c(10,7,8,4,11,14)
 #'	status <- c(1,1,1,0,1,0)
 #'	srv <- Surv(time, status)
