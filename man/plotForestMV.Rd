@@ -32,6 +32,7 @@ cutoff in the univariate analysis. Errors might occur if the graphic
 devices dimension is too small (foresplot() fails).
 }
 \examples{
+require(survival)
 times <- c(100, 87, 96, 20)
 status <- c(1,1,0,1)
 srv <- Surv(times, status)
