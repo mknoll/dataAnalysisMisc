@@ -23,6 +23,7 @@ renameVars <- function(data, rename) {
 	mp <- which(map$VARNAME == colnames(data)[i])
 	if (length(mp) == 0) { next }
 	sub <- map[mp,,drop=F] 
+	sub$OLD <- trimws(sub$OLD)
 	cpy[,i] <- as.character(cpy[,i])
 	for (j in 1:length(sub[,1])) {
 	    cpy[which(cpy[,i] == as.character(sub$OLD[j])),i] <- as.character(sub$NEW[j])
