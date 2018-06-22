@@ -2,8 +2,42 @@
 % Please edit documentation in R/plotKM.R
 \name{plotKM}
 \alias{plotKM}
-\title{Plots a Kaplan Meier surivival curve}
+\title{Plots a Kaplan Meier survival curve with number at risk table}
 \usage{
-plotKM(srv, grp, xlim = NULL, col = NULL, xyleg = NULL, pleg = NULL,
-  offsetNRisk = -0.2, pval = NULL, ...)
+plotKM(srv, grp, xlim = NULL, col = NULL, xyleg = NULL,
+  offsetNRisk = -0.2, yDelta = 0.1, nRiskCat = 4, pval = NULL,
+  mar = NULL, ...)
+}
+\arguments{
+\item{srv}{Survival obejct as obtained by survival::Surv()}
+
+\item{grp}{grouping variable}
+
+\item{xlim}{xlim range to plot. Default: 0-max time included in the srv object}
+
+\item{xyleg}{vector contaning x,y coordinates to the legend}
+
+\item{offsetNRisk}{offset in y dimensions to move the number at risk table}
+
+\item{yDelta}{y difference between rows of the number at risk table}
+
+\item{nRiskCat}{Number of breaks of the number a risk table}
+
+\item{pval}{xy coordinates of where to plot the pvalue}
+
+\item{mar}{margin parameter, calculated internally (default). Not used if mar 
+is set to anything different from NULL}
+}
+\description{
+Creates Kaplan-Meier survival curves, prints a number at risk
+table and calculates & plots a Cox-PH LRT p-value. Median event times 
+are indicted by addiditional lines.
+}
+\examples{
+require(survival)
+time <- c(10,7,8,4,11,14)
+status <- c(1,1,1,0,1,0)
+srv <- Surv(time, status)
+	grp <- c(rep("A", 3), rep("B", 3))
+	plotKM(srv, grp)
 }

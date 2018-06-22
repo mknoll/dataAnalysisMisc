@@ -4,5 +4,5 @@
 \alias{encCant}
 \title{Cantor Encode}
 \usage{
-encCant(text)
+encCant(text, off = 32, maxLen = 25)
 }

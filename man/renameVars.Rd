@@ -2,7 +2,20 @@
 % Please edit documentation in R/renameVars.R
 \name{renameVars}
 \alias{renameVars}
-\title{Rename vars}
+\title{Rename variables in a data frame using a mapping file}
 \usage{
 renameVars(data, rename)
+}
+\arguments{
+\item{data}{data.frame containing each variable in a spearate column}
+
+\item{rename}{mapping file (csv) to rename vars. Contains the following columns:
+OLD, NEW, TYPE, VARNAME, REFERENCE. OLD contains the old names, NEW the new ones,
+TYPE is VARNAME for variables (colnames of data), and LEVEL for the corresponding
+variable levels. VARNAME contains the old variable name to which each levels 
+corresponds to. REFERENCE is the ordre for factors, 1 being the reference}
+}
+\description{
+Allows to easily utilize different version of variable
+naming, e.g. for diffnerent languages.
 }

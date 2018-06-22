@@ -1,4 +1,29 @@
 #' @title Create patient characteristics table 
+#'
+#' @description Creates a patient characteristics table for a provided
+#' data.frame, as used by the plotForest and plotForestMV functions. 
+#' Multiple observations per patient are indicated by the subject parameter,
+#' defaults to NULL. In this case, each row is considered an independent 
+#' subject. If a subject vector is provided and if subjRef is set to "subject", 
+#' the reference Value (100%) is set to the number of subject, otherwise the 
+#' number of rows is selected. If for any variable, no duplicate analysis
+#' makes sense (e.g. sex), the selected indices for this variable can be 
+#' provided as names list via the subjVar parameter. 
+#'
+#' @param latex create .tex files and/or compile it.
+#' @param data data.frame containing the variables 
+#' @param subject vecotr containing subject ids 
+#' @param subjVar list conatining indices of which rows of data to used for 
+#' any given variable (provided as name of the list element)
+#' @param na.rm remove na?
+#' @param outdir directory supplied to preparePdf(). Here, the tex and pdf files 
+#' will be stored.
+#' @param filename filename of the pdf/tex file
+#' 
+#' @return if latex is set to False, a data.frame with the patient characterisitcs.
+#' Otherwise, a list containing the patient characteristics table and information
+#' returned by the preparePdf() function (.tex filename, .pdf filename) 
+#'
 #' @export 
 createPatChar <- function(data, subject=NULL, subjVar=NULL, subjRef=NULL, na.rm=T, latex=T, outdir="../reports/", filename=NULL) {
     pat <- list()

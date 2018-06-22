@@ -1,4 +1,15 @@
-#' @title Rename vars
+#' @title Rename variables in a data frame using a mapping file
+#' 
+#' @description Allows to easily utilize different version of variable
+#' naming, e.g. for diffnerent languages.
+#' 
+#' @param data data.frame containing each variable in a spearate column
+#' @param rename mapping file (csv) to rename vars. Contains the following columns:
+#' OLD, NEW, TYPE, VARNAME, REFERENCE. OLD contains the old names, NEW the new ones,
+#' TYPE is VARNAME for variables (colnames of data), and LEVEL for the corresponding
+#' variable levels. VARNAME contains the old variable name to which each levels 
+#' corresponds to. REFERENCE is the ordre for factors, 1 being the reference
+#'
 #' @export
 renameVars <- function(data, rename) {
     cpy <- data
@@ -12,18 +23,19 @@ renameVars <- function(data, rename) {
 	mp <- which(map$VARNAME == colnames(data)[i])
 	if (length(mp) == 0) { next }
 	sub <- map[mp,,drop=F] 
+	sub$OLD <- trimws(sub$OLD)
 	cpy[,i] <- as.character(cpy[,i])
 	for (j in 1:length(sub[,1])) {
 	    cpy[which(cpy[,i] == as.character(sub$OLD[j])),i] <- as.character(sub$NEW[j])
 	}
-	#set reference level?
-	if (!all(is.na(sub$REFERENCE)) && any(sub$REFERENCE == 1)) {
-	    ref <- factor(sub$NEW)
-	    ref <- ref[which(sub$REFERENCE == 1)]
-	    tryCatch({
-		cpy[,i] <- relevel(as.factor(cpy[,i]), ref=as.character(ref))
-	    }, error=function(e) { })
-	}
+	
+	#reorder levels
+	lvsNew <- levels(factor(cpy[,i]))
+	lvsOrder <- sub$REFERENCE[match(lvsNew, sub$NEW)]
+	lvsNew <- lvsNew[order(lvsOrder)]
+	tryCatch({
+	    cpy[,i] <- factor(cpy[,i], lvsNew) 
+	}, error=function(e) {})
     }
 
     return(cpy)

@@ -19,6 +19,9 @@
 #' @import pals
 #'
 #' @export
+<<<<<<< HEAD
+plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, pleg=NULL, offsetNRisk=-0.2, pval=NULL, subject=NULL, ...) {
+=======
 #' 
 #' @examples
 #'	require(survival)
@@ -29,6 +32,7 @@
 #' 	plotKM(srv, grp)
 plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, yDelta=0.1, nRiskCat=4, pval=NULL, mar=NULL,
 		   ...) {
+>>>>>>> 801023f246840a9d9d41be2fa539445cf413a945
 	# number of groups 
 	nGrp <- length(levels(factor(grp)))
 
@@ -47,29 +51,29 @@ plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, 
 
 	# plot median os 
 	fit <- survfit(srv~grp)
-	if (length(data.frame(summary(fit)$table)[1,]) == 1) {
+    if (length(data.frame(summary(fit)$table)[1,]) == 1) {
 	    tbl <- data.frame(t(summary(fit)$table))
-	} else {
+    } else {
 	    tbl <- data.frame(summary(fit)$table)
-	}
+    }
 	for (i in 1:length(tbl[,1])) {
-	    segments(0, 0.5, tbl[i,"median"], 0.5, lty=3, col=col[i])
-	    segments(tbl[i,"median"], 0.5, tbl[i,"median"], -0.1, lty=3, col=col[i])
+		segments(0, 0.5, tbl[i,"median"], 0.5, lty=3, col=col[i])
+		segments(tbl[i,"median"], 0.5, tbl[i,"median"], -0.1, lty=3, col=col[i])
 	}
 
 	# legende
 	legend(xyleg[1], xyleg[2], levels(factor(grp)), fill=col, bty='n', cex=0.8)
 
-	# pvalue
-	if (nGrp >= 2) {
-	    if (is.null(subject)) {
-		fitC <- coxph(srv~grp)
-		p <- summary(fitC)$logtest[3][[1]]
-	    } else {
-		fitC <- coxph(srv~grp+cluster(subject))
-		print(str(summary(fitC)))
-		p <- summary(fitC)$robscore[3][[1]]
-	    }
+    # pvalue
+    if (nGrp >= 2) {
+	if (is.null(subject)) {
+	    fitC <- coxph(srv~grp)
+	    p <- summary(fitC)$logtest[3][[1]]
+	} else {
+	    fitC <- coxph(srv~grp+cluster(subject))
+	    print(str(summary(fitC)))
+	    p <- summary(fitC)$robscore[3][[1]]
+	}
         p <- paste("p=",format(p, scientific=TRUE, digits=3), sep="")
         text(pval[1], pval[2], p, font=2, cex=0.8)
     }

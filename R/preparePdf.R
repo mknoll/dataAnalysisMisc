@@ -1,4 +1,4 @@
-#' @title Adapts pdf
+#' @title Create tex/pdf files 
 #' @export
 preparePdf <- function(pat, outdir, col="llcc", filename=NULL) {
     sgOut <- stargazer(pat, summary=F, rownames=F)
