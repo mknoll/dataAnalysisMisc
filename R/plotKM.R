@@ -4,11 +4,11 @@
 #' @import pals
 #'
 #' @export
-plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, pleg=NULL, offsetNRisk=-0.2, pval=NULL, ...) {
+plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, pleg=NULL, offsetNRisk=-0.2, pval=NULL, subject=NULL, ...) {
 	# number of groups 
 	nGrp <- length(levels(factor(grp)))
 
-	if (is.null(xlim)) { xlim <- c(0, max(as.numeric(srv))) }
+	if (is.null(xlim)) { xlim <- c(0, max(as.numeric(srv), na.rm=T)) }
 	if (is.null(col)) { col <- kelly()[-1] }
 	if (is.null(xyleg)) { xyleg <- c(xlim[2]*0.7, 0.8) }
     if (is.null(pval)) { pval <- c(xlim[2]*0.7, 0.2) }
@@ -36,8 +36,14 @@ plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, pleg=NULL, offsetN
 
     # pvalue
     if (nGrp >= 2) {
-        fitC <- coxph(srv~grp)
-        p <- summary(fitC)$logtest[3][[1]]
+	if (is.null(subject)) {
+	    fitC <- coxph(srv~grp)
+	    p <- summary(fitC)$logtest[3][[1]]
+	} else {
+	    fitC <- coxph(srv~grp+cluster(subject))
+	    print(str(summary(fitC)))
+	    p <- summary(fitC)$robscore[3][[1]]
+	}
         p <- paste("p=",format(p, scientific=TRUE, digits=3), sep="")
         text(pval[1], pval[2], p, font=2, cex=0.8)
     }
