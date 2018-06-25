@@ -46,8 +46,8 @@ randEffAnalysis <- function(data, pheno,
 	}
 	out <- do.call(rbind, out)
     } else {
-	# Use nlme
-	print("Using nlme")
+	# Use lme4
+	print("Using lme4")
 	out <- foreach(i=1:length(data[,1])) %dopar% {
 	    ## Obtain Model p-value
 	    ret <- NULL
