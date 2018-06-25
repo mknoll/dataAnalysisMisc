@@ -33,13 +33,14 @@ randEffAnalysis <- function(data, pheno,
 	    ## Obtain Model p-value
 	    ret <- NULL
 	    tryCatch({
-		fit0 <- lme(frm0, data=data, rand=rand, method="ML")
-		fit <- lme(frm, data=data, rand=rand, method="ML")
+		df <- data.frame(VAL=data[i,], pheno)
+		fit0 <- lme(frm0, data=df, rand=rand, method="ML")
+		fit <- lme(frm, data=df, rand=rand, method="ML")
 		aP <- anova(fit0, fit)[2,9]
 		if (reCalcREML) {
-		    fit <- lme(frm, data=data, rand=rand)
+		    fit <- lme(frm, data=df, rand=rand)
 		}
-		ret <- data.frame(summary(fit)$tTable[-1,,drop=F], anovaP=aP, i=i, ID=rownames(i)[i])
+		ret <- data.frame(summary(fit)$tTable[-1,,drop=F], anovaP=aP, i=i, ID=rownames(data)[i])
 	    }, error=function(e) { })
 	    ret
 	}
