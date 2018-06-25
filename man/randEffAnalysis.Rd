@@ -5,6 +5,6 @@
 \title{Model based analysis with random effects}
 \usage{
 randEffAnalysis(data, pheno, frm0 = as.formula(VAL ~ 1),
-  frm = as.formula(VAL ~ GRP), rand = NULL, nCores = NULL,
-  reCalcREML = F)
+  frm = as.formula(VAL ~ GRP), rand = as.formula(~1 | ID), nCores = NULL,
+  reCalcREML = T, complete.cases = T)
 }
