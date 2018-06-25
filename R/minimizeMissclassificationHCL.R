@@ -38,7 +38,7 @@ minimizeMissclassificationHCL <- function(data, res, class,
         print(paste("Clustering method:", cm))
         out <- foreach(cut=cuts) %dopar% {
 	    i <- which(cut == cuts)
-	    cat(paste("\r    ", round(i/length(cuts)), "%  ", sep=""))
+	    cat(paste("\r    ", round(i/length(cuts)*100), "%  ", sep=""))
 	    vec <- NULL
 	    tryCatch({
 		pm <- pheatmap::pheatmap(data[which(rownames(data) %in% res[1:cut]),], silent=T)
