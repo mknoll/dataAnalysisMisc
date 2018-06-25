@@ -10,7 +10,7 @@
 randEffAnalysis <- function(data, pheno, 
 			    frm0=as.formula(VAL~1), 
 			    frm=as.formula(VAL~GRP),
-			    rand=NULL, nCores=NULL,
+			    rand=as.formula(~1|ID), nCores=NULL,
 			    reCalcREML=T) {
     if (is.null(nCores)) {
 	nCores <- parallel::detectCores() - 1
