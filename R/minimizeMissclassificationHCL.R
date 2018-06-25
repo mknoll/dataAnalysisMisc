@@ -16,7 +16,7 @@
 #' 
 minimizeMissclassificationHCL <- function(data, res, class,
                                           clst_method=c("complete", "ward.D2"),
-                                          test="chisq") {
+                                          test="chisq", by=1) {
     total <- list()
     
     ##use parallel computing
@@ -24,7 +24,7 @@ minimizeMissclassificationHCL <- function(data, res, class,
     no_cores <- ifelse(no_cores == 0, 1, no_cores)
     doParallel::registerDoParallel(no_cores)
     
-    cuts <- seq(from=2, to=length(res), by=1)
+    cuts <- seq(from=2, to=length(res), by=by)
     
     for (cm in clst_method) {
         print(paste("Clustering method:", cm))
