@@ -11,7 +11,14 @@ randEffAnalysis <- function(data, pheno,
 			    frm0=as.formula(VAL~1), 
 			    frm=as.formula(VAL~GRP),
 			    rand=as.formula(~1|ID), nCores=NULL,
-			    reCalcREML=T) {
+			    reCalcREML=T, complete.cases=T) {
+    ## Check for missing data
+    if (!complete.cases && any(is.na(data) || is.infinite(data))) {
+	stop("NAs or Inf values found!. Set complete.cases to T")
+    } else {
+	data <- data[complete.cases(data*0),,drop=F]
+    }
+
     if (is.null(nCores)) {
 	nCores <- parallel::detectCores() - 1
 	nCores <- ifelse(nCores == 0, 1, nCores)
