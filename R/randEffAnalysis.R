@@ -8,9 +8,9 @@
 #'
 #' @export
 randEffAnalysis <- function(data, pheno, 
-			    frm0=as.formula(VAL~1), 
-			    frm=as.formula(VAL~GRP),
-			    rand=as.formula(~1|ID), nCores=NULL,
+			    frm0=as.formula(VAL~1 + (1|ID)), 
+			    frm=as.formula(VAL~GRP + (1|ID)),
+			    rand=NULL, nCores=NULL,
 			    reCalcREML=T, complete.cases=T) {
     ## Check for missing data
     if (!complete.cases && any(is.na(data) || is.infinite(data))) {
@@ -22,11 +22,12 @@ randEffAnalysis <- function(data, pheno,
     if (is.null(nCores)) {
 	nCores <- parallel::detectCores() - 1
 	nCores <- ifelse(nCores == 0, 1, nCores)
-	doParallel::registerDoParallel(nCores)
     }
+    doParallel::registerDoParallel(nCores)
 
     out <- NULL
     if (!is.null(rand)) {
+	stop("currently DEFUNCT!")
 	# Use nlme
 	print("Using nlme")
 	out <- foreach(i=1:length(data[,1])) %dopar% {
@@ -36,15 +37,34 @@ randEffAnalysis <- function(data, pheno,
 		df <- data.frame(VAL=data[i,], pheno)
 		fit0 <- nlme::lme(frm0, data=df, rand=rand, method="ML")
 		fit <- nlme::lme(frm, data=df, rand=rand, method="ML")
-		aP <- anova(fit0, fit)[2,9]
+		### BREAKS THE FUNCTION
+		aP <- anova(fit, fit0)[2,9]
 		if (reCalcREML) {
-		    fit <- nlme::lme(frm, data=df, rand=rand)
 		}
 		ret <- data.frame(summary(fit)$tTable[-1,,drop=F], anovaP=aP, i=i, ID=rownames(data)[i])
-	    }, error=function(e) { })
-	    ret
+	    }, error=function(e) { print(e) })
 	}
 	out <- do.call(rbind, out)
+    } else {
+	# Use nlme
+	print("Using nlme")
+	out <- foreach(i=1:length(data[,1])) %dopar% {
+	    ## Obtain Model p-value
+	    ret <- NULL
+	    tryCatch({
+		df <- data.frame(VAL=data[i,], pheno)
+		fit0 <- lmer(frm0, data=df, REML=F)
+		fit <- lmer(frm, data=df,  REML=F)
+		aP <- anova(fit, fit0)[2,8]
+		if (reCalcREML) {
+		    fit <- lmer(frm, data=df,  REML=T)
+		}
+		ret <- data.frame(summary(fit)$coef[-1,,drop=F], anovaP=aP, i=i, ID=rownames(data)[i])
+	    }, error=function(e) { print(e) })
+	}
+	out <- do.call(rbind, out)
+	##add two-sided p.value
+	out$p.value <- 2*pnorm(-abs(out$t.value))
     }
     
     doParallel::stopImplicitCluster()
