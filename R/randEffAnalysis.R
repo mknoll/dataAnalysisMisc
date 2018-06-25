@@ -34,11 +34,11 @@ randEffAnalysis <- function(data, pheno,
 	    ret <- NULL
 	    tryCatch({
 		df <- data.frame(VAL=data[i,], pheno)
-		fit0 <- lme(frm0, data=df, rand=rand, method="ML")
-		fit <- lme(frm, data=df, rand=rand, method="ML")
+		fit0 <- nlme::lme(frm0, data=df, rand=rand, method="ML")
+		fit <- nlme::lme(frm, data=df, rand=rand, method="ML")
 		aP <- anova(fit0, fit)[2,9]
 		if (reCalcREML) {
-		    fit <- lme(frm, data=df, rand=rand)
+		    fit <- nlme::lme(frm, data=df, rand=rand)
 		}
 		ret <- data.frame(summary(fit)$tTable[-1,,drop=F], anovaP=aP, i=i, ID=rownames(data)[i])
 	    }, error=function(e) { })
