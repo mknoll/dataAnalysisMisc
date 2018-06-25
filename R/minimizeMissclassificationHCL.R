@@ -16,7 +16,8 @@
 #' 
 minimizeMissclassificationHCL <- function(data, res, class,
                                           clst_method=c("complete", "ward.D2"),
-                                          test="chisq", by=1, complete.cases=T) {
+                                          test="chisq", by=1, complete.cases=T,
+					  nClust=2) {
     ## Chekc for NA,Inf
     if (!complete.cases && any(is.na(data) | is.infinite(data))) {
 	stop("NA/Inf found. Set complete.cases to T")
@@ -32,7 +33,7 @@ minimizeMissclassificationHCL <- function(data, res, class,
     
     total <- list()
     
-    cuts <- seq(from=2, to=length(res), by=by)
+    cuts <- seq(from=1, to=length(res), by=by)
     
     for (cm in clst_method) {
         print(paste("Clustering method:", cm))
@@ -42,7 +43,7 @@ minimizeMissclassificationHCL <- function(data, res, class,
 	    vec <- NULL
 	    tryCatch({
 		pm <- pheatmap::pheatmap(data[which(rownames(data) %in% res[1:cut]),], silent=T)
-		pm.clust <- cutree(pm$tree_col, 2)
+		pm.clust <- cutree(pm$tree_col, nClust)
 		p.val <- NA
 		if (test == "chisq") {
 		    p.val <- chisq.test(pm.clust, class)$p.value
