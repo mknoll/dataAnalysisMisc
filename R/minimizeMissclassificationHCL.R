@@ -39,15 +39,19 @@ minimizeMissclassificationHCL <- function(data, res, class,
         out <- foreach(cut=cuts) %dopar% {
 	    i <- which(cut == cuts)
 	    cat(paste("\r    ", round(i/length(cuts)), "%  ", sep=""))
-            pm <- pheatmap::pheatmap(data[which(rownames(data) %in% res[1:cut]),], silent=T)
-            pm.clust <- cutree(pm$tree_col, 2)
-            p.val <- NA
-            if (test == "chisq") {
-                p.val <- chisq.test(pm.clust, class)$p.value
-            } else {
-                p.val <- fisher.test(table(pm.clust, class))$p.value
-            }
-            vec <- data.frame(cutoff=cut, p.val=p.val, cl_meth=cm)
+	    vec <- NULL
+	    tryCatch({
+		pm <- pheatmap::pheatmap(data[which(rownames(data) %in% res[1:cut]),], silent=T)
+		pm.clust <- cutree(pm$tree_col, 2)
+		p.val <- NA
+		if (test == "chisq") {
+		    p.val <- chisq.test(pm.clust, class)$p.value
+		} else {
+		    p.val <- fisher.test(table(pm.clust, class))$p.value
+		}
+		vec <- data.frame(cutoff=cut, p.val=p.val, cl_meth=cm)
+	    }, error=function(e) {})
+	    vec
         }
         tmp <- do.call(rbind, out)
         tmp <- tmp[order(tmp$p.val),]
