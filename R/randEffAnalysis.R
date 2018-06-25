@@ -26,7 +26,7 @@ randEffAnalysis <- function(data, pheno,
     }
 
     out <- NULL
-    if (is.null(rand)) {
+    if (!is.null(rand)) {
 	# Use nlme
 	print("Using nlme")
 	out <- foreach(i=1:length(data[,1])) %dopar% {
