@@ -13,7 +13,7 @@
 #' @param frm0 Null-model formula
 #' @param frm Full-model formula
 #' @param type type of analysis, can be "lm" (lmer), 
-#' "nb" (glmer.nb), "qp" (glmer, family=quasipoisson(link=log))
+#' "nb" (glmer.nb), "p" (glmer, family=poisson(link=log))
 #' @param rand random formula required in nlme, if provided,
 #' lmer will be used for "lm"
 #' @param nCores number of cores to use
@@ -86,10 +86,10 @@ randEffAnalysis <- function(data, pheno,
 		    a <- anova(fit0, fit, test="LRT")
 		    aP <- a[2,8]
 		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], i=i, aP=aP)
-		} else if (type == "qp") {
+		} else if (type == "p") {
 		    ##quasipoisson
-		    fit0  <- glmer(frm0, family=quasipoisson(link=log), data=df)
-		    fit  <- glmer(frm, family=quasipoisson(link=log), data=df)
+		    fit0  <- glmer(frm0, family=poisson(link=log), data=df)
+		    fit  <- glmer(frm, family=poisson(link=log), data=df)
 		    a <- anova(fit0, fit, test="LRT")
 		    aP <- a[2,5]
 		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], i=i,  aP=aP)
