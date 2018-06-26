@@ -20,8 +20,10 @@ fixedEffAnalysis <- function(data, pheno,
 			    frm=as.formula(VAL~GRP ),
 			    type="lm",
 			    nCores=NULL,
-			    complete.cases=T,
+			    complete.cases=F,
 			    padj="BH") {
+    rownames(data) <- as.character(1:length(data[,1]))
+
     ## Check for missing data
     if (!complete.cases && any(is.na(data) || is.infinite(data))) {
 	stop("NAs or Inf values found!. Set complete.cases to T")
@@ -47,7 +49,7 @@ fixedEffAnalysis <- function(data, pheno,
 		fit0 <- lm(frm0, data=df)
 		fit <- lm(frm, data=df)
 		aP <- anova(fit, fit0)[2,6]
-		ret <- data.frame(summary(fit)$coef[-1,,drop=F], anovaP=aP, i=i, ID=rownames(data)[i])
+		ret <- data.frame(summary(fit)$coef[-1,,drop=F], anovaP=aP, i=i, RN=rownames(data)[i])
 	    } else {
 		stop("Not implemented yet!")
 	    }

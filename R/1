@@ -1,0 +1,110 @@
+```{r}
+require(data.table)
+devtools::install_github("mknoll/dataAnalysisMisc")
+require(dataAnalysisMisc)
+```
+
+## Load data new
+```{r}
+fn <- "../data/IlluminaMicroArray/all.qnorm_annotated.txt"
+
+require(data.table)
+source("../../dataAnalysisMisc/dataAnalysisMisc/R/sumo.R")
+
+exp <- new("matrixSUMO", fn)
+```
+
+
+## Load Data
+```{r}
+data <- data.frame(fread("../data/IlluminaMicroArray/all.qnorm_annotated.txt"))
+
+pheno <- data.frame(t(data[1:4, 33:length(data[1,])]))
+colnames(pheno) <- c("N", "GRP", "TREAT", "ADD")
+expr <- data.matrix(data[-c(1:4),33:length(data[1,])])
+anno <- data[-c(1:4), 1:33]
+
+## aggregate expr by gene / mean 
+exprAgg <- aggregate(expr, by=list(ILMN_Gene=anno$ILMN_Gene), mean)
+rownames(exprAgg) <- exprAgg$ILMN_Gene
+exprAgg <- exprAgg[,-1]
+expr <- data.matrix(exprAgg )
+anno <- anno[match(rownames(exprAgg), anno$ILMN_Gene),]
+rownames(anno) <- anno$ILMN_Gene
+
+### dimensions ok?
+length(expr[,1]) == length(anno[,1])
+
+### Distirbution
+hist(expr)
+expr.lg <- log(expr)
+hist(expr.lg)
+
+
+##### 1h, 25, 4d
+pheno$TIME <- ifelse(pheno$ADD == "1h", 1, ifelse(pheno$ADD == "24h", 24, ifelse(pheno$ADD == "day4", 96, NA)))
+pheno$TIME_KAT <- as.numeric(factor(pheno$TIME))
+table(pheno$TIME, pheno$TIME_KAT)
+
+## flank: ansteigende tumorgroesse
+pheno$SIZE <- ifelse(pheno$ADD %in% c("flank", "1000mm", "endpoint"), as.character(pheno$ADD), NA)
+pheno$SIZE <- factor(pheno$SIZE, levels=c("flank", "1000mm", "endpoint"))
+
+## GRP reference
+table(pheno$GRP)
+pheno$GRP <- relevel(pheno$GRP, "shCtrl")
+```
+
+## Subset expr data
+```{r}
+mads <- apply(expr.lg, 1, mad)
+#50%
+selE <- which(mads > quantile(mads, na.rm=T,  0.5)[[1]])
+exprSub <- expr.lg[selE,]
+annoSub <- anno[selE,]
+```
+
+### Differentiell über Zeit 
+```{r}
+## remove TIME == NA
+sel <- which(!is.na(pheno$TIME))
+res <- fixedEffAnalysis(exprSub[,sel], 
+			pheno[sel,],
+			frm=as.formula(VAL~GRP*TIME*TREAT),
+			padj="bonf")
+res$SYMBOL <- res$ID
+
+##p-value filtering
+res <- res[which(res$padjModellLRT < 0.05),]
+
+# 3-fach Interaktion
+resI <- res[which(grepl(":TIME:", rownames(res))),]
+resI <- resI[which(resI$Pr...t.. < 0.05),]
+resI <- resI[rev(order(resI$Estimate)),]
+
+genes <- resI$SYMBOL
+
+i <-1
+require(lattice)
+mD <- melt(expr.lg[which(anno$ILMN_Gene %in% genes[i]),sel,drop=F])
+mD <- cbind(mD, pheno[match(mD[,2], rownames(pheno)),])
+xyplot(value~GRP|TREAT*TIME , data=mD, type=c("p"), pch=19 , main=genes[i],
+       panel=function(x,y, ...) {
+	   panel.xyplot(x,y,...)
+	   panel.linejoin(x,y,horizontal=F)
+       })
+
+require(pheatmap)
+dat <- t(scale(t(exprSub[which(rownames(exprSub) %in% genes),sel])))
+dat <- data.frame(dat)
+ord <- order(pheno$GRP[sel], pheno$TREAT[sel], pheno$TIME[sel])
+pheatmap(dat[,ord], show_colnames=F, show_rownames=F, cluster_cols=F,  
+	 annotation_col=pheno[sel, c("TIME", "GRP", "TREAT")], cellwidth=10, cellheight=2,
+	 treeheight_row=0
+	 )
+
+
+```
+
+
+

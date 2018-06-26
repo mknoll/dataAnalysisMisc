@@ -4,7 +4,28 @@
 \alias{randEffAnalysis}
 \title{Model based analysis with random effects}
 \usage{
-randEffAnalysis(data, pheno, frm0 = as.formula(VAL ~ 1),
-  frm = as.formula(VAL ~ GRP), rand = as.formula(~1 | ID), nCores = NULL,
-  reCalcREML = T, complete.cases = T)
+randEffAnalysis(data, pheno, frm0 = as.formula(VAL ~ 1 + (1 | ID)),
+  frm = as.formula(VAL ~ GRP + (1 | ID)), type = "lm", rand = NULL,
+  nCores = NULL, reCalcREML = T, complete.cases = T)
+}
+\arguments{
+\item{data}{data.frame containg a sample per column and 
+one gene per row}
+
+\item{pheno}{Pheno data.frame with columns representing variables
+and rows patients. Must be matched.}
+
+\item{frm0}{Null-model formula}
+
+\item{frm}{Full-model formula}
+
+\item{type}{type of analysis, can be "lm" (lmer), 
+"nb" (glmer.nb), "qp" (glm, family=quasipoisson(link=log))}
+
+\item{rand}{random formula required in nlme, if provided,
+lmer will be used for "lm"}
+
+\item{nCores}{number of cores to use}
+
+\item{complete.cases}{automatically remove incomplete data (NA, Inf)}
 }

@@ -6,7 +6,7 @@
 of evaluated candidates}
 \usage{
 minimizeMissclassificationHCL(data, res, class, clst_method = c("complete",
-  "ward.D2"), test = "chisq")
+  "ward.D2"), test = "chisq", by = 1, complete.cases = T, nClust = 2)
 }
 \arguments{
 \item{data}{data.frame containing the data to be analyzed}
