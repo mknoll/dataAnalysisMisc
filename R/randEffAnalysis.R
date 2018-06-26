@@ -45,6 +45,7 @@ randEffAnalysis <- function(data, pheno,
 	# Use nlme
 	print("Using nlme")
 	out <- foreach(i=1:length(data[,1])) %dopar% {
+	    cat(paste("\r  ", round(i/length(data[,1])*100), "%       ", sep=""))
 	    ## Obtain Model p-value
 	    ret <- NULL
 	    tryCatch({
@@ -63,6 +64,7 @@ randEffAnalysis <- function(data, pheno,
 	# Use lme4
 	print("Using lme4")
 	out <- foreach(i=1:length(data[,1])) %dopar% {
+	    cat(paste("\r  ", round(i/length(data[,1])*100), "%       ", sep=""))
 	    ## Obtain Model p-value
 	    ret <- NULL
 	    tryCatch({
