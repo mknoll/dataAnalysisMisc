@@ -44,16 +44,16 @@ setMethod("initialize", "matrixSUMO",
 
 	      print("Splitting data ... ")
 	      ## First probeID / row split 
-	      wR <- which(!is.na(as.numeric(as.character(exp@sumoData$ProbeID))))[1]
-	      toR <- length(exp@sumoData[,1])
+	      wR <- which(!is.na(as.numeric(as.character(.Object@sumoData$ProbeID))))[1]
+	      toR <- length(.Object@sumoData[,1])
 	      ## First sampleID / col split 
-	      wC <- which(colnames(exp@sumoData) == "Ari.mean")+1
-	      toC <- length(exp@sumoData[1,])
+	      wC <- which(colnames(.Object@sumoData) == "Ari.mean")+1
+	      toC <- length(.Object@sumoData[1,])
 	      
-	      .Object@expr <- as.matrix(data.matrix(exp@sumoData[wR:toR, wC:toC]))
-	      .Object@anno <- data.frame(exp@sumoData[wR:toR, 1:(wC-1)])
-	      .Object@pheno <- data.frame(t(data.frame(exp@sumoData[1:(wR-1), wC:toC])))
-	      colnames(.Object@pheno) <- exp@sumoData$ProbeID[1:(wR-1)]
+	      .Object@expr <- as.matrix(data.matrix(.Object@sumoData[wR:toR, wC:toC]))
+	      .Object@anno <- data.frame(.Object@sumoData[wR:toR, 1:(wC-1)])
+	      .Object@pheno <- data.frame(t(data.frame(.Object@sumoData[1:(wR-1), wC:toC])))
+	      colnames(.Object@pheno) <- .Object@sumoData$ProbeID[1:(wR-1)]
 	      ## TODO_: Check dimensions
 	      
 	      .Object@selRow <- 1:length(.Object@expr[,1])
