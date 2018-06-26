@@ -92,7 +92,7 @@ randEffAnalysis <- function(data, pheno,
 		    fit  <- glm(frm, family=quasipoisson(link=log), data=df)
 		    a <- anova(fit0, fit, test="LRT")
 		    aP <- a[2,5]
-		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], i=i, t(tbl[1,]), aP=aP)
+		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], i=i,  aP=aP)
 		}
 
 	    }, error=function(e) { print(e) })
