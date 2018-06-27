@@ -27,8 +27,7 @@
 #'	srv <- Surv(time, status)
 #' 	grp <- c(rep("A", 3), rep("B", 3))
 #' 	plotKM(srv, grp)
-plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, yDelta=0.1, nRiskCat=4, pval=NULL, mar=NULL,
-		   ...) {
+plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, yDelta=0.1, nRiskCat=4, pval=NULL, mar=NULL, subject=NULL,  ...) {
 	# number of groups 
 	nGrp <- length(levels(factor(grp)))
 
