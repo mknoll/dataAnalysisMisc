@@ -3,7 +3,6 @@
 #' @import parallel
 #' @import doParallel
 #' @import foreach
-#' @import nlme
 #' @import lme4
 #' 
 #' @param data data.frame containg a sample per column and 
@@ -81,13 +80,15 @@ randEffAnalysis <- function(data, pheno,
 		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], anovaP=aP, i=i, ID=rownames(data)[i])
 		} else if (type == "nb") {
 		    ##negative binomial
-		    fit0 <- glmer.nb(frm0, data=df)
-		    fit <- glmer.nb(frm, data=df)
-		    a <- anova(fit0, fit, test="LRT")
-		    aP <- a[2,8]
-		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], i=i, aP=aP)
+		    tryCatch({
+			fit0 <- glmer.nb(frm0, data=df)
+			fit <- glmer.nb(frm, data=df)
+			a <- anova(fit0, fit, test="LRT")
+			aP <- a[2,8]
+			ret <- data.frame(summary(fit)$coef[-1,,drop=F], i=i, aP=aP)
+		    }, error=function(e) { })
 		} else if (type == "p") {
-		    ##quasipoisson
+		    ##poisson
 		    fit0  <- glmer(frm0, family=poisson(link=log), data=df)
 		    fit  <- glmer(frm, family=poisson(link=log), data=df)
 		    a <- anova(fit0, fit, test="LRT")
