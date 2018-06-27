@@ -98,15 +98,13 @@ randEffAnalysis <- function(data, pheno,
 		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], i=i,  aP=aP)
 		}, error=function(e) { })
 	    }
-
-	}, error=function(e) { print(e) })
-    }
+	}
 
 	if (!"p.value" %in% colnames(out) && "t.value" %in% colnames(out)) {
 	    out$p.value <- 2*pnorm(-abs(out$t.value))
 	}
     }
-    
+
     doParallel::stopImplicitCluster()
 
     return(out)
