@@ -66,11 +66,11 @@ randEffAnalysis <- function(data, pheno,
 	    cat(paste("\r  ", round(i/length(data[,1])*100), "%       ", sep=""))
 	    ## Obtain Model p-value
 	    ret <- NULL
-	    tryCatch({
-		df <- data.frame(VAL=data[i,], pheno)
+	    df <- data.frame(VAL=data[i,], pheno)
 
-		if (type == "lm") {
-		    ##normal distribution
+	    if (type == "lm") {
+		##normal distribution
+		tryCatch({
 		    fit0 <- lmer(frm0, data=df, REML=F)
 		    fit <- lmer(frm, data=df,  REML=F)
 		    aP <- anova(fit, fit0)[2,8]
@@ -78,27 +78,29 @@ randEffAnalysis <- function(data, pheno,
 			fit <- lmer(frm, data=df,  REML=T)
 		    }
 		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], anovaP=aP, i=i, ID=rownames(data)[i])
-		} else if (type == "nb") {
-		    ##negative binomial
-		    tryCatch({
-			fit0 <- glmer.nb(frm0, data=df)
-			fit <- glmer.nb(frm, data=df)
-			a <- anova(fit0, fit, test="LRT")
-			aP <- a[2,8]
-			ret <- data.frame(summary(fit)$coef[-1,,drop=F], i=i, aP=aP)
-		    }, error=function(e) { })
-		} else if (type == "p") {
-		    ##poisson
+		}, error=function(e) { })
+	    } else if (type == "nb") {
+		##negative binomial
+		tryCatch({
+		    fit0 <- glmer.nb(frm0, data=df)
+		    fit <- glmer.nb(frm, data=df)
+		    a <- anova(fit0, fit, test="LRT")
+		    aP <- a[2,8]
+		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], i=i, aP=aP)
+		}, error=function(e) { })
+	    } else if (type == "p") {
+		##poisson
+		tryCatch({
 		    fit0  <- glmer(frm0, family=poisson(link=log), data=df)
 		    fit  <- glmer(frm, family=poisson(link=log), data=df)
 		    a <- anova(fit0, fit, test="LRT")
 		    aP <- a[2,5]
 		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], i=i,  aP=aP)
-		}
+		}, error=function(e) { })
+	    }
 
-	    }, error=function(e) { print(e) })
-	}
-	out <- do.call(rbind, out)
+	}, error=function(e) { print(e) })
+    }
 
 	if (!"p.value" %in% colnames(out) && "t.value" %in% colnames(out)) {
 	    out$p.value <- 2*pnorm(-abs(out$t.value))
