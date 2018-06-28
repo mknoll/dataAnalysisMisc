@@ -20,7 +20,7 @@ and rows patients. Must be matched.}
 \item{frm}{Full-model formula}
 
 \item{type}{type of analysis, can be "lm" (lmer), 
-"nb" (glmer.nb), "qp" (glm, family=quasipoisson(link=log))}
+"nb" (glmer.nb), "p" (glmer, family=poisson(link=log))}
 
 \item{rand}{random formula required in nlme, if provided,
 lmer will be used for "lm"}
