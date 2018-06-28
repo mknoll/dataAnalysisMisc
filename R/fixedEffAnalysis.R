@@ -3,6 +3,7 @@
 #' @import parallel
 #' @import doParallel
 #' @import foreach
+#' @import MASS
 #' 
 #' @param data data.frame containg a sample per column and 
 #' one gene per row
@@ -41,19 +42,28 @@ fixedEffAnalysis <- function(data, pheno,
 	cat(paste("\r   ", round(i/length(data[,1])*100), "%      ",sep=""))
 	## Obtain Model p-value
 	ret <- NULL
-	tryCatch({
-	    df <- data.frame(VAL=data[i,], pheno)
+	df <- data.frame(VAL=data[i,], pheno)
 
-	    if (type == "lm") {
+	if (type == "lm") {
+	    tryCatch({
 		##normal distribution
 		fit0 <- lm(frm0, data=df)
 		fit <- lm(frm, data=df)
 		aP <- anova(fit, fit0)[2,6]
 		ret <- data.frame(summary(fit)$coef[-1,,drop=F], anovaP=aP, i=i, RN=rownames(data)[i])
-	    } else {
-		stop("Not implemented yet!")
-	    }
-	}, error=function(e) { print(e) })
+	    }, error=function(e) { print(e) })
+	} else if (type == "nb") {
+	    tryCatch({
+		##normal distribution
+		fit0 <- glm.nb(frm0, data=df)
+		fit <- glm.nb(frm, data=df)
+		aP <- anova(fit, fit0)[2,8]
+		ret <- data.frame(summary(fit)$coef[-1,,drop=F], anovaP=aP, i=i, RN=rownames(data)[i])
+	    }, error=function(e) { print(e) })
+	} else {
+	    stop("Not implemented yet!")
+	    return(NULL)
+	}
     }
     out <- do.call(rbind, out)
 
