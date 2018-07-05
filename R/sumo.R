@@ -127,3 +127,29 @@ plotSingle <- function(obj, gene, sel, frm=as.formula(value~GRP|TREAT*TIME)) {
 	   })
 }
 
+
+#' @title Export SUMO matrix
+#' @import data.table
+#' @export
+exportSUMO <- function(obj, filename=NULL) {
+    print("Merge pheno and expression data ... ")
+    pe <- rbind(t(obj@pheno), obj@expr)
+    
+    print("Prepare Annotation data ... ")
+    placeholder <- matrix(nrow=length(obj@pheno[1,]), ncol=length(obj@anno[1,]), NA)
+    colnames(placeholder) <- colnames(obj@anno)
+
+    print("Merge all data ... ")
+    anno2 <- rbind(placeholder, obj@anno)
+    anno2[,2] <- as.character(anno2[,1])
+    anno2[1:length(obj@pheno[1,]),1] <- colnames(obj@pheno)
+
+    final <- cbind(anno2, pe)
+
+    if (!is.null(filename)) {
+	print("Writing file ... ")
+	fwrite(final, finlename, quote=F)
+    }
+
+    return(final)
+}
