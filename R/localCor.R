@@ -18,6 +18,9 @@ localCor <- function(data, len=3, cutLow=-0.9, cutHigh=0.9, corMethod="pearson")
     ## similariy matrix
     to <- length(data[,1])-len
     tmp <- foreach(i=1:to) %dopar% {
+	if (i %% 100 == 0) {
+	    cat(paste("\r    ", round(i/to*100), "%", sep=""))
+	}
 	## select relevatn data
 	d <- data[i:(i+len),]
 	cM <- cor(d)
