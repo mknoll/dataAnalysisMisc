@@ -29,14 +29,18 @@ localCor <- function(data, len=3, cutLow=-0.9, cutHigh=0.9, corMethod="pearson")
 	mN <- mP <- m
 
 	#negative
-	mN[which(mN > cutLow | is.na(mN))] <- 0
+	if (!is.null(cutLow)) {
+		mN[which(mN > cutLow | is.na(mN))] <- 0
+	}
 	#positive
-	mP[which(mP < cutHigh | is.na(mP))] <- 0
-
+	if (!is.null(cutHigh)) {
+		mP[which(mP < cutHigh | is.na(mP))] <- 0
+	}
 	list(mN, mP)
     }
 
     ##aggregate stacks 
+	if (!is.null(cutHigh)) {
     print("\nAggregate pos stack ...")
     pos <- lapply(tmp, function(x) x[[1]])
     posS <- rep(0, length(pos[[1]]))
@@ -46,7 +50,9 @@ localCor <- function(data, len=3, cutLow=-0.9, cutHigh=0.9, corMethod="pearson")
 	}
 	sum(unlist(lapply(pos, function(x) x[i])), na.rm=T)
     }
+	}
 
+	if (!is.null(cutLow)) {
     print("\nAggregate neg stack ...")
     neg <- lapply(tmp, function(x) x[[1]])
     negS <- rep(0, length(neg[[1]]))
@@ -56,11 +62,18 @@ localCor <- function(data, len=3, cutLow=-0.9, cutHigh=0.9, corMethod="pearson")
 	}
 	sum(unlist(lapply(neg, function(x) x[i])), na.rm=T)
     }
+}
 
     print("Reformat data .. ")
     #restore matrix format
+ 	posM  <- NULL
+	negM  <- NULL
+	if (!is.null(cutHigh)) {
     posM <- matrix(nrow=length(data[1,]), ncol=length(data[1,]), posS)
+	}
+	if (!is.null(cutLow)) {
     negM <- matrix(nrow=length(data[1,]), ncol=length(data[1,]), negS)
+	}
     
     doParallel::stopImplicitCluster()
 
