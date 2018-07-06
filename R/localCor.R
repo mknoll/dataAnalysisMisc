@@ -42,7 +42,7 @@ localCor <- function(data, len=3, cutLow=-0.9, cutHigh=0.9, corMethod="pearson")
     posS <- rep(0, length(pos[[1]]))
     posS <- foreach(i=1:length(posS)) %dopar% {
 	if (i %% 100 == 0) {
-	    cat(paste("\r    ", round(i/to*100), "%", sep=""))
+	    cat(paste("\r    ", round(i/length(posS)*100), "%", sep=""))
 	}
 	sum(unlist(lapply(pos, function(x) x[i])), na.rm=T)
     }
@@ -52,7 +52,7 @@ localCor <- function(data, len=3, cutLow=-0.9, cutHigh=0.9, corMethod="pearson")
     negS <- rep(0, length(neg[[1]]))
     negS <- foreach(i=1:length(negS)) %dopar% {
 	if (i %% 100 == 0) {
-	    cat(paste("\r    ", round(i/to*100), "%", sep=""))
+	    cat(paste("\r    ", round(i/length(negS)*100), "%", sep=""))
 	}
 	sum(unlist(lapply(neg, function(x) x[i])), na.rm=T)
     }
