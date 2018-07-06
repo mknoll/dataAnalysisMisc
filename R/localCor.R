@@ -37,17 +37,27 @@ localCor <- function(data, len=3, cutLow=-0.9, cutHigh=0.9, corMethod="pearson")
     }
 
     ##aggregate stacks 
+    print("\nAggregate pos stack ...")
     pos <- lapply(tmp, function(x) x[[1]])
     posS <- rep(0, length(pos[[1]]))
-    for (i in 1:length(posS)) {
-	posS[i] <- sum(unlist(lapply(pos, function(x) x[i])), na.rm=T)
+    posS <- foreach(i=1:length(posS)) %dopar% {
+	if (i %% 100 == 0) {
+	    cat(paste("\r    ", round(i/to*100), "%", sep=""))
+	}
+	sum(unlist(lapply(pos, function(x) x[i])), na.rm=T)
     }
 
+    print("\nAggregate neg stack ...")
     neg <- lapply(tmp, function(x) x[[1]])
     negS <- rep(0, length(neg[[1]]))
-    for (i in 1:length(negS)) {
-	negS[i] <- sum(unlist(lapply(neg, function(x) x[i])), na.rm=T)
+    negS <- foreach(i=1:length(negS)) %dopar% {
+	if (i %% 100 == 0) {
+	    cat(paste("\r    ", round(i/to*100), "%", sep=""))
+	}
+	sum(unlist(lapply(neg, function(x) x[i])), na.rm=T)
     }
+
+    print("Reformat data .. ")
     #restore matrix format
     posM <- matrix(nrow=length(data[1,]), ncol=length(data[1,]), posS)
     negM <- matrix(nrow=length(data[1,]), ncol=length(data[1,]), negS)
