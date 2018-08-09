@@ -35,3 +35,4 @@ wy <- function(data, grp, B=100) {
     
     return (ret$pval)
 }
+
