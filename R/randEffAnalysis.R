@@ -12,7 +12,8 @@
 #' @param frm0 Null-model formula
 #' @param frm Full-model formula
 #' @param type type of analysis, can be "lm" (lmer), 
-#' "nb" (glmer.nb), "p" (glmer, family=poisson(link=log))
+#' "nb" (glmer.nb), "p" (glmer, family=poisson(link=log)),
+#' "l" (glmer, family=binomial(link=logit))
 #' @param rand random formula required in nlme, if provided,
 #' lmer will be used for "lm"
 #' @param nCores number of cores to use
@@ -97,7 +98,15 @@ randEffAnalysis <- function(data, pheno,
 		    aP <- a[2,5]
 		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], i=i,  aP=aP)
 		}, error=function(e) { })
-	    }
+	    } else if (type == "l") {
+		##binomial / logisitc regression
+		tryCatch({
+		    fit0  <- glmer(frm0, family=binomial(link=logit), data=df)
+		    fit  <- glmer(frm, family=binomial(link=logit), data=df)
+		    a <- anova(fit0, fit, test="LRT")
+		    aP <- a[2,5]
+		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], i=i,  aP=aP)
+		}, error=function(e) { })
 	}
 
 	if (!"p.value" %in% colnames(out) && "t.value" %in% colnames(out)) {
