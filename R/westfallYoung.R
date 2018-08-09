@@ -33,6 +33,5 @@ wy <- function(data, grp, B=100) {
               B=as.integer(B),
               pval=numeric(length(data[,1])))
     
-    return (ret$pval)
+    return(ret$pval)
 }
-

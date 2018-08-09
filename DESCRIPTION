@@ -12,9 +12,13 @@ License: GPL-3
 LazyData: TRUE
 RoxygenNote: 6.0.1
 Imports: Barnard,
+    data.table,
     doParallel,
     foreach,
     forestplot,
+    lattice,
+    lme4,
+    MASS,
     pals,
     pheatmap,
     plotrix,

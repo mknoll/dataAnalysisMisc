@@ -107,6 +107,7 @@ randEffAnalysis <- function(data, pheno,
 		    aP <- a[2,5]
 		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], i=i,  aP=aP)
 		}, error=function(e) { })
+	    }
 	}
 
 	if (!"p.value" %in% colnames(out) && "t.value" %in% colnames(out)) {
@@ -118,3 +119,5 @@ randEffAnalysis <- function(data, pheno,
 
     return(out)
 }
+
+
