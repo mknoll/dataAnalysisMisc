@@ -104,7 +104,6 @@ randEffAnalysis <- function(data, pheno,
 		    fit0  <- glmer(frm0, family=binomial(link=logit), data=df)
 		    fit  <- glmer(frm, family=binomial(link=logit), data=df)
 		    a <- anova(fit0, fit, test="LRT")
-		    print(a)
 		    aP <- a[2,8]
 		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], i=i,  aP=aP)
 		}, error=function(e) { })
