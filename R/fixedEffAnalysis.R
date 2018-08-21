@@ -65,12 +65,15 @@ fixedEffAnalysis <- function(data, pheno,
 	    return(NULL)
 	}
     }
-    out <- do.call(rbind, out)
+    ## FIXME
+    if (F) {
+	out <- do.call(rbind, out)
 
-    if (!is.null(padj)) {
-	tmp <- out[which(!duplicated(out$i)),]
-	tmp$padjModell <- p.adjust(tmp$anovaP, padj)
-	out$padjModellLRT <- tmp$padjModell[match(out$i, tmp$i)]
+	if (!is.null(padj)) {
+	    tmp <- out[which(!duplicated(out$i)),]
+	    tmp$padjModell <- p.adjust(tmp$anovaP, padj)
+	    out$padjModellLRT <- tmp$padjModell[match(out$i, tmp$i)]
+	}
     }
     
     doParallel::stopImplicitCluster()
