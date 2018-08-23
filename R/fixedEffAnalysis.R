@@ -11,7 +11,8 @@
 #' and rows patients. Must be matched. 
 #' @param frm0 Null-model formula
 #' @param frm Full-model formula
-#' @param type type of analysis, can be "lm" (lmer)
+#' @param type type of analysis, can be "lm" (linear), "nb" (negativ binomial),
+#' "bin" (logistic regression)
 #' @param nCores number of cores to use
 #' @param complete.cases automatically remove incomplete data (NA, Inf)
 #'
@@ -60,6 +61,15 @@ fixedEffAnalysis <- function(data, pheno,
 		aP <- anova(fit, fit0)[2,8]
 		ret <- data.frame(summary(fit)$coef[-1,,drop=F], anovaP=aP, i=i, RN=rownames(data)[i])
 	    }, error=function(e) { print(e) })
+	} else if (type == "bin") {
+	    tryCatch({
+		##normal distribution
+		fit0 <- glm(frm0, data=df, family=binomial(link=logit))
+		fit <- glm(frm, data=df, family=binomial(link=logit))
+		aP <- anova(fit, fit0)[2,8]
+		ret <- data.frame(summary(fit)$coef[-1,,drop=F], anovaP=aP, i=i, RN=rownames(data)[i])
+	    }, error=function(e) { print(e) })
+
 	} else {
 	    stop("Not implemented yet!")
 	    return(NULL)
