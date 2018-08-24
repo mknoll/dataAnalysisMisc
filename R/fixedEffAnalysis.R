@@ -66,7 +66,7 @@ fixedEffAnalysis <- function(data, pheno,
 		##normal distribution
 		fit0 <- glm(frm0, data=df, family=binomial(link=logit))
 		fit <- glm(frm, data=df, family=binomial(link=logit))
-		aP <- anova(fit, fit0)[2,8]
+		aP <- anova(fit, fit0, test="LRT")[2,5]
 		ret <- data.frame(summary(fit)$coef[-1,,drop=F], anovaP=aP, i=i, RN=rownames(data)[i])
 	    }, error=function(e) { print(e) })
 
