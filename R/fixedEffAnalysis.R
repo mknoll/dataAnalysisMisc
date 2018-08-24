@@ -26,12 +26,12 @@ fixedEffAnalysis <- function(data, pheno,
 			    padj="BH") {
     rownames(data) <- as.character(1:length(data[,1]))
 
-    ## Check for missing data
-    if (!complete.cases && (any(is.na(data) || any(is.infinite(data))))) {
-	stop("NAs or Inf values found!. Set complete.cases to T")
-    } else {
-	data <- data[complete.cases(data*0),,drop=F]
-    }
+    ## Check for missing data - FIXME
+    #if (!complete.cases && (any(is.na(data) || any(is.infinite(data))))) {
+#	stop("NAs or Inf values found!. Set complete.cases to T")
+#    } else {
+#	data <- data[complete.cases(data*0),,drop=F]
+#    }
 
     if (is.null(nCores)) {
 	nCores <- parallel::detectCores() - 1
