@@ -27,7 +27,7 @@ fixedEffAnalysis <- function(data, pheno,
     rownames(data) <- as.character(1:length(data[,1]))
 
     ## Check for missing data
-    if (!complete.cases && any(is.na(data) || is.infinite(data))) {
+    if (!complete.cases && (any(is.na(data) || any(is.infinite(data))))) {
 	stop("NAs or Inf values found!. Set complete.cases to T")
     } else {
 	data <- data[complete.cases(data*0),,drop=F]
@@ -43,7 +43,7 @@ fixedEffAnalysis <- function(data, pheno,
 	cat(paste("\r   ", round(i/length(data[,1])*100), "%      ",sep=""))
 	## Obtain Model p-value
 	ret <- NULL
-	df <- data.frame(VAL=data[i,], pheno)
+	df <- data.frame(VAL=unlist(data[i,]), pheno)
 
 	if (type == "lm") {
 	    tryCatch({
