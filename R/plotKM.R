@@ -27,7 +27,7 @@
 #'	srv <- Surv(time, status)
 #' 	grp <- c(rep("A", 3), rep("B", 3))
 #' 	plotKM(srv, grp)
-plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, yDelta=0.1, nRiskCat=4, pval=NULL, mar=NULL, subject=NULL,  ...) {
+plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, yDelta=0.1, nRiskCat=4, pval=NULL, mar=NULL, subject=NULL, dist=NULL, ...) {
 	# number of groups 
 	nGrp <- length(levels(factor(grp)))
 
@@ -43,6 +43,15 @@ plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, 
 
 	# plot KM
 	plot(survfit(srv~grp), mark.time=T, xlim=xlim, col=col, ...)
+	# plot parametric survival curves
+	if (!is.null(dist)) {
+	    fitR <- survreg(srv~grp,dist=dist)
+	    for (i in 1:nGrp) {
+		y <- predict(fitR, newdata=list(grp=levels(factor(grp))[i]), type="quantile", p=seq(.01,.99,by=.01))
+		x <- seq(.99,.01,by=-.01)
+		lines(y, x, col=col[i], lty=2, ...)
+	    }
+	}
 
 	# plot median os 
 	fit <- survfit(srv~grp)
