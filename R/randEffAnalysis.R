@@ -4,6 +4,8 @@
 #' @import doParallel
 #' @import foreach
 #' @import lme4
+#' @import glmmTMB
+#' @import lmtest
 #' 
 #' @param data data.frame containg a sample per column and 
 #' one gene per row
@@ -13,7 +15,7 @@
 #' @param frm Full-model formula
 #' @param type type of analysis, can be "lm" (lmer), 
 #' "nb" (glmer.nb), "p" (glmer, family=poisson(link=log)),
-#' "l" (glmer, family=binomial(link=logit))
+#' "l" (glmer, family=binomial(link=logit)), "b" (glmmTMB, family=beta)
 #' @param rand random formula required in nlme, if provided,
 #' lmer will be used for "lm"
 #' @param nCores number of cores to use
@@ -25,13 +27,14 @@ randEffAnalysis <- function(data, pheno,
 			    frm=as.formula(VAL~GRP + (1|ID)),
 			    type="lm",
 			    rand=NULL, nCores=NULL,
-			    reCalcREML=T, complete.cases=T) {
+			    reCalcREML=T, complete.cases=T,
+			    transf=F) {
     ## Check for missing data
-    if (!complete.cases && any(is.na(data) || is.infinite(data))) {
-	stop("NAs or Inf values found!. Set complete.cases to T")
-    } else {
-	data <- data[complete.cases(data*0),,drop=F]
-    }
+    #if (!complete.cases && any(is.na(data))) {
+#	stop("NAs or Inf values found!. Set complete.cases to T")
+#    } else {
+#	data <- data[complete.cases(data*0),,drop=F]
+ #   }
 
     if (is.null(nCores)) {
 	nCores <- parallel::detectCores() - 1
@@ -42,32 +45,12 @@ randEffAnalysis <- function(data, pheno,
     out <- NULL
     if (!is.null(rand)) {
 	stop("currently DEFUNCT!")
-	# Use nlme
-	print("Using nlme")
-	out <- foreach(i=1:length(data[,1])) %dopar% {
-	    cat(paste("\r  ", round(i/length(data[,1])*100), "%       ", sep=""))
-	    ## Obtain Model p-value
-	    ret <- NULL
-	    tryCatch({
-		df <- data.frame(VAL=data[i,], pheno)
-		fit0 <- nlme::lme(frm0, data=df, rand=rand, method="ML")
-		fit <- nlme::lme(frm, data=df, rand=rand, method="ML")
-		### BREAKS THE FUNCTION
-		aP <- anova(fit, fit0)[2,9]
-		if (reCalcREML) {
-		}
-		ret <- data.frame(summary(fit)$tTable[-1,,drop=F], anovaP=aP, i=i, ID=rownames(data)[i])
-	    }, error=function(e) { print(e) })
-	}
-	out <- do.call(rbind, out)
     } else {
-	# Use lme4
-	print("Using lme4")
 	out <- foreach(i=1:length(data[,1])) %dopar% {
 	    cat(paste("\r  ", round(i/length(data[,1])*100), "%       ", sep=""))
 	    ## Obtain Model p-value
 	    ret <- NULL
-	    df <- data.frame(VAL=data[i,], pheno)
+	    df <- data.frame(VAL=unlist(data[i,]), pheno)
 
 	    if (type == "lm") {
 		##normal distribution
@@ -95,7 +78,7 @@ randEffAnalysis <- function(data, pheno,
 		    fit0  <- glmer(frm0, family=poisson(link=log), data=df)
 		    fit  <- glmer(frm, family=poisson(link=log), data=df)
 		    a <- anova(fit0, fit, test="LRT")
-		    aP <- a[2,5]
+		    aP <- a[2,8]
 		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], i=i,  aP=aP)
 		}, error=function(e) { })
 	    } else if (type == "l") {
@@ -106,6 +89,20 @@ randEffAnalysis <- function(data, pheno,
 		    a <- anova(fit0, fit, test="LRT")
 		    aP <- a[2,8]
 		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], i=i,  aP=aP)
+		}, error=function(e) { })
+	    } else if (type == "b") {
+		## beta regression
+		tryCatch({
+		    ## FIXME
+		    df <- df[which(!is.na(df$VAL)),]
+		    if (transf) {
+			df$VAL <- (df$VAL*(length(df$VAL)-1)+0.5)/length(df$VAL)
+		    }
+		    fit0 <- glmmTMB(frm0, data=df, family=list(family="beta", link="logit"))
+		    fit <- glmmTMB(frm, data=df, family=list(family="beta", link="logit"))
+		    pLRT <- lrtest(fit, fit0)[2,5]
+		    ret <- data.frame(t(summary(fit)$coef$cond[-1,] ), i=i, ap=pLRT)
+		    print(ret)
 		}, error=function(e) { })
 	    }
 	}

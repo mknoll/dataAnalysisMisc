@@ -22,7 +22,7 @@ preparePdf <- function(pat, outdir, col="llcc", filename=NULL) {
     sgOut[[length(sgOut)]] <- "\\end{longtable}"
 
 
-    tex <- "\\documentclass{article}  \n \\usepackage{longtable} \n \\pagestyle{empty} \\begin{document} "
+    tex <- "\\documentclass{article} \n \\usepackage[margin=0.1in]{geometry}  \n \\usepackage{longtable} \n \\pagestyle{empty} \\begin{document} "
     tex <- paste(tex, paste(sgOut, collapse="\n"), sep="\n")
     tex <- paste(tex, "\\end{document}", sep="\n")
 
