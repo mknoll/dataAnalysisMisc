@@ -19,7 +19,8 @@ and rows patients. Must be matched.}
 
 \item{frm}{Full-model formula}
 
-\item{type}{type of analysis, can be "lm" (lmer)}
+\item{type}{type of analysis, can be "lm" (linear), "nb" (negativ binomial),
+"bin" (logistic regression)}
 
 \item{nCores}{number of cores to use}
 
