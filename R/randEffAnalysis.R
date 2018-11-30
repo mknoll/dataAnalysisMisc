@@ -101,8 +101,7 @@ randEffAnalysis <- function(data, pheno,
 		    fit0 <- glmmTMB(frm0, data=df, family=list(family="beta", link="logit"))
 		    fit <- glmmTMB(frm, data=df, family=list(family="beta", link="logit"))
 		    pLRT <- lrtest(fit, fit0)[2,5]
-		    ret <- data.frame(t(summary(fit)$coef$cond[-1,] ), i=i, ap=pLRT)
-		    print(ret)
+		    ret <- data.frame(summary(fit)$coef$cond[-1,,drop=F], i=i, ap=pLRT)
 		}, error=function(e) { })
 	    }
 	}
