@@ -29,20 +29,33 @@ preparePdf <- function(pat, outdir, col="llcc", filename=NULL) {
     tf <- paste(trimws(tempfile()), ".tex", sep="")
     write(tex, tf)
     folder <- paste(outdir, substr(Sys.time(), 1, 10), sep="")
-    system(paste("mkdir ", folder, sep=""))
+    #system(paste("mkdir ", folder, sep=""))
+    dir.create(folder)
+
+
     pdfF <- strsplit(tf, "\\.")
     pdfF <- pdfF[[1]][length(pdfF[[1]])-1]
     pdfF <- strsplit(pdfF, "/")
     pdfF <- pdfF[[1]][length(pdfF[[1]])]
     pdfF <- paste(pdfF, ".pdf", sep="")
+
+    ## try to run pdflatex
+    tryCatch({
     cmd <- paste("cd ",folder," && pdflatex ", tf, sep="")
-    system(cmd)
-    system(paste("cp ", tf, " ", folder,"/", sep=""))
+	system(cmd)
+    }, error=function(e) { 
+	warning("Could not run pdflatex!")
+    })
+    file.copy(tf, paste(folder,"/", sep=""))
+    #system(paste("cp ", tf, " ", folder,"/", sep=""))
 
     retName <- paste(folder, "/", pdfF, sep="")
     if (!is.null(filename)) {
-	system(paste(" mv ", tf, " ", folder, "/", filename, ".tex", sep=""))
-	system(paste(" mv ", folder, "/", pdfF , " ", folder, "/", filename, ".pdf", sep=""))
+	file.copy(tf, paste( folder, "/", filename, ".tex", sep=""))
+	#system(paste(" mv ", tf, " ", folder, "/", filename, ".tex", sep=""))
+
+	file.copy(paste(folder, "/", pdfF, sep=""), paste(folder, "/", filename, ".pdf", sep=""))
+	#system(paste(" mv ", folder, "/", pdfF , " ", folder, "/", filename, ".pdf", sep=""))
 	retName <- paste(folder, "/", filename, ".pdf", sep="")
     } 
     #system(paste("mupdf ", folder, "/",pdfF, sep=""))
