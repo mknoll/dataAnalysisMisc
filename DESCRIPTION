@@ -1,7 +1,7 @@
 Package: dataAnalysisMisc
 Type: Package
 Title: Collection of functions for daily tasks
-Version: 0.99.2
+Version: 0.99.3
 Author: Maximilian Knoll
 Maintainer: Maximilian Knoll <m.knoll@dkfz.de>
 Description: Functions for easy survival analysis, cutoff determinations,
