@@ -5,7 +5,8 @@
 \title{Find associations}
 \usage{
 findAssoc(grp, data, test = NULL, kat = "Fisher", filename = NULL,
-  contParam = c("mean", "sd"), latex = F, outdir = "../reports/")
+  contParam = c("mean", "sd"), latex = F, outdir = "../reports/",
+  subject = NULL)
 }
 \description{
 find associations between a given groupin
