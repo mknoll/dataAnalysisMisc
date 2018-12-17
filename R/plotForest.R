@@ -40,10 +40,12 @@ plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "da
 					      N=NA,
 					      NEVENT=NA)
 	    if (is.null(subject)) {
-		fit <- coxph(srv~factor(data[,i]))
+		w <- which(!is.na(data[,i]) & !is.na(srv))
+		fit <- coxph(srv[w]~factor(data[w,i]))
 		tbl <- cbind(summary(fit)$coef, summary(fit)$conf.int, fit$n, fit$nevent)
 	    } else {
-		fit <- coxph(srv~factor(data[,i])+cluster(subject))
+		w <- which(!is.na(data[,i]) & !is.na(srv))
+		fit <- coxph(srv[w]~factor(data[w,i])+cluster(subject[w]))
 		tbl <- cbind(summary(fit)$coef[], summary(fit)$conf.int, fit$n, fit$nevent)
 		tbl <- tbl[,-4,drop=F]
 	    }
@@ -68,10 +70,12 @@ plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "da
 					      N=NA,
 					      NEVENT=NA)
 	    if (is.null(subject)) {
-		fit <- coxph(srv~data[,i])
+		w <- which(!is.na(data[,i]) & !is.na(srv))
+		fit <- coxph(srv[w]~data[w,i])
 		tbl <- cbind(summary(fit)$coef, summary(fit)$conf.int, fit$n, fit$nevent)
 	    } else {
-		fit <- coxph(srv~data[,i]+cluster(subject))
+		w <- which(!is.na(data[,i]) & !is.na(srv))
+		fit <- coxph(srv[w]~data[w,i]+cluster(subject))
 		tbl <- cbind(summary(fit)$coef, summary(fit)$conf.int, fit$n, fit$nevent)
 		tbl <- tbl[,-4,drop=F]
 	    }

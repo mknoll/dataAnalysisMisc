@@ -65,7 +65,8 @@ findAssoc <- function(grp, data, test=NULL, kat="Fisher", filename=NULL,
 	    ### factors 
 	    vals <- droplevels(factor(data[,i]))
 	    ##only one factor: skip
-	    if (length(unique(vals)) == 1) { next }
+	    ## TODO: -> wilson confidence interval
+	    if (length(unique(vals)) == 1) {  next }
 
 	    ## two factors: use barnard for nonpaired data
 	    force <- F
@@ -81,12 +82,13 @@ findAssoc <- function(grp, data, test=NULL, kat="Fisher", filename=NULL,
 		} else {
 		    force <- T
 		}
-		sub[[length(sub)+1]] <- data.frame(name0=NA, name1=rownames(tbl)[1], 
-						   name2=as.character(tbl[1,1]), name3=as.character(tbl[1,2]),p=NA)
-		sub[[length(sub)+1]] <- data.frame(name0=NA, name1=rownames(tbl)[2], 
-						   name2=as.character(tbl[2,1]), name3=as.character(tbl[2,2]),p=NA)
+		#sub[[length(sub)+1]] <- data.frame(name0=NA, name1=rownames(tbl)[1], 
+	#					   name2=as.character(tbl[1,1]), name3=as.character(tbl[1,2]),p=NA)
+#		sub[[length(sub)+1]] <- data.frame(name0=NA, name1=rownames(tbl)[2], 
+#						   name2=as.character(tbl[2,1]), name3=as.character(tbl[2,2]),p=NA)
 	    } 
 	    if (length(unique(vals)) > 2 || force) {
+		tbl <- table(vals, grp)
 		p.val <- NA
 		if (!is.null(subject)) {
 		    ## paired data
@@ -96,12 +98,10 @@ findAssoc <- function(grp, data, test=NULL, kat="Fisher", filename=NULL,
 		} else {
 		    ## non paired data
 		    if (kat == "Fisher") {
-			tbl <- table(vals, grp)
 			tryCatch({
 			    p.val <- fisher.test(tbl)$p.value
 			}, error=function(e) { })
 		    } else {
-			tbl <- table(vals, grp)
 			p.val <- NA
 			tryCatch({
 			    p.val <- chisq.test(tbl)$p.value

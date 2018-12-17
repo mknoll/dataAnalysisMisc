@@ -51,7 +51,9 @@ plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c(
     #preserve level names
     for (i in 1:length(data[1,])) {
 	if (class(data[,i]) == "factor") { 
-	    data[,i] <- as.character(data[,i])
+	    #lvs <- levels(factor(data[,i]))
+	    #data[,i] <- as.character(data[,i])
+	    #data[,i] <- factor(data[,i], levels=lvs)
 	}
     }
 
@@ -138,7 +140,8 @@ plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c(
     }
     uv <- do.call(rbind, uv)
 
-    tabletext<-cbind(c("", as.character(uv[,1])),
+    #tabletext<-cbind(c("", as.character(uv[,1])),
+    tabletext<-cbind(c(paste(fit$n, "/", fit$nevent), as.character(uv[,1])),
 		     c("", as.character(uv[,2])),
 		     c("Hazard Ratio", round(uv[,3],2)),
 		     c("95% CI", paste(round(uv[,4],2), "-", round(uv[,5],2), sep="")),
