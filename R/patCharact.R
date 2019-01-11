@@ -52,6 +52,7 @@ createPatChar <- function(data, subject=NULL, subjVar=NULL, subjRef=NULL, na.rm=
     }
 
     for (i in 1:length(data[1,])) {
+	print(colnames(data)[i])
         if (class(data[,i]) %in% c("character", "factor")) {
             pat[[length(pat)+1]] <- data.frame(name1=colnames(data)[i],
                                                name2=NA,

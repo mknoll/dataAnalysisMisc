@@ -50,6 +50,8 @@ plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, 
 		y <- predict(fitR, newdata=list(grp=levels(factor(grp))[i]), type="quantile", p=seq(.01,.99,by=.01))
 		x <- seq(.99,.01,by=-.01)
 		lines(y, x, col=col[i], lty=2, ...)
+		ww <- which(x == 0.5)
+		print(paste("Median survival time [",levels(factor(grp))[i],"]: ", y[ww], sep=""))
 	    }
 	}
 
