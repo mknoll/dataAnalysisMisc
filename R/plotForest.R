@@ -49,7 +49,7 @@ plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "da
 		tbl <- cbind(summary(fit)$coef[], summary(fit)$conf.int, fit$n, fit$nevent)
 		tbl <- tbl[,-4,drop=F]
 	    }
-	    rownames(tbl) <- substr(rownames(tbl), 18, nchar(rownames(tbl)))
+	    rownames(tbl) <- substr(rownames(tbl), 19, nchar(rownames(tbl)))
 	    for (j in 1:length(tbl[,1])) {
 		uv [[length(uv)+1]] <- data.frame(name1=NA, 
 						  name2=rownames(tbl)[j],
@@ -75,7 +75,7 @@ plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "da
 		tbl <- cbind(summary(fit)$coef, summary(fit)$conf.int, fit$n, fit$nevent)
 	    } else {
 		w <- which(!is.na(data[,i]) & !is.na(srv))
-		fit <- coxph(srv[w]~data[w,i]+cluster(subject))
+		fit <- coxph(srv[w]~data[w,i]+cluster(subject[w]))
 		tbl <- cbind(summary(fit)$coef, summary(fit)$conf.int, fit$n, fit$nevent)
 		tbl <- tbl[,-4,drop=F]
 	    }
