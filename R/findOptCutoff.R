@@ -87,8 +87,8 @@ findOptCutoff <- function(data, srv, delta=0.1, minGrpSize=1, subject=NULL) {
 
 		data.frame(cutoff=cutoff+step, 
 			   p.val=p.val,
-			   nHigh=length(grp[grp == "high"]), 
-			   nLow=length(grp[grp == "low"]), 
+			   nHigh=length(grp[grp == "high" & !duplicated(subject)]), 
+			   nLow=length(grp[grp == "low" & !duplicated(subject)]), 
 			   medianHigh=NA, #summary(fit)$table["grp=high","median"],
 			   medianLow=NA, #summary(fit)$table["grp=low","median"],
 			   delta=delta,
