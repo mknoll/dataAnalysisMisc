@@ -20,7 +20,11 @@ sampleAdj <- function(adj, size=5,
     ret <- .C("startAdj", matrix=as.integer(m), len=length(adj[1,]), 
 	      n=as.integer(n), size=as.integer(size), erg=erg, 
 	      maxTry=as.integer(maxTry), star=as.integer(starTopo))
-    #table(ret$erg)
+    tbl <- table(ret$erg)
+    if (length(tbl)-1 != n) { 
+	warning("To few clusters identified! Try increasing the maxTry parameter.")
+    }
+    print(tbl)
 
     matrix(ret$erg, ncol=length(adj[1,]), nrow=length(adj[1,]))
 }

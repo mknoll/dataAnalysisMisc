@@ -135,12 +135,12 @@ int findeNachbar(int *m, int *visited, int start, int invStart, int len, int siz
     if (max > len*len) { 
 	max = len*len;
     }
-    printf("FROM :%d %d, TO %d\n", c*len, c, max);
+    //printf("FROM :%d %d, TO %d\n", c*len, c, max);
     for (int i = c*len; i < max; i++) {
 	if (m[i] == 1 && visited[i] == 0) {
 	    //Found 
 	    pos = i;
-	    printf("FOUND I: i=%d ADJ %d VISITED %d\n", i, m[i], visited[i]);
+	    //printf("FOUND I: i=%d ADJ %d VISITED %d\n", i, m[i], visited[i]);
 	    rowIndex=i % len;
 	    colIndex=i / len;
 	    printf("->  [%d,%d]\n.", rowIndex, colIndex);
@@ -176,8 +176,7 @@ int findeNachbar(int *m, int *visited, int start, int invStart, int len, int siz
 	invNachbar = len*(nachbar%len)+nachbar/len;
 	visited[nachbar] = clID;
 	visited[invNachbar] = clID;
-	printf("REGISTER\n");
-	printf(" [%d, %d], [%d, %d]", nachbar%len, nachbar / len, invNachbar%len, invNachbar / len);
+	printf("\tREGISTER: [%d, %d], [%d, %d]\n", nachbar%len, nachbar / len, invNachbar%len, invNachbar / len);
 
 	found++;
 	//printf("Currently found: %d\n", found);
