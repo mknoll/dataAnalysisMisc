@@ -45,10 +45,11 @@ findOptCutoff <- function(data, srv, delta=0.1, minGrpSize=1, subject=NULL) {
     ##use parallel computing
     no_cores <- parallel::detectCores() - 1
     no_cores <- ifelse(no_cores == 0, 1, no_cores)
+    ## FIXME
+    if (is.na(no_cores)) { no_cores <- 4 }
     doParallel::registerDoParallel(no_cores)
     
     out <- foreach(cutoff=sq) %dopar% {
-        #print(cutoff)
         grp <- ifelse(data > cutoff, "high", "low")
         cutoff <- cutoff-step
         if (length(levels(factor(grp))) == 2) {
@@ -61,22 +62,26 @@ findOptCutoff <- function(data, srv, delta=0.1, minGrpSize=1, subject=NULL) {
 		grp <- factor(grp)
 		grp <- relevel(grp, "low")
 		fit2 <- coxph(srv~factor(grp))
-
-		data.frame(cutoff=cutoff+step, 
-			   p.val=p.val,
-			   nHigh=length(grp[grp == "high"]), 
-			   nLow=length(grp[grp == "low"]), 
-			   medianHigh=summary(fit)$table["grp=high","median"],
-			   medianLow=summary(fit)$table["grp=low","median"],
-			   delta=delta,
-			   coxph_name=rownames(summary(fit2)$conf.int)[1],
-			   coxph_hr=summary(fit2)$conf.int[1,1],
-			   coxph_lower=summary(fit2)$conf.int[1,3],
-			   coxph_upper=summary(fit2)$conf.int[1,4],
-			   coxph_p=summary(fit2)$coeff[1,5],
-			   coxph_lrt=summary(fit2)$logtest[[3]],
-			   coxph_score=summary(fit2)$sctest[[3]],
-			   coxph_wald=summary(fit2)$waldtest[[3]])
+		
+		df <- NULL
+		tryCatch({
+		    df <- data.frame(cutoff=cutoff+step, 
+			       p.val=p.val,
+			       nHigh=length(grp[grp == "high"]), 
+			       nLow=length(grp[grp == "low"]), 
+			       medianHigh=summary(fit)$table["grp=high","median"],
+			       medianLow=summary(fit)$table["grp=low","median"],
+			       delta=delta,
+			       coxph_name=rownames(summary(fit2)$conf.int)[1],
+			       coxph_hr=summary(fit2)$conf.int[1,1],
+			       coxph_lower=summary(fit2)$conf.int[1,3],
+			       coxph_upper=summary(fit2)$conf.int[1,4],
+			       coxph_p=summary(fit2)$coeff[1,5],
+			       coxph_lrt=summary(fit2)$logtest[[3]],
+			       coxph_score=summary(fit2)$sctest[[3]],
+			       coxph_wald=summary(fit2)$waldtest[[3]])
+		}, error=function(e) { print(e) })
+		df
 	    } else {
 		## paired data
 		# only coxph
@@ -85,7 +90,9 @@ findOptCutoff <- function(data, srv, delta=0.1, minGrpSize=1, subject=NULL) {
 		fit2 <- coxph(srv~factor(grp)+cluster(subject))
 		p.val <- summary(fit2)$logtest[[3]]
 
-		data.frame(cutoff=cutoff+step, 
+		df <- NULL
+		tryCatch({
+		df <- data.frame(cutoff=cutoff+step, 
 			   p.val=p.val,
 			   nHigh=length(grp[grp == "high" & !duplicated(subject)]), 
 			   nLow=length(grp[grp == "low" & !duplicated(subject)]), 
@@ -100,11 +107,16 @@ findOptCutoff <- function(data, srv, delta=0.1, minGrpSize=1, subject=NULL) {
 			   coxph_lrt=summary(fit2)$logtest[[3]],
 			   coxph_score=summary(fit2)$sctest[[3]],
 			   coxph_wald=summary(fit2)$waldtest[[3]])
+		}, error=function(e) { print(e) })
+		df
 	    }
 	}
     }
-    coll <- do.call(rbind, out)
-    coll <- coll[order(coll$p.val),]
+    coll <- NULL
+    tryCatch({
+	coll <- do.call(rbind, out)
+	coll <- coll[order(coll$p.val),]
+    }, error=function(e) { print(e)  })
     
     doParallel::stopImplicitCluster()
     

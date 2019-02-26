@@ -18,6 +18,56 @@ int cmp(const void *x, const void *y);
 double *array; //Needed for sorting
 int *arrayGrp;
 
+//without WY p correction
+void tTest_unpaired_unequalVar_simple(double *data, int *lenRows, int *grp, int *lenGrp, double *df, double *statistic) {
+    //store teststatistic per row
+    double U[lenRows[0]];
+    int i;
+    int j;
+
+    //Get Indices for groups
+    int pos = 0; // First index of second group
+    for (i=1; i < lenGrp[0]; ++i) {
+	//printf("VAL %f\n", data[i]);
+	if (grp[i-1] != grp[i]) {
+	    pos = i;
+	}
+    }
+
+    //Calculate actual testtstiatic
+    //double actTest[lenRows[0]]; 
+    //double actTestAbs[lenRows[0]]; //absolute value
+    //int index[lenRows[0]];
+    for (i=0; i < lenRows[0]; i++) {
+	//Pointer to first element of each row
+	double *start = &data[i*lenGrp[0]]; 
+
+	//calc means and vars
+	double m1 = mean(start, pos); 
+	double m2 = mean(start+pos, lenGrp[0]-pos); 
+	//printf("MEAN 1 %f, MEAN 2 %f \n", m1, m2);
+	double v1 = var(start, m1, pos);
+	double v2 = var(start+pos, m2, lenGrp[0]-pos);
+	//printf("VAR 1 %f, VAR 2 %f \n", v1, v2);
+
+	//Welch's test
+	double stat = welch(m1, m2, pos, lenGrp[0]-pos, v1, v2);
+	//printf("Teststat: %f\n", stat);
+
+	//Degrees of freedom
+	double dg = ws(v1, v2, pos, lenGrp[0]-pos);
+	//printf("Degrees of Freedom: %f\n", dg);
+
+	//actTest[i] = stat; 
+	//actTestAbs[i] = fabsl(stat); 
+	//index[i] = i;
+	
+	statistic[i] = stat;
+	df[i] = dg;
+    }
+}
+
+
 void tTest_unpaired_unequalVar(double *data, int *lenRows, int *grp, int *lenGrp, int *B, double *pval) {
    //Grouping
    printf("LenGrp: %d\n", lenGrp[0]);
@@ -282,6 +332,7 @@ double ws(double var1, double var2,
         int n1, int n2) {
   double nom = pow(var1 + var2, 2);
   double denom = pow(var1, 2)/((n1-1)) + pow(var2, 2)/((n2-1));
+
   return (nom/denom);
 }
 

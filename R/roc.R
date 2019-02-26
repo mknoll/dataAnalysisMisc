@@ -1,14 +1,14 @@
 #' @title Create ROC curve
 #' @import pROC
 #' @export
-rocDetail <- function(val, grp, fit=NULL) {
+rocDetail <- function(val, grp, fit=NULL,xyleg=c(0.5, 0.1)) {
     rc <- roc(grp, val)
     plot(rc)
     text(0.5, 0.2, paste("AUC=",round(rc$auc, 2),sep=""), font=2)
     ## add youden
     ydn <- rc$sensitivities+rc$specificities-1
     points(ydn~seq(0,1,length.out=length(rc$sensitivities)), col="tomato", pch=19, cex=0.2)
-    legend(0.5, 0.1, "Youden", fill="tomato")
+    legend(xyleg[1], xyleg[2], "Youden", fill="tomato")
     abline(v=seq(0,1,length.out=length(rc$sensitivities))[which.max(ydn)])
     tr <- rc$thresholds[which.max(ydn)]
 

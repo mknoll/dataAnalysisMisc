@@ -27,6 +27,7 @@ findAssoc <- function(grp, data, test=NULL, kat="Fisher", filename=NULL,
 	sub <-  list()
 	sub[[length(sub)+1]] <- data.frame(name0=colnames(data)[i], name1=NA, name2=NA, name3=NA, p=NA)
 	p.val <- NA
+
 	if (class(data[,i]) %in% c("numeric","integer")) {
 	    vals <- data[,i]
 	    p.val <- NA
@@ -78,14 +79,10 @@ findAssoc <- function(grp, data, test=NULL, kat="Fisher", filename=NULL,
 		    p.val <- NA
 		    tryCatch({
 			p.val <- barnard.test(tbl[1,1], tbl[1,2], tbl[2,1], tbl[2,2])$p.value[2]  
-		    }, error=function(e) { } )
+		    }, error=function(e) {  } )
 		} else {
 		    force <- T
 		}
-		#sub[[length(sub)+1]] <- data.frame(name0=NA, name1=rownames(tbl)[1], 
-	#					   name2=as.character(tbl[1,1]), name3=as.character(tbl[1,2]),p=NA)
-#		sub[[length(sub)+1]] <- data.frame(name0=NA, name1=rownames(tbl)[2], 
-#						   name2=as.character(tbl[2,1]), name3=as.character(tbl[2,2]),p=NA)
 	    } 
 	    if (length(unique(vals)) > 2 || force) {
 		tbl <- table(vals, grp)
@@ -108,10 +105,10 @@ findAssoc <- function(grp, data, test=NULL, kat="Fisher", filename=NULL,
 			}, error=function(e) { })
 		    }
 		}
-		for (j in 1:length(tbl[,1])) {
-		    sub[[length(sub)+1]] <- data.frame(name0=NA, name1=rownames(tbl)[j], 
-						       name2=as.character(tbl[j,1]), name3=as.character(tbl[j,2]),p=NA)
-		}
+	    }
+	    for (j in 1:length(tbl[,1])) {
+		sub[[length(sub)+1]] <- data.frame(name0=NA, name1=rownames(tbl)[j], 
+						   name2=as.character(tbl[j,1]), name3=as.character(tbl[j,2]),p=NA)
 	    }
 	}
 	sub[[1]]$p <- round(p.val, 3)
