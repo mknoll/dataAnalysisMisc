@@ -4,5 +4,5 @@
 \alias{rocDetail}
 \title{Create ROC curve}
 \usage{
-rocDetail(val, grp, fit = NULL)
+rocDetail(val, grp, fit = NULL, xyleg = c(0.5, 0.1))
 }
