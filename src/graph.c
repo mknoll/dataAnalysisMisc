@@ -7,9 +7,13 @@ int findeNachbar(int *m, int *visited, int start, int invStart, int len,  int si
 int findCluster(int *m, int *visited, int len, int size, int id, int star, int type);
 int countClusterMembers(int *visited, int clID, int size, int len);
 
-void startAdj(int *matrix, int *len, int *n, int *size, int *erg, int *maxTry, int *star, int *type) {
+void startAdj(int *matrix, int *len, int *n, int *size, int *erg, int *maxTry, int *star, int *type, int *seed) {
     printf("Matrix: %d x %d \n", len[0], len[0]);
     printf("Pos [0,0]: %d\n", matrix[0]);
+
+    if (seed[0] != -1) {
+	srand(seed[0]);
+    }
 
     //adj matrix m 
     int m[len[0]][len[0]];
