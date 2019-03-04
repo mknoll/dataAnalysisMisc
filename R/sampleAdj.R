@@ -9,6 +9,7 @@
 #' @param starTopo create star topology
 #' @param type If set to 0, n refers to number of edges, choose
 #' 1 for number of nodes
+#' @param seed if set to -1, no seed is used.
 #'
 #' @useDynLib dataAnalysisMisc
 #'
@@ -16,14 +17,14 @@
 sampleAdj <- function(adj, size=5, 
 		      n=5, maxTry=1000,
 		      starTopo=1,
-              type=1) {
+			type=1, seed=-1) {
 
     m <- c(as.matrix(unlist(adj), nrow=1))
     erg <- c(as.integer(rep(0, length(m))))
     ret <- .C("startAdj", matrix=as.integer(m), len=length(adj[1,]), 
 	      n=as.integer(n), size=as.integer(size), erg=erg, 
 	      maxTry=as.integer(maxTry), star=as.integer(starTopo),
-          type=as.integer(type))
+          type=as.integer(type), seed=as.integer(seed))
     tbl <- table(ret$erg)
     if (length(tbl)-1 != n) { 
 	warning("To few clusters identified! Try increasing the maxTry parameter.")
