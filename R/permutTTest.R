@@ -3,6 +3,8 @@
 #' @description Permutation t-test (Welch)
 #' Might crash with a C stack overflow, if this happens, 
 #' increase the size with ulimit -s 65535
+#' Be careful with reported p-values of 0 in a 
+#' p-value adjustment setting (see Phipson & Smyth, 2010)
 #' 
 #' @param grp grouping, exactly two levels required
 #' @param data data 
