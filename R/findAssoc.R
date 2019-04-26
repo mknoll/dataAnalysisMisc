@@ -70,15 +70,20 @@ findAssoc <- function(grp, data, test=NULL, kat="Fisher", filename=NULL,
 
 	    ## two factors: use barnard for nonpaired data
 	    force <- F
-	    if (length(unique(vals)) == 2 && length(unique(grp)) == 2) {
-		tbl <- table(vals, grp)
-		if (is.null(subject)) {
-		    ## non paired
-		    #Barnard two sided
-		    p.val <- NA
-		    tryCatch({
-			p.val <- barnard.test(tbl[1,1], tbl[1,2], tbl[2,1], tbl[2,2])$p.value[2]  
-		    }, error=function(e) {  } )
+	    if (length(unique(vals)) == 2 ) {
+		if (length(unique(grp)) == 2) {
+		    ## assure that we have a 2x2 table
+		    tbl <- table(vals, grp)
+		    if (is.null(subject)) {
+			## non paired
+			#Barnard two sided
+			p.val <- NA
+			tryCatch({
+			    p.val <- barnard.test(tbl[1,1], tbl[1,2], tbl[2,1], tbl[2,2])$p.value[2]  
+			}, error=function(e) {  } )
+		    } else {
+			force <- T
+		    }
 		} else {
 		    force <- T
 		}
