@@ -9,32 +9,38 @@
 findAssoc <- function(grp, data, test=NULL, kat="Fisher", filename=NULL,
 		      contParam=c("mean", "sd"), latex=F, outdir="../reports/",
 		      subject=NULL) {
-    ###
+    ##########
     grp <- as.character(grp)
-    #if (length(unique(grp)) != 2) {
-#	warning("Sry, currently only two group tests are implmented!")
-#	return(NULL)
- #   }
 
     out <- list()
     lvs <- as.character(levels(factor(grp)))
-    out[[length(out)+1]] <- data.frame(name0="Group", name1=NA, name2=lvs[1], name3=lvs[2], p=NA)
-    out[[length(out)+1]] <- data.frame(name0=NA, name1=NA, name2=as.character(length(which(grp == lvs[1]))), 
-						 name3=as.character(length(which(grp == lvs[2]))), p=NA)
 
-    ###
+    ##### Heading
+    df <- data.frame(t(c("Group", NA, lvs, NA)))
+    out[[length(out)+1]] <- df
+    df <- data.frame(t(c(NA, NA, table(grp)[match(lvs, names(table(grp)))], NA)))
+    out[[length(out)+1]] <- df
+
+    #### Fill Table 
     for (i in 1:length(data[1,])) {
 	sub <-  list()
-	sub[[length(sub)+1]] <- data.frame(name0=colnames(data)[i], name1=NA, name2=NA, name3=NA, p=NA)
+	#sub[[length(sub)+1]] <- data.frame(name0=colnames(data)[i], name1=NA, name2=NA, name3=NA, p=NA)
+	sub[[length(sub)+1]] <- data.frame(t(c(colnames(data)[i], NA, rep(NA, length(lvs)), NA)))
 	p.val <- NA
 
 	if (class(data[,i]) %in% c("numeric","integer")) {
+	    #### Continuous data
+	    #####################
 	    vals <- data[,i]
 	    p.val <- NA
 	    tryCatch({
 		if (is.null(subject)) {
 		    ### non paired data
-		    p.val <- t.test(vals~grp)$p.value
+		    df <- data.frame(VAL=vals, GRP=factor(grp))
+		    w <- which(!is.na(df$VAL) & !is.na(df$GRP))
+		    fit0 <- lm(VAL~1, data=df[w,])
+		    fit <- lm(VAL~GRP, data=df[w,])
+		    p.val <- anova(fit0, fit)[2,6]
 		} else {
 		    df <- data.frame(VAL=vals, GRP=grp, ID=subject)
 		    fit0 <- lme(VAL~1 + (1|ID), data=df, method="ML")
@@ -42,27 +48,20 @@ findAssoc <- function(grp, data, test=NULL, kat="Fisher", filename=NULL,
 		    p.val <- anova(fit0, fit)[2,9]
 		}
 	    }, error=function(e) {})
-	    if ("mean" %in% contParam) {
-		sub[[length(sub)+1]] <- data.frame(name0=NA, name1="Mean", name2=as.character(round(mean(vals[which(grp == lvs[1])], na.rm=T)),2),
-						   name3=as.character(round(mean(vals[which(grp == lvs[2])], na.rm=T),2)), p=NA)
+
+	    for (cp in contParam) {
+		eval(parse(text=paste("fun=",cp)))
+		valsTmp <- c()
+		for (lv in lvs) {
+		    v <- as.character(round(apply(data.frame(t(vals[which(grp == lv & !is.na(vals))])),1,fun),2))
+		    valsTmp <- c(valsTmp, v)
+		}
+		df <- data.frame(t(c(NA, cp, valsTmp, NA)))
+		sub[[length(sub)+1]] <- df
 	    }
-	    if ("sd" %in% contParam) {
-		sub[[length(sub)+1]] <- data.frame(name0=NA, name1="SD", name2=as.character(round(sd(vals[which(grp == lvs[1])], na.rm=T)),2),
-						   name3=as.character(round(sd(vals[which(grp == lvs[2])], na.rm=T),2)), p=NA)
-	    }
-	    if ("median" %in% contParam) {
-		sub[[length(sub)+1]] <- data.frame(name0=NA, name1="Median", name2=as.character(round(median(vals[which(grp == lvs[1])], na.rm=T)),2),
-						   name3=as.character(round(median(vals[which(grp == lvs[2])], na.rm=T),2)), p=NA)
-	    }
-	    if ("min" %in% contParam) {
-		sub[[length(sub)+1]] <- data.frame(name0=NA, name1="Min", name2=as.character(round(min(vals[which(grp == lvs[1])], na.rm=T)),2),
-						   name3=as.character(round(min(vals[which(grp == lvs[2])], na.rm=T),2)), p=NA)
-	    }
-	    if ("max" %in% contParam) {
-		sub[[length(sub)+1]] <- data.frame(name0=NA, name1="Max", name2=as.character(round(max(vals[which(grp == lvs[1])], na.rm=T)),2),
-						   name3=as.character(round(max(vals[which(grp == lvs[2])], na.rm=T),2)), p=NA)
-	    }
+
 	} else {
+	    ##################################
 	    ### factors 
 	    vals <- droplevels(factor(data[,i]))
 	    ##only one factor: skip
@@ -107,20 +106,31 @@ findAssoc <- function(grp, data, test=NULL, kat="Fisher", filename=NULL,
 		}
 	    }
 	    for (j in 1:length(tbl[,1])) {
-		sub[[length(sub)+1]] <- data.frame(name0=NA, name1=rownames(tbl)[j], 
-						   name2=as.character(tbl[j,1]), name3=as.character(tbl[j,2]),p=NA)
+		tblNM <- c()
+		for (k in 1:length(tbl[1,])) {
+		    tblNM <- c(tblNM, as.character(tbl[j,k]))
+		}
+		sub[[length(sub)+1]] <- data.frame(t(c(name0=NA, name1=rownames(tbl)[j], 
+						   tblNM, 
+						   p=NA)))
 	    }
 	}
-	sub[[1]]$p <- round(p.val, 3)
+	sub[[1]][length(sub[[1]][1,])] <- as.character(round(p.val, 3))
 	out <- c(out, sub)
     }
 
+    cn <- c("Feature","", paste("Level", lvs,sep=""), "p-value")
+    out <- lapply(out, function(x) {
+	       colnames(x) <- cn
+	       x <- apply(x, 2, function(x) as.character(x))
+	       x
+			})
     pat <- do.call(rbind, out)
-    colnames(pat) <- c("Feature","", "Level1", "Level2", "p-value")
+    #colnames(pat) <- c("Feature","", "Level1", "Level2", "p-value")
 
     if (!latex) {
-        return(pat)
+        return(data.frame(pat))
     } else {		
-	return (list(tbl=pat, pdffile=preparePdf(pat, outdir, col="llccr",filename=filename))) 
+	return (list(tbl=pat, pdffile=preparePdf(pat, outdir, col=paste("ll",paste(rep("c", length(lvs)),collapse=""),"r", sep=""),filename=filename))) 
     }
 }

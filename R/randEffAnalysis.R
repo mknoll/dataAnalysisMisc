@@ -28,7 +28,7 @@ randEffAnalysis <- function(data, pheno,
 			    type="lm",
 			    rand=NULL, nCores=NULL,
 			    reCalcREML=T, complete.cases=T,
-			    transf=F) {
+			    transf=F) { 
     ## Check for missing data
     #if (!complete.cases && any(is.na(data))) {
 #	stop("NAs or Inf values found!. Set complete.cases to T")
@@ -46,6 +46,7 @@ randEffAnalysis <- function(data, pheno,
     if (!is.null(rand)) {
 	stop("currently DEFUNCT!")
     } else {
+
 	out <- foreach(i=1:length(data[,1])) %dopar% {
 	    cat(paste("\r  ", round(i/length(data[,1])*100), "%       ", sep=""))
 	    ## Obtain Model p-value
@@ -61,8 +62,20 @@ randEffAnalysis <- function(data, pheno,
 		    if (reCalcREML) {
 			fit <- lmer(frm, data=df,  REML=T)
 		    }
-		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], anovaP=aP, i=i, ID=rownames(data)[i])
-		}, error=function(e) { })
+		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], anovaP=aP, i=i, ID=rownames(data)[i], warn=F)
+		}, error=function(e) { print(e) },
+		warning=function(w) { 
+		    #### FIXME!
+		    tryCatch({
+			fit0 <- lmer(frm0, data=df, REML=F)
+			fit <- lmer(frm, data=df,  REML=F)
+			aP <- anova(fit, fit0)[2,8]
+			if (reCalcREML) {
+			    fit <- lmer(frm, data=df,  REML=T)
+			}
+			ret <- data.frame(summary(fit)$coef[-1,,drop=F], anovaP=aP, i=i, ID=rownames(data)[i], warn=T)
+		    }, error=function(e) { })
+		})
 	    } else if (type == "nb") {
 		##negative binomial
 		tryCatch({
@@ -88,8 +101,15 @@ randEffAnalysis <- function(data, pheno,
 		    fit  <- glmer(frm, family=binomial(link=logit), data=df)
 		    a <- anova(fit0, fit, test="LRT")
 		    aP <- a[2,8]
-		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], i=i,  aP=aP)
-		}, error=function(e) { })
+		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], i=i,  aP=aP, warn=F)
+		}, error=function(e) { },
+		warning=function(w) {
+		    fit0  <- glmer(frm0, family=binomial(link=logit), data=df)
+		    fit  <- glmer(frm, family=binomial(link=logit), data=df)
+		    a <- anova(fit0, fit, test="LRT")
+		    aP <- a[2,8]
+		    ret <- data.frame(summary(fit)$coef[-1,,drop=F], i=i,  aP=aP, warn=T)
+		} )
 	    } else if (type == "b") {
 		## beta regression
 		tryCatch({

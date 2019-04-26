@@ -17,4 +17,6 @@ permTTest(data, grp, B = 10000)
 Permutation t-test (Welch)
 Might crash with a C stack overflow, if this happens, 
 increase the size with ulimit -s 65535
+Be careful with reported p-values of 0 in a 
+p-value adjustment setting (see Phipson & Smyth, 2010)
 }

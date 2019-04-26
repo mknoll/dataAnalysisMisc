@@ -30,6 +30,7 @@
 plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, yDelta=0.1, nRiskCat=4, pval=NULL, mar=NULL, subject=NULL, dist=NULL, ...) {
 	# number of groups 
 	nGrp <- length(levels(factor(grp)))
+	grp <- factor(grp)
 
 	if (is.null(xlim)) { xlim <- c(0, max(as.numeric(srv), na.rm=T)) }
 	if (is.null(col)) { col <- kelly()[-1] }

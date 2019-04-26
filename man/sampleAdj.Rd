@@ -4,7 +4,8 @@
 \alias{sampleAdj}
 \title{Sample clusters from adjacence matrix}
 \usage{
-sampleAdj(adj, size = 5, n = 5, maxTry = 1000, starTopo = 1)
+sampleAdj(adj, size = 5, n = 5, maxTry = 1000, starTopo = 1, type = 1,
+  seed = -1)
 }
 \arguments{
 \item{adj}{Adjazenzmatrix}
@@ -16,6 +17,11 @@ sampleAdj(adj, size = 5, n = 5, maxTry = 1000, starTopo = 1)
 \item{maxTry}{numbers of random tries to establish clusters}
 
 \item{starTopo}{create star topology}
+
+\item{type}{If set to 0, n refers to number of edges, choose
+1 for number of nodes}
+
+\item{seed}{if set to -1, no seed is used.}
 }
 \description{
 Desc
