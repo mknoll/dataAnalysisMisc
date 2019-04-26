@@ -70,7 +70,7 @@ findAssoc <- function(grp, data, test=NULL, kat="Fisher", filename=NULL,
 
 	    ## two factors: use barnard for nonpaired data
 	    force <- F
-	    if (length(unique(vals)) == 2) {
+	    if (length(unique(vals)) == 2 && length(unique(grp)) == 2) {
 		tbl <- table(vals, grp)
 		if (is.null(subject)) {
 		    ## non paired
@@ -85,6 +85,8 @@ findAssoc <- function(grp, data, test=NULL, kat="Fisher", filename=NULL,
 	    } 
 	    if (length(unique(vals)) > 2 || force) {
 		tbl <- table(vals, grp)
+		print(tbl)
+		return(0)
 		p.val <- NA
 		if (!is.null(subject)) {
 		    ## paired data
