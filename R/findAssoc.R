@@ -90,8 +90,6 @@ findAssoc <- function(grp, data, test=NULL, kat="Fisher", filename=NULL,
 	    } 
 	    if (length(unique(vals)) > 2 || force) {
 		tbl <- table(vals, grp)
-		print(tbl)
-		return(0)
 		p.val <- NA
 		if (!is.null(subject)) {
 		    ## paired data
