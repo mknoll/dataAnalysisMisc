@@ -26,3 +26,6 @@ and rows patients. Must be matched.}
 
 \item{complete.cases}{automatically remove incomplete data (NA, Inf)}
 }
+\description{
+Model based analysis with fixed effects
+}

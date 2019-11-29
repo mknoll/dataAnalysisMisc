@@ -6,3 +6,6 @@
 \usage{
 rocDetail(val, grp, fit = NULL, xyleg = c(0.5, 0.1))
 }
+\description{
+Create ROC curve
+}

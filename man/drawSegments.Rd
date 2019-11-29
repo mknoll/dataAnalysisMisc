@@ -5,6 +5,9 @@
 \title{Draw segments for boxplots}
 \usage{
 drawSegments(data, y, yDelta = -0.05, xyLeg = NULL, col = NULL,
-  txtBottomOff = -1, segmentDelta = 0.2, lwd = 10, legText = c(0.55,
-  0.02))
+  txtBottomOff = -1, segmentDelta = 0.2, lwd = 10,
+  legText = c(0.55, 0.02))
+}
+\description{
+Draw segments for boxplots
 }

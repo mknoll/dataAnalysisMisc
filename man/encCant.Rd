@@ -6,3 +6,6 @@
 \usage{
 encCant(text, off = 32, maxLen = 25)
 }
+\description{
+Cantor Encode
+}

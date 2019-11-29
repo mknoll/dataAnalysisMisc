@@ -6,3 +6,6 @@
 \usage{
 cant(x)
 }
+\description{
+Cantor
+}

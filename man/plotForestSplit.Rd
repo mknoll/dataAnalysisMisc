@@ -7,3 +7,6 @@
 plotForestSplit(srv, data, subject = NULL, title = "",
   col = c("royalblue", "darkblue", "royalblue"), split = NULL)
 }
+\description{
+Create forest plot
+}

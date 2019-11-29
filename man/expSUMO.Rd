@@ -6,3 +6,6 @@
 \usage{
 expSUMO(data)
 }
+\description{
+Export to SUMO
+}

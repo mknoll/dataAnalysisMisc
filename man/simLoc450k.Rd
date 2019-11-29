@@ -18,3 +18,6 @@ simLoc450k(data, type = "both", n = 3, corM = "pearson",
 
 \item{cutNegCor}{}
 }
+\description{
+Calculate localtion sensitive similarity, 450k
+}

@@ -5,8 +5,9 @@
 \title{Minimize missclassification by step-wise increase
 of evaluated candidates}
 \usage{
-minimizeMissclassificationHCL(data, res, class, clst_method = c("complete",
-  "ward.D2"), test = "chisq", by = 1, complete.cases = T, nClust = 2)
+minimizeMissclassificationHCL(data, res, class,
+  clst_method = c("complete", "ward.D2"), test = "chisq", by = 1,
+  complete.cases = T, nClust = 2)
 }
 \arguments{
 \item{data}{data.frame containing the data to be analyzed}
@@ -18,4 +19,8 @@ minimizeMissclassificationHCL(data, res, class, clst_method = c("complete",
 \item{clst_method}{clustering method to use for}
 
 \item{test}{chisq or fisher}
+}
+\description{
+Minimize missclassification by step-wise increase
+of evaluated candidates
 }

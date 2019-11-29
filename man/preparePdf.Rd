@@ -6,3 +6,6 @@
 \usage{
 preparePdf(pat, outdir, col = "llcc", filename = NULL)
 }
+\description{
+Create tex/pdf files
+}

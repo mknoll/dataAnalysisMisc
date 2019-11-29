@@ -6,3 +6,6 @@
 \usage{
 transf(obj, fun = log)
 }
+\description{
+Transform expression data
+}

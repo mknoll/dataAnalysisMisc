@@ -7,3 +7,6 @@
 localCor(data, len = 3, cutLow = -0.9, cutHigh = 0.9,
   corMethod = "pearson")
 }
+\description{
+Calculate genimc local correlation
+}

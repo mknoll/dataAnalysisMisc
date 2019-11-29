@@ -6,3 +6,6 @@
 \usage{
 exportSUMO(obj, filename = NULL)
 }
+\description{
+Export SUMO matrix
+}

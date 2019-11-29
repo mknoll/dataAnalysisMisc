@@ -6,3 +6,6 @@
 \usage{
 detClusters(data, nClust = NULL, fun = mean, lossfun = "squared")
 }
+\description{
+Determine number of clusters
+}

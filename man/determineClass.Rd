@@ -6,3 +6,6 @@
 \usage{
 determineClass(data)
 }
+\description{
+Tried to determine the class of data.frame columns
+}

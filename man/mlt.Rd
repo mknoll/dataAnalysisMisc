@@ -6,3 +6,6 @@
 \usage{
 mlt(data, pheno)
 }
+\description{
+Melt and merge data w/ pheno info
+}

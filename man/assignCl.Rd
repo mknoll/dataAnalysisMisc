@@ -16,3 +16,7 @@ assignCl(ref, refCl, test, testCl = NULL, alternative = "two.sided")
 
 \item{testCl}{Class testset}
 }
+\description{
+Assign class for test data based
+based on correlation
+}

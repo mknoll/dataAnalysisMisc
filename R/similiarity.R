@@ -19,8 +19,9 @@ simLoc450k <- function(data,
 		       cutNegCor=-0.9) {
     #### TODO: add EPIC annotation
     print("Get annotation ...")
-    anno <- minfi::getAnnotation(minfiData::RGsetEx)
-    anno <- anno[order(anno$chr, anno$pos),,drop=F]
+    anno <- data.frame(minfi::getAnnotation(minfiData::RGsetEx))
+    anno <- anno[order(anno$chr, as.numeric(as.character(anno$pos))),,drop=F]
+    print(anno[1:10,c("chr", "pos")])
 
     ### go parallel
     no_cores <- parallel::detectCores() - 1
@@ -30,6 +31,7 @@ simLoc450k <- function(data,
     doParallel::registerDoParallel(no_cores)
     
     ### match data
+    anno <- anno[which(rownames(anno) %in% rownames(data)[which(complete.cases(data*0))]),]
     data <- data.frame(data[match(rownames(anno), rownames(data)),])
     ### split by chromosome 
     f <- split(data, f=anno$chr)
@@ -47,7 +49,7 @@ simLoc450k <- function(data,
 	print("Positive correlation")
 	pos <- foreach(j=from:to) %dopar% {
 	    if (j %% 100 == 0) { cat(paste("\r  ", round(j/to*100, 2), "%     ")) }
-	    m <- cor(sub[(from-n):to,], method=corM)
+	    m <- cor(sub[(j-n):j,], method=corM)
 	    m[which(m < cutPosCor)] <- 0
 	    m
 	}
@@ -64,7 +66,7 @@ simLoc450k <- function(data,
 	#### Correlation neg
 	print("Negative correlation")
 	neg <- foreach(j=from:to) %dopar% {
-	    m <- cor(sub[(from-n):to,], method=corM)
+	    m <- cor(sub[(j-n):j,], method=corM)
 	    m[which(m > cutNegCor)] <- 0
 	    diag(m) <- -1
 	    m

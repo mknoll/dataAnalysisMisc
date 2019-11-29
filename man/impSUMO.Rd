@@ -6,3 +6,6 @@
 \usage{
 impSUMO(data)
 }
+\description{
+Import from SUMO
+}

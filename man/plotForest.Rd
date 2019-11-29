@@ -4,8 +4,9 @@
 \alias{plotForest}
 \title{Calculated univariate analysis and creates a forest plot}
 \usage{
-plotForest(srv, data, subject = NULL, title = "", col = c("royalblue",
-  "darkblue", "royalblue"), invalCut = 100, removeInval = F)
+plotForest(srv, data, subject = NULL, title = "",
+  col = c("royalblue", "darkblue", "royalblue"), invalCut = 100,
+  removeInval = F)
 }
 \arguments{
 \item{srv}{Survival object as created by survival::Surv() function,

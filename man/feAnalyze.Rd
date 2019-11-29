@@ -6,3 +6,6 @@
 \usage{
 feAnalyze(obj, sel, frm, frm0 = as.formula(VAL ~ 1), padj = "BH")
 }
+\description{
+Analyze fixed Effects
+}

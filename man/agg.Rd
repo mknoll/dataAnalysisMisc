@@ -6,3 +6,6 @@
 \usage{
 agg(obj, fun = mean, var = "ILMN_Gene")
 }
+\description{
+Aggregate epxression
+}

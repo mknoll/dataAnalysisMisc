@@ -30,3 +30,6 @@ lmer will be used for "lm"}
 
 \item{complete.cases}{automatically remove incomplete data (NA, Inf)}
 }
+\description{
+Model based analysis with random effects
+}

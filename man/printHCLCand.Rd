@@ -6,3 +6,6 @@
 \usage{
 printHCLCand(data, srv, n, i, j, dist, main = "")
 }
+\description{
+Print Kaplan Meier plots
+}

@@ -2,7 +2,6 @@
 % Please edit documentation in R/drawSpiralPlot.R, R/drawSpiralPlot2.R
 \name{drawSpiralPlot}
 \alias{drawSpiralPlot}
-\alias{drawSpiralPlot}
 \title{Draw spiral plot}
 \usage{
 drawSpiralPlot(data, meta, coord, off = 1, col = NULL, segm = NULL,

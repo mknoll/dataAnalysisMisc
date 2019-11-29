@@ -7,3 +7,6 @@
 \usage{
 \S4method{initialize}{matrixSUMO}(.Object, sumoMatrixFile = character)
 }
+\description{
+Construcotr matrixSUMO
+}

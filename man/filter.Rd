@@ -6,3 +6,6 @@
 \usage{
 filter(obj, fun = mad, cutoff = 0.5)
 }
+\description{
+Keep only most variant
+}

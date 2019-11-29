@@ -6,3 +6,6 @@
 \usage{
 plotSingle(obj, gene, sel, frm = as.formula(value ~ GRP | TREAT * TIME))
 }
+\description{
+Plot single gene
+}

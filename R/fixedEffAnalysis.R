@@ -24,6 +24,7 @@ fixedEffAnalysis <- function(data, pheno,
 			    nCores=NULL,
 			    complete.cases=F,
 			    padj="BH") {
+    rnBak <- rownames(data)
     rownames(data) <- as.character(1:length(data[,1]))
 
     ## Check for missing data - FIXME
@@ -51,23 +52,29 @@ fixedEffAnalysis <- function(data, pheno,
 		fit0 <- lm(frm0, data=df)
 		fit <- lm(frm, data=df)
 		aP <- anova(fit, fit0)[2,6]
-		ret <- data.frame(summary(fit)$coef[-1,,drop=F], anovaP=aP, i=i, RN=rownames(data)[i])
+		ret <- data.frame(summary(fit)$coef[-1,,drop=F], anovaP=aP, i=i, ID=rnBak[i])
 	    }, error=function(e) { print(e) })
 	} else if (type == "nb") {
 	    tryCatch({
-		##normal distribution
 		fit0 <- glm.nb(frm0, data=df)
 		fit <- glm.nb(frm, data=df)
 		aP <- anova(fit, fit0)[2,8]
-		ret <- data.frame(summary(fit)$coef[-1,,drop=F], anovaP=aP, i=i, RN=rownames(data)[i])
+		ret <- data.frame(summary(fit)$coef[-1,,drop=F], anovaP=aP, i=i, ID=rnBak[i])
 	    }, error=function(e) { print(e) })
+	} else if (type == "p") {
+	    tryCatch({
+		fit0 <- glm(frm0, data=df, family=poisson(link=log))
+		fit <- glm(frm, data=df, family=poisson(link=log))
+		aP <- anova(fit, fit0, test="LRT")[2,5]
+		ret <- data.frame(summary(fit)$coef[-1,,drop=F], anovaP=aP, i=i, ID=rnBak[i])
+	    }, error=function(e) { print(e) })
+
 	} else if (type == "bin") {
 	    tryCatch({
-		##normal distribution
 		fit0 <- glm(frm0, data=df, family=binomial(link=logit))
 		fit <- glm(frm, data=df, family=binomial(link=logit))
 		aP <- anova(fit, fit0, test="LRT")[2,5]
-		ret <- data.frame(summary(fit)$coef[-1,,drop=F], anovaP=aP, i=i, RN=rownames(data)[i])
+		ret <- data.frame(summary(fit)$coef[-1,,drop=F], anovaP=aP, i=i, ID=rnBak[i])
 	    }, error=function(e) { print(e) })
 
 	} else {
