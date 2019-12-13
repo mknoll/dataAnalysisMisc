@@ -10,6 +10,8 @@
 equivFract <- function(data, grp, delta=0.1, z=1.65) {
     ## TODO: parallel
     ## TODO: sanitize inputs
+    eMU <- abs(delta)
+    eML <- -abs(delta)
 
     ### parallel
     no_cores <- parallel::detectCores() - 1
