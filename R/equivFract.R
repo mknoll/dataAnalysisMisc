@@ -32,7 +32,7 @@ equivFract <- function(data, grp, delta=0.1, z=1.65) {
 	upr <- dP+1.65*s
 	ret <- NULL
 	if (lwr > eML && upr < eMU) {     
-	    ret <- rownames(mm)[i]
+	    ret <- rownames(data)[i]
 	}
 	ret
     }
