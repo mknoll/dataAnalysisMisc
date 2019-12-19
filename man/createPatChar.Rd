@@ -5,7 +5,8 @@
 \title{Create patient characteristics table}
 \usage{
 createPatChar(data, subject = NULL, subjVar = NULL, subjRef = NULL,
-  na.rm = T, latex = T, outdir = "../reports/", filename = NULL)
+  na.rm = T, latex = T, outdir = "../reports/", filename = NULL,
+  fract = F)
 }
 \arguments{
 \item{data}{data.frame containing the variables}

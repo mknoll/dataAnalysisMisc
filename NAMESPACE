@@ -2,6 +2,7 @@
 
 export(agg)
 export(assignCl)
+export(barnP)
 export(boxGraph)
 export(cant)
 export(createPatChar)
