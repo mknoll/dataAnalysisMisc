@@ -144,8 +144,10 @@ plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c(
     tabletext<-cbind(c(paste(fit$n, "/", fit$nevent), as.character(uv[,1])),
 		     c("", as.character(uv[,2])),
 		     c("Hazard Ratio", round(uv[,3],2)),
-		     c("95% CI", paste(round(uv[,4],2), "-", round(uv[,5],2), sep="")),
-		     c("p-value", round(uv[,6],3))
+		     c("95% CI", ifelse(uv[,4] == "", "", 
+					paste(format(round(uv[,4],2), nsmall=2), "-", 
+					      format(round(uv[,5],2), nsmall=2), sep=""))),
+		     c("p-value", ifelse(round(uv[,6],3) == 0, "<0.001", round(uv[,6],3)))
 		     )
     for (i in 1:length(tabletext[,1])) {
 	tabletext[i,1] <- paste(tabletext[i,1], tabletext[i,2], collapse="   ")

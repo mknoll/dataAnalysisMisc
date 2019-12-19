@@ -41,3 +41,4 @@ equivFract <- function(data, grp, delta=0.1, z=1.65) {
 
     return(unlist(coll))
 }
+

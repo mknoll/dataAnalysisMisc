@@ -54,7 +54,11 @@ findAssoc <- function(grp, data, test=NULL, kat="Fisher", filename=NULL,
 		valsTmp <- c()
 		for (lv in lvs) {
 		    v <- as.character(round(apply(data.frame(t(vals[which(grp == lv & !is.na(vals))])),1,fun),2))
-		    valsTmp <- c(valsTmp, v)
+		    if (cp == "range") {
+			valsTmp <- c(valsTmp, paste(" [",v[1],";",v[2],"]", sep=""))
+		    } else {
+			valsTmp <- c(valsTmp, v)
+		    }
 		}
 		df <- data.frame(t(c(NA, cp, valsTmp, NA)))
 		sub[[length(sub)+1]] <- df
@@ -113,7 +117,9 @@ findAssoc <- function(grp, data, test=NULL, kat="Fisher", filename=NULL,
 	    for (j in 1:length(tbl[,1])) {
 		tblNM <- c()
 		for (k in 1:length(tbl[1,])) {
-		    tblNM <- c(tblNM, as.character(tbl[j,k]))
+		    #tblNM <- c(tblNM, as.character(tbl[j,k]))
+		    add <- paste(tbl[j,k], " (", round(tbl[j,k]/sum(tbl[,k])*100), ")",sep="")
+		    tblNM <- c(tblNM, add)
 		}
 		sub[[length(sub)+1]] <- data.frame(t(c(name0=NA, name1=rownames(tbl)[j], 
 						   tblNM, 

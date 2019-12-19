@@ -25,7 +25,7 @@
 #' returned by the preparePdf() function (.tex filename, .pdf filename) 
 #'
 #' @export 
-createPatChar <- function(data, subject=NULL, subjVar=NULL, subjRef=NULL, na.rm=T, latex=T, outdir="../reports/", filename=NULL) {
+createPatChar <- function(data, subject=NULL, subjVar=NULL, subjRef=NULL, na.rm=T, latex=T, outdir="../reports/", filename=NULL, fract=F) {
     pat <- list()
     ## All
     if (is.null(subject)) {
