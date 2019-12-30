@@ -10,6 +10,9 @@
 equivFract <- function(data, grp, delta=0.1, z=1.65) {
     ## TODO: parallel
     ## TODO: sanitize inputs
+    if (length(delta) == 1) {
+	delta <- rep(delta, length(data[,1]))
+    }
     eMU <- abs(delta)
     eML <- -abs(delta)
 
@@ -31,7 +34,7 @@ equivFract <- function(data, grp, delta=0.1, z=1.65) {
 	lwr <- dP-1.65*s
 	upr <- dP+1.65*s
 	ret <- NULL
-	if (lwr > eML && upr < eMU) {     
+	if (lwr > eML[i] && upr < eMU[i]) {     
 	    ret <- rownames(data)[i]
 	}
 	ret
