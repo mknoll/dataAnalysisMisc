@@ -32,12 +32,10 @@ getMeans <- function(vec, eps=10^-5, eps2=-0.1, n=1000, frac=0.005, log=T, bw=0.
 	ret
     }    
     mus <- unlist(coll)    
-    hist(mus, breaks=500)    
 
-    plot(density(mus))    
     d <- density(mus, bw=bw)    
     d0 <- diff(d$y)    
-    w <- which((d0[-1] < -eps & d0[-length(d0)] > eps))# | (d0[-1] > eps & d0[-length(d0)] < -eps)  )    
+    w <- which((d0[-1] < -eps & d0[-length(d0)] > eps))
 
     doParallel::stopImplicitCluster()
     
