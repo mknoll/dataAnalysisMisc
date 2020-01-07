@@ -26,7 +26,7 @@ getMeans <- function(vec, eps=10^-5, eps2=-0.1, n=1000, frac=0.005, log=T, bw=0.
 	    d <- density(mn)    
 	    d0 <- diff(d$y)    
 	    d00 <- diff(density(d0)$y)    
-	    w <- which((d0[-1] < -eps & d0[-length(d0)] > eps) & d00[-c(1:2)] < eps2 )
+	    w <- which((d0[-1] < -eps & d0[-length(d0)] > eps) & d00[-c(1)] < eps2 )
 	    ret <- d$x[w]    
 	}, error=function(e) {})
 	ret
