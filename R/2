@@ -1,0 +1,93 @@
+#' @title Prepare data for CNV overlap comparison
+#' 
+#' @param pos list with positions of CNV segments
+#' @param id names of cohorts
+#' @param sel list with selected indices 
+#' @param diff list with differences
+#' 
+#' @export
+cnvOverlap <- function(pos, nm, sel, diff) {
+    # TODO: sanitize input data
+
+    # all positions and order
+    allP <- unique(unlist(pos))
+    bak <- allP
+    allP <- data.frame(do.call(rbind, strsplit(allP, ":")))
+    rownames(allP) <- bak
+    colnames(allP) <- c("chr", "pos")
+    allP$chr <- as.numeric(gsub("chr", "", allP[,1]))
+    allP$pos <- as.numeric(allP$pos)
+    allP <-allP[order(allP$chr, allP$pos),]
+
+    # split by chr
+    f <- split(allP, f=allP$chr)
+    f <- lapply(f, function(x) {
+		    coll <- list()
+		    collD <- list()
+		    for (j in 1:length(sel)) {
+			vec <- pos[[j]][match(rownames(allP), pos[[j]])]
+			vecD <- diff[[j]][match(rownames(allP), names(diff[[j]]))]
+			w <-which(!is.na(vec))
+			vec[w] <- ifelse(vec[w] %in% sel[[j]], 1, 0)
+			w <- which(!is.na(vec))
+			if (length(w) > 0 && w[1] != 1) {
+			    vec[1:(w[1]-1)] <- 0
+			    vecD[1:(w[1]-1)] <- 0
+			}
+
+			for (z in 2:length(vec)) {
+			    if (is.na(vec[z])) {
+				vec[z] <- vec[z-1]
+				vecD[z] <- vecD[z-1]
+
+			    }
+			}
+			coll[[length(coll)+1]] <- vec
+			collD[[length(collD)+1]] <- vecD
+
+		    }
+		    s <- apply(do.call(cbind, coll), 2, as.numeric)
+		    rownames(s) <- rownames(allP)
+		    sD <- do.call(cbind, collD)
+		    rownames(sD) <- rownames(allP)
+		    colnames(s) <-colnames(sD) <- nm
+
+		    list(sel=s, eff=sD)
+})
+
+    return(f)
+
+}
+
+
+cnvAug <- function(f) {
+    f2 <- lapply(f, function(x) {
+		     for (i in 1:length(x$sel)) {
+			 vec <- x$sel[,i]
+			 vecD <- x$sel[,i]
+			 pos <- as.numeric(do.call(rbind, strsplit(rownames(x), ":"))[,2])
+			 chr<- do.call(rbind, strsplit(rownames(x), ":"))[,1]
+
+			f3 <- list()
+			f3D <- list()
+			fP <- list()
+			fC <- list()
+			 for (j in 1:(length(vec)-1)) {
+			     f3[[length(f3)+1]] <- vec[j]
+			     f3D[[length(f3D)+1]] <- vecD[j]
+			     fP[[length(fP)+1]] <- pos[j]
+			     fC[[length(fC)+1]] <- chr[j]
+			     if (vec[j] == 0 && vec[j+1] == 1) {
+				
+			     }
+			 }
+			f3[[length(f3)+1]] <- vec[length(vec)]
+			f3D[[length(f3D)+1]] <- vecD[length(vecD)]
+		     }
+})
+}
+
+
+cnvEval <-function(dat) {
+
+}
