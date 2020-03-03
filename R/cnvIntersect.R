@@ -25,7 +25,8 @@ cnvOverlap <- function(pos, nm, sel, diff) {
     for (cc in unique(allP$chr)) {
 	w0 <-which(allP$chr == cc)
 	#FIXME
-	if (length(w0) <= 1) { next }
+	if (length(w0) < 1) { next }
+	print(paste("CHROM", cc))
 
 	coll <- list()
 	collD <- list()
@@ -35,16 +36,18 @@ cnvOverlap <- function(pos, nm, sel, diff) {
 	    w <-which(!is.na(vec))
 	    vec[w] <- ifelse(vec[w] %in% sel[[j]], 1, 0)
 	    w <- which(!is.na(vec))
-	    if (length(w) > 0 && w[1] != 1) {
+	    if (length(w) > 0 && w[1] != 1 && length(vec) > 1) {
 		vec[1:(w[1]-1)] <- 0
 		vecD[1:(w[1]-1)] <- 0
 	    }
 
-	    for (z in 2:length(vec)) {
-		if (is.na(vec[z])) {
-		    vec[z] <- vec[z-1]
-		    vecD[z] <- vecD[z-1]
+	    if (length(w0) > 1) {
+		for (z in 2:length(vec)) {
+		    if (is.na(vec[z])) {
+			vec[z] <- vec[z-1]
+			vecD[z] <- vecD[z-1]
 
+		    }
 		}
 	    }
 	    print(vec)
@@ -52,9 +55,14 @@ cnvOverlap <- function(pos, nm, sel, diff) {
 	    collD[[length(collD)+1]] <- vecD
 
 	}
-	s <- apply(do.call(cbind, coll), 2, as.numeric)
+	if (length(w0) == 1) {
+	    s <- data.frame(t(unlist(coll)))
+	    sD <- data.frame(t(unlist(collD)))
+	} else {
+	    s <- apply(do.call(cbind, coll), 2, as.numeric)
+	    sD <- do.call(cbind, collD)
+	}
 	rownames(s) <- rownames(allP)[w0]
-	sD <- do.call(cbind, collD)
 	rownames(sD) <- rownames(allP)[w0]
 	colnames(s) <-colnames(sD) <- nm
 
@@ -70,18 +78,22 @@ cnvOverlap <- function(pos, nm, sel, diff) {
 #' @title Evaluate overlaps between segments
 #' @export
 cnvEval <- function(f, cut=NULL) {
+    f <- Filter(length, f)
     f <- lapply(f,  function(x) {
-	     s <-   apply(data.frame(x$sel), 1, sum)
-	     cut0 <- ifelse(is.null(cut), length(x$sel[1,]), cut)
-	     if (any(s >= cut0)) {
-		 #### FIXME: 
-		 dir <- apply(data.frame(x$eff), 1, function(z) (all(z >0 ) | all(z < 0)))
-		 x$sel <-data.frame(x$sel, DIR=ifelse(dir == T & s>= cut0,  1,0), SUM=s)
-		 x
-	     } else {
-		 ####FIXME
-		 NULL
-	     }
+		    x$sel <- t(apply(x$sel, 1, function(u) as.numeric(as.character(u))))
+		    colnames(x$sel) <-colnames(x$eff)
+		    s <-   apply(data.frame(x$sel), 1, sum)
+		    print(s)
+		    cut0 <- ifelse(is.null(cut), length(x$sel[1,]), cut)
+		    if (any(s >= cut0)) {
+			#### FIXME: 
+			dir <- apply(data.frame(x$eff), 1, function(z) (all(z >0 ) | all(z < 0)))
+			x$sel <-data.frame(x$sel, DIR=ifelse(dir == T & s>= cut0,  1,0), SUM=s)
+			x
+		    } else {
+			####FIXME
+			NULL
+		    }
 })
     Filter(length,f)
 }
@@ -90,6 +102,12 @@ cnvEval <- function(f, cut=NULL) {
 #' @title Augments segment breaks (plottign of steps)
 #' @export
 cnvAug <- function(f) {
+    ### FIXME: chromosomal boundaries!
+    anno <- data.frame(minfi::getAnnotation(minfiData::RGsetEx))
+    anSub <-anno[,c("chr", "pos")]
+    f0 <- split(anSub, f=anSub$chr)
+    maxPos <- lapply(f0, function(x) x$pos[which.max(x$pos)])
+
     f2 <- lapply(f, function(y) {
 		     chr0<- do.call(rbind, strsplit(as.character(rownames(y$sel)), ":"))[,1]
 		     eff1 <- list()
@@ -101,6 +119,26 @@ cnvAug <- function(f) {
 		     for (cc in unique(chr0)) {
 			 x <- list(sel=y$sel[which(chr0 == cc),],
 				   eff=y$eff[which(chr0 == cc),])
+
+			 #### add end of chromosome
+			 posM <- max(as.numeric(do.call(rbind, strsplit(as.character(rownames(x$sel)), ":"))[,2]))
+			 chrC<- do.call(rbind, strsplit(as.character(rownames(x$sel)), ":"))[,1][1]
+			 mP0 <- maxPos[which(names(maxPos) ==  chrC)][[1]]
+			 print(paste("chrC:", chrC, " maxPos", mP0, " avail", posM))
+
+			 if (length(mP0)  > 0 && posM != mP0) {
+			     mP <- maxPos[which(names(maxPos) ==  chrC)][[1]]
+
+			     print("ADD")
+			     #add row
+			     tmp <- x$sel[length(x$sel[,1]),,drop=F]
+			     tmp2 <- x$eff[length(x$eff[,1]),,drop=F]
+			     rownames(tmp) <- paste(chrC, mP, sep=":")
+			     rownames(tmp2) <- paste(chrC, mP, sep=":")
+			     x$sel <- rbind(data.frame(x$sel), tmp)
+			     x$eff <- rbind(data.frame(x$eff), tmp2)
+			 }
+
 
 			 for (i in 1:length(x$eff[1,])) {
 			     pos <- as.numeric(do.call(rbind, strsplit(as.character(rownames(x$sel)), ":"))[,2])
@@ -205,17 +243,21 @@ segMerge <- function(tmp) {
     go <- T
     while(go) {
 	id <- apply(tmp, 1, function(x) paste(x, collapse=";"))
-	for (i in 2:(length(tmp[,1])-1)) {
-	    if (id[i-1] == id[i] && id[i] == id[i+1]) {
-		tmp <- tmp[-i,]
-		break
+	if (length(tmp[,1]) == 1) { 
+	    go <- F
+	} else {
+	    for (i in 2:(length(tmp[,1])-1)) {
+		if (id[i-1] == id[i] && id[i] == id[i+1]) {
+		    tmp <- tmp[-i,]
+		    break
+		}
+		if (i == length(tmp[,1])-1) {
+		    go <- F
+		}
 	    }
-	    if (i == length(tmp[,1])-1) {
+	    if (length(tmp[,1]) < 3) {
 		go <- F
 	    }
-	}
-	if (length(tmp[,1]) < 3) {
-	    go <- F
 	}
     }
     return(tmp)
@@ -242,6 +284,7 @@ cnvSegGene <- function(f, cut=NULL, type="hs",mergeSeg=T) {
 		     }
 
 		     cut0 <- ifelse(is.null(cut), length(x$eff[1,]), cut)
+		     print(cut0)
 		     w <- which(x$sel$DIR == 1 & x$sel$SUM >= cut0)
 		     ret <- list()
 		     if (length(w) > 0) {
