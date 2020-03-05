@@ -43,11 +43,11 @@ findAssoc <- function(grp, data, test=NULL, kat="Fisher", filename=NULL,
 		    p.val <- anova(fit0, fit)[2,6]
 		} else {
 		    df <- data.frame(VAL=vals, GRP=grp, ID=subject)
-		    fit0 <- lme(VAL~1 + (1|ID), data=df, method="ML")
-		    fit <- lme(VAL~GRP + (1|ID), data=df, method="ML")
-		    p.val <- anova(fit0, fit)[2,9]
+		    fit0 <- lmer(VAL~1 + (1|ID), data=df, REML=F)
+		    fit <- lmer(VAL~GRP + (1|ID), data=df, REML=F)
+		    p.val <- anova(fit0, fit)[2,8]
 		}
-	    }, error=function(e) {})
+	    }, error=function(e) { print(e) })
 
 	    for (cp in contParam) {
 		eval(parse(text=paste("fun=",cp)))
