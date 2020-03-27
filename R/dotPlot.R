@@ -66,7 +66,7 @@ dotPlot <- function(m, grp=NULL, na.rm=T, pCut=0.05) {
     ### plot
     coll$i <- factor(coll$i, levels=c(1:length(m[,1])))
     coll$j <- factor(coll$j, levels=c(1:length(m[,1])))
-    coll$p[which(!is.na(coll$p))] <- ifelse(coll$p[which(!is.na(coll$p))] < pCut, paste0("<",pCut), paste0("≥",pCut))
+    coll$p[which(!is.na(coll$p))] <- ifelse(coll$p[which(!is.na(coll$p))] < pCut, paste0("<",pCut), paste0(">=",pCut))
     coll$p <- as.character(coll$p)
     g <- ggplot(coll, aes(x=i, y=j, size=abs(cr), fill=cr, color=p))+
 	geom_point(shape = 21, stroke=2) + #,  fill = "b", size = 5, stroke = 5) + 
