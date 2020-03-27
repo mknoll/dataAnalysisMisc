@@ -29,7 +29,8 @@ Imports: Barnard,
     plyr,
     pROC,
     stargazer,
-    survival
+    survival,
+    SurvRegCensCov
 Suggests: ggplot2,
     knitr,
     rmarkdown
