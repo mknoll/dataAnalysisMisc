@@ -60,8 +60,9 @@ plotForestParamMV <- function(srv, data, subject=NULL, selection=F, title="",  c
     if (is.null(subject)) {
 	fit <- survreg(srv~., data=data, dist=dist)
     } else {
-	stop("DEFUNC")
-	fit <- survreg(srv~.+cluster(subject), data=data, dist=dist)
+	frm <- as.formula(paste("srv~", paste(colnames(data), collapse="+"), "+cluster(subject)"))
+	#fit <- survreg(srv~.+cluster(subject), data=data, dist=dist)
+	fit <- survreg(frm, data=data, dist=dist)
     }
     if (selection != F) {
 	stop("DEFUNC")
@@ -97,10 +98,11 @@ plotForestParamMV <- function(srv, data, subject=NULL, selection=F, title="",  c
                                    N=summary(fit)$n, 
                                    summary(fit)$table[-c(1,length(summary(fit)$table[,1])),,drop=F])
     } else {
-	stop("DEFUNC")
-	tbl <- cbind(summary(fit)$coef, summary(fit)$conf.int)
-	tbl <- tbl[,-4,drop=F]
+	rmI <- c(1, length(summary(fit)$table[,1]))
+	tbl <- cbind(int(fit), summary(fit)$table[-rmI,,drop=F])
     }
+    print(summary(fit))
+    print(tbl)
     rownames(tbl) <- gsub("`", "", rownames(tbl))
 
     for (i in 1:length(data[1,])) {
