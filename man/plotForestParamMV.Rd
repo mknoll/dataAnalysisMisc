@@ -6,7 +6,7 @@
 \usage{
 plotForestParamMV(srv, data, subject = NULL, selection = F,
   title = "", col = c("royalblue", "darkblue", "royalblue"),
-  dist = "weibull")
+  dist = "weibull", recalc = F)
 }
 \arguments{
 \item{srv}{Survival object as created by survival::Surv() function,
@@ -22,6 +22,8 @@ with automatic model selection.}
 \item{title}{Plot title}
 
 \item{col}{Color vector as expected by the forestplot() function}
+
+\item{recalc}{caluclate LRT per factor}
 }
 \description{
 Calculates a multivariate analysis, either utilizing all

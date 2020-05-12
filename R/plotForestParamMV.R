@@ -17,6 +17,7 @@
 #' with automatic model selection.
 #' @param title Plot title
 #' @param col Color vector as expected by the forestplot() function
+#' @param recalc caluclate LRT per factor
 #' 
 #' @import forestplot
 #' @import survival
@@ -45,8 +46,21 @@
 #' 
 #' #Observatons from the same individual
 #' #plotForestMV(srv, data, subject=subjectIDs)
-plotForestParamMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c("royalblue", "darkblue", "royalblue"), dist="weibull") {
+plotForestParamMV <- function(srv, data, subject=NULL, selection=F, title="",  
+			      col=c("royalblue", "darkblue", "royalblue"), 
+			      dist="weibull", recalc=F) {
     uv <- list()
+
+    ## any srv time <= 0?
+    if (any(as.numeric(srv)[1:length(srv)] <= 0)) {
+	warning("srv <0 0! Removing!")
+	w <- which(as.numeric(srv)[1:length(srv)] <= 0)
+	srv <-srv[-w]
+	data <- data[-w,,drop=F]
+	if (!is.null(subject)) { 
+	    subject <- subject[-w]
+	}
+    }
     
     #preserve level names
     for (i in 1:length(data[1,])) {
@@ -61,37 +75,10 @@ plotForestParamMV <- function(srv, data, subject=NULL, selection=F, title="",  c
 	fit <- survreg(srv~., data=data, dist=dist)
     } else {
 	frm <- as.formula(paste("srv~", paste(colnames(data), collapse="+"), "+cluster(subject)"))
-	#fit <- survreg(srv~.+cluster(subject), data=data, dist=dist)
 	fit <- survreg(frm, data=data, dist=dist)
     }
     if (selection != F) {
 	stop("DEFUNC")
-	if (class(selection) == "numeric") {
-	    selVar <- c()
-	    for (i in 1:length(data[1,])) {
-		if (is.null(subject)) {
-		    fit <- coxph(srv~data[,i])
-		} else {
-		    fit <- coxph(srv~data[,i]+cluster(subject))
-		}
-		if (summary(fit)$logtest['pvalue'][[1]] < selection) {
-		    selVar <- c(selVar, i)
-		}
-	    }
-	    print("Selected: ")
-	    print(colnames(data)[selVar])
-	    if (is.null(subject)) {
-		fit <- coxph(srv~., data=data[,selVar,drop=F])
-	    } else {
-		fit <- coxph(srv~.+cluster(subject), data=data[,selVar,drop=F])
-	    }
-	} else {
-	    if (!is.null(subject)) {
-		warning("Not working yet, sorry!")
-		return(NULL)
-	    }
-	    fit <- step(fit, direction=selection)
-	}
     }
     if (is.null(subject)) {
 	tbl <- data.frame(int(fit, dist=dist), 
@@ -101,12 +88,31 @@ plotForestParamMV <- function(srv, data, subject=NULL, selection=F, title="",  c
 	rmI <- c(1, length(summary(fit)$table[,1]))
 	tbl <- cbind(int(fit), summary(fit)$table[-rmI,,drop=F])
     }
-    print(summary(fit))
-    print(tbl)
     rownames(tbl) <- gsub("`", "", rownames(tbl))
 
     for (i in 1:length(data[1,])) {
 	if (!any(grepl(colnames(data)[i], rownames(tbl)))) { next }
+
+	### do we need to recalculate p-values?
+	recalcP <- NULL
+	if (recalc) {
+	    if (is.null(subject)) {
+		frm0 <- as.formula(paste("srv~", colnames(data)[-which(colnames(data) == colnames(data)[i])], collapse="+"))
+		fit0 <- survreg(frm0, data=data, dist=dist)
+		fit1 <- survreg(srv~., data=data, dist=dist)
+		a <- anova(fit0, fit1)
+		recalcP <- a[2,7]
+	    } else {
+		frm <- as.formula(paste("srv~", paste(colnames(data)[-which(colnames(data) == colnames(data)[i])],
+						      collapse="+"), "+cluster(subject)"))
+		fit0 <- survreg(frm, data=data, dist=dist)
+		frm <- as.formula(paste("srv~", paste(colnames(data), collapse="+"), "+cluster(subject)"))
+		fit1 <- survreg(frm, data=data, dist=dist)
+		a <- anova(fit0, fit1)
+		recalcP <- a[2,7]
+	    }
+	}
+
 	if (class(data[,i]) %in% c("factor", "character")) {
 	    uv [[length(uv)+1]] <- data.frame(name1=colnames(data)[i],
 					      name2=NA,
@@ -116,15 +122,17 @@ plotForestParamMV <- function(srv, data, subject=NULL, selection=F, title="",  c
 					      PVAL=NA)
 	    w <- which(substr(rownames(tbl), 1, nchar(colnames(data)[i])) == colnames(data)[i])
 	    sub <- tbl[w,,drop=F]
-	    #sub <- tbl[which(grepl(colnames(data)[i], rownames(tbl))),,drop=F]
+
 	    for (j in 1:length(sub[,1])) {
 		var <- substr(rownames(sub)[j], nchar(colnames(data)[i])+1, nchar(rownames(sub)[j]))
+
 		uv [[length(uv)+1]] <- data.frame(name1=NA,
 						  name2=var,
 						  HR=sub[j,2], 
 						  LOW=sub[j,1],
 						  UP=sub[j,3], 
-						  PVAL=sub[j,8])
+						  PVAL=ifelse(is.null(recalcP), sub[j,8],
+							      ifelse(j==1,recalcP, NA)))
 	    }
 	} else if (class(data[,i]) == "numeric") {
 	    uv [[length(uv)+1]] <- data.frame(name1=colnames(data)[i],
@@ -142,7 +150,7 @@ plotForestParamMV <- function(srv, data, subject=NULL, selection=F, title="",  c
 					      HR=sub[j,2], 
 					      LOW=sub[j,1],
 					      UP=sub[j,3], 
-					      PVAL=sub[j,8])
+					      PVAL=ifelse(is.null(recalcP), sub[j,8], recalcP))
 	}
     }
     uv <- do.call(rbind, uv)

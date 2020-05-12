@@ -28,6 +28,7 @@ plotForestParam <- function(srv, data, subject=NULL, title="", col=c("royalblue"
 		       invalCut=100, removeInval=F, dist="weibull") {
     uv <- list()
     for (i in 1:length(data[1,])) {
+	print(colnames(data)[i])
 	# Add variable
 	# factors
 	if (class(data[,i]) %in% c("factor", "character")) {
@@ -45,11 +46,15 @@ plotForestParam <- function(srv, data, subject=NULL, title="", col=c("royalblue"
 				  N=summary(fit)$n, 
 				  summary(fit)$table[-c(1,length(summary(fit)$table[,1])),,drop=F])
 	    } else {
-		stop("DEFUNC")
-		w <- which(!is.na(data[,i]) & !is.na(srv))
+		if (any(as.numeric(srv)[1:length(srv)] ==0)) { 
+			warning("Found 0 time in survival object. Removing!")
+		}
+		w <- which(!is.na(data[,i]) & !is.na(srv) & as.numeric(srv)[1:length(srv)] > 0)
 		fit <- survreg(srv[w]~factor(data[w,i])+cluster(subject[w]), dist=dist)
-		tbl <- cbind(summary(fit)$coef[], summary(fit)$conf.int, fit$n, fit$nevent)
-		tbl <- tbl[,-4,drop=F]
+		rmI <- c(1, length(summary(fit)$table[,1]))    
+		tbl <- cbind(int(fit), 
+			     N=summary(fit)$n, 
+			     summary(fit)$table[-rmI,-3,drop=F])    
 	    }
 	    rownames(tbl) <- substr(rownames(tbl), 19, nchar(rownames(tbl)))
 	    for (j in 1:length(tbl[,1])) {
@@ -76,11 +81,15 @@ plotForestParam <- function(srv, data, subject=NULL, title="", col=c("royalblue"
 				  N=summary(fit)$n, 
 				  summary(fit)$table[-c(1,length(summary(fit)$table[,1])),,drop=F])
 	    } else {
-		stop("DEFUNC")
-		w <- which(!is.na(data[,i]) & !is.na(srv))
+		if (any(as.numeric(srv)[1:length(srv)] ==0)) { 
+			warning("Found 0 time in survival object. Removing!")
+		}
+		w <- which(!is.na(data[,i]) & !is.na(srv) & as.numeric(srv)[1:length(srv)] > 0)
 		fit <- survreg(srv[w]~data[w,i]+cluster(subject[w]), dist=dist)
-		tbl <- cbind(summary(fit)$coef, summary(fit)$conf.int, fit$n)
-		tbl <- tbl[,-4,drop=F]
+		rmI <- c(1, length(summary(fit)$table[,1]))    
+		tbl <- cbind(int(fit), 
+			     N=summary(fit)$n, 
+			     summary(fit)$table[-rmI,-3,drop=F])    
 	    }
 	    j<-1
 	    uv [[length(uv)+1]] <- data.frame(name1=NA, 

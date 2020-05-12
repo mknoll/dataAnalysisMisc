@@ -37,6 +37,24 @@ plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, 
     if (is.null(xyleg)) { xyleg <- c(xlim[2]*0.7, 0.8) }
     if (is.null(pval)) { pval <- c(xlim[2]*0.7, 0.2) }
 
+    # any 0 srv time and dist?
+    if (!is.null(dist)){
+	if (any(is.na(srv))) {
+	    w <- which(is.na(srv))
+	    warning("Removing srv NA!")
+	    srv <-srv[-w]
+	    grp <- grp[-w]
+	    if (!is.null(subject)) { subject <-subject[-w] }
+	}
+	if (any(as.numeric(srv)[1:length(srv)] <= 0)) {
+	    w <- which(as.numeric(srv)[1:length(srv)] <= 0)
+	    warning("Removing srv <=0!")
+	    srv <-srv[-w]
+	    grp <- grp[-w]
+	    if (!is.null(subject)) { subject <-subject[-w] }
+	}
+    }
+
     # margin for number at risk table
     if (is.null(mar)) {
 	par(mar=c(7+nGrp*2,4,2,2))

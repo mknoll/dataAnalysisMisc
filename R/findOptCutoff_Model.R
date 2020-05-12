@@ -32,8 +32,22 @@ findOptCutoff_Model <- function(data,
     ## TODO: test from GRP var!
     #### Environment problems i passed as formula!
     ## FIXME
-    frm0 <- as.formula(frm0)
-    frm <- as.formula(frm)
+    ### do we need a cluster term?
+    if (!is.null(subjVar)) {
+	frm0 <- as.formula(paste(format(frm0), "+cluster(", subjVar, ")"))
+	frm <- as.formula(paste(format(frm), "+cluster(", subjVar, ")"))
+    } else {
+	frm0 <- as.formula(frm0)
+	frm <- as.formula(frm)
+    }
+
+    ## remove 0 srv data
+    if (any(as.numeric(srv)[1:length(srv)] <= 0)) {
+	warning("Found 0/neg srv time. Removing!")
+	w <- which(as.numeric(srv)[1:length(srv)] <= 0)
+	srv <- srv[-w]
+	data <- data[-w,,drop=F]
+    }
 
     ##remove NA SRV data 
     if (any(is.na(srv))) { 
@@ -47,6 +61,9 @@ findOptCutoff_Model <- function(data,
     identVar <- c(subjVar, tmp, stdVar)
     if (!is.null(subjVar)) { identVar <- c(identVar, subjVar) }
     identVar <- identVar[which(identVar != "GRP")]
+    if (any(grepl("cluster(", identVar, fixed=T))) {
+	identVar <- identVar[-which(grepl("cluster(", identVar,fixed=T))]
+    }
     print(identVar)
 
     keep <- list()
@@ -101,16 +118,14 @@ findOptCutoff_Model <- function(data,
 	    data$GRP <- grp
 
 	    ### do we need a cluster term?
-	    if (!is.null(subjVar)) {
-		frm0 <- as.formula(paste(as.character(frm0), "+cluster(", subjVar, ")"))
-		frm <- as.formula(paste(as.character(frm), "+cluster(", subjVar, ")"))
-	    }
 	    if (is.null(dist)) {
-		fit0 <- coxph(frm0, data)
-		fit <- coxph(frm, data)
+		#### FIXME: there's a bug in stats, survival, base R, .... 
+		#### "'termlabels' must be a character vector of length at least one"
+		fit0 <- coxph(frm0, data=data.frame(data))
+		fit <- coxph(frm, data=data.frame(data))
 	    } else {
-		fit0 <- survreg(frm0, data, dist=dist)
-		fit <- survreg(frm, data, dist=dist)
+		fit0 <- survreg(frm0, data.frame(data), dist=dist)
+		fit <- survreg(frm, data.frame(data), dist=dist)
 	    }
 	    a <- anova(fit0, fit)
 	    p.val <- a[2,4]
