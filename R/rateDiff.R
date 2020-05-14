@@ -43,6 +43,7 @@ createGrids <- function(dat, treat, nbin=50, rate=T) {
 }
 
 
+
 #' @title Get Quantiles from grid
 #' 
 #' @param dat output from createGrids()
