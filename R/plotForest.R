@@ -116,12 +116,15 @@ plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "da
 
     for (i in 1:length(tabletext[,1])) {
 	tabletext[i,1] <- paste(tabletext[i,1], tabletext[i,2], collapse="   ")
-	tabletext[i,1] <- gsub("NA", "", tabletext[i,1])
+	tabletext[i,1] <- gsub(" NA", "", tabletext[i,1])
+	#tabletext[i,1] <- gsub("NA", "", tabletext[i,1])
+	tabletext[i,1] <- ifelse(tabletext[i,1] == "NA", "", tabletext[i,1])
 	tabletext[i,6] <- gsub("NA/NA", "", tabletext[i,6])
 	if (!is.na(tabletext[i,5]) && i > 1) { tabletext[i,6] <- "" }
     }
     tabletext <- tabletext[,-2]
     tabletext[,3] <- gsub("NA-NA", "", tabletext[,3])
+    print(tabletext)
 
     forestplot(tabletext,
 	       mean  = c(NA, as.numeric(as.character(uv[,3]))),

@@ -68,22 +68,26 @@ getQuantiles<- function(dat, q=c(0.025, 0.975)) {
 #' @param dat output from createGrids()
 #' 
 #' @export 
-plotDiff <- function(dat, q=q) {
-    n<- length(dat)
+plotDiff <- function(dat, q=q, mar=c(4,4,4,4), main=T) {
+    n<- length(dat)-1
     print(paste("GRID: ",n,"x",n,sep=""))
-    par(mfrow=c(n,n), mar=c(0,0,0,0))
-    for (i in 1:length(dat)) {
-	for (j in 1:length(dat)) {
+    par(mfrow=c(n,n), mar=mar)
+    for (i in length(dat):2) {
+	for (j in length(dat):1) {
 	    if (i == j) { next }
 
-	    #diff
+	    #differenz wird berechnet
 	    dM <- dat[[i]]-dat[[j]]
 
 	    #### gray background
 	    dM2 <- dM
 	    dM2[which(dM2 == 0)] <- NA
-	    if (i <= j) {
-		image(dM2, col=gray.colors(100)[-c(40:60)], axes=F)
+	    if (i > j) {
+		txt <- ""
+		if (main) {
+		    txt <- paste(names(dat)[i], "-", names(dat)[j])
+		}
+		image(dM2, col=gray.colors(100)[-c(40:60)], axes=F, main=txt)
 	    } else {
 		## placeholder
 		image(dM2, col="white", axes=F)
@@ -92,7 +96,7 @@ plotDiff <- function(dat, q=q) {
 	    ### colored: quantile
 	    dM3 <- dM2
 	    dM3[which(dM2 > q[1] & dM2 < q[2])] <- NA
-	    if (i <= j) { 
+	    if (i > j) { 
 		image(dM3, col=redgreen(100)[-c(40:60)], axes=F, add=T)
 	    } else {
 		### placeholder
@@ -102,6 +106,45 @@ plotDiff <- function(dat, q=q) {
     }
 }
 
+
+#' @title Plot pairwise comparisons of grids
+#'
+#' @param dat output from createGrids()
+#' 
+#' @export 
+plotDiff2 <- function(dat, q=q) {
+  n<- length(dat)
+  print(paste("GRID: 1x",sum(1:n-1),sep=""))
+  par(mfrow=c(1,sum(1:n-1)), mar=c(4,4,4,4))
+  for (i in 1:length(dat)) {
+    for (j in 1:length(dat)) {
+      if (i == j) { next }
+      
+      #differenz wird berechnet
+      dM <- dat[[i]]-dat[[j]]
+      
+      #### gray background
+      dM2 <- dM
+      dM2[which(dM2 == 0)] <- NA
+      if (i <= j) {
+        image(dM2, col=gray.colors(100)[-c(40:60)], axes=F, main=paste(names(dat)[i], "-", names(dat)[j]))
+      } else {
+        ## placeholder
+        #image(dM2, col="white", axes=F)
+      }
+      
+      ### colored: quantile
+      dM3 <- dM2
+      dM3[which(dM2 > q[1] & dM2 < q[2])] <- NA
+      if (i <= j) { 
+        image(dM3, col=redgreen(100)[-c(40:60)], axes=F, add=T)
+      } else {
+        ### placeholder
+        #image(dM3, col="white", axes=F, add=T)
+      }
+    }
+  }
+}
 
 #' @title Quantify differences from pairwise comparisons
 #' 

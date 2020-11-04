@@ -82,7 +82,10 @@ plotForestSplit <- function(srv, data, subject=NULL, title="", col=c("royalblue"
 		     )
     for (i in 1:length(tabletext[,1])) {
 	tabletext[i,1] <- paste(tabletext[i,1], tabletext[i,2], tabletext[i,3], collapse="   ")
-	tabletext[i,1] <- gsub("NA", "", tabletext[i,1])
+	#tabletext[i,1] <- gsub("NA", "", tabletext[i,1])
+	tabletext[i,1] <- gsub(" NA", "", tabletext[i,1])
+	tabletext[i,1] <- ifelse(tabletext[i,1] == "NA", "", tabletext[i,1])
+	tabletext[i,1] <- gsub("NA ", "", tabletext[i,1])
     }
     tabletext <- tabletext[,-c(2:3)]
     tabletext[,3] <- gsub("NA-NA", "", tabletext[,3])
