@@ -4,9 +4,16 @@
 \alias{fixedEffAnalysis}
 \title{Model based analysis with fixed effects}
 \usage{
-fixedEffAnalysis(data, pheno, frm0 = as.formula(VAL ~ 1),
-  frm = as.formula(VAL ~ GRP), type = "lm", nCores = NULL,
-  complete.cases = F, padj = "BH")
+fixedEffAnalysis(
+  data,
+  pheno,
+  frm0 = as.formula(VAL ~ 1),
+  frm = as.formula(VAL ~ GRP),
+  type = "lm",
+  nCores = NULL,
+  complete.cases = F,
+  padj = "BH"
+)
 }
 \arguments{
 \item{data}{data.frame containg a sample per column and 

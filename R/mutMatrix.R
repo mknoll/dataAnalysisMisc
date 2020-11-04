@@ -3,6 +3,7 @@
 #' @param files maf files 
 #' @param excl Variant_Classification to exclude
 #' 
+#' @import data.table
 #' @export
 mutMatrix <- function(files, excl=c("Silent")) {
     mafs <- list()    

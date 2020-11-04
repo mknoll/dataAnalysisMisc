@@ -4,11 +4,9 @@
 \alias{drawSpiralPlot}
 \title{Draw spiral plot}
 \usage{
-drawSpiralPlot(data, meta, coord, off = 1, col = NULL, segm = NULL,
-  leg = F)
+drawSpiralPlot(data, meta, coord, off = 1, col = NULL, segm = NULL, leg = F)
 
-drawSpiralPlot(data, meta, coord, off = 1, col = NULL, segm = NULL,
-  leg = F)
+drawSpiralPlot(data, meta, coord, off = 1, col = NULL, segm = NULL, leg = F)
 }
 \description{
 

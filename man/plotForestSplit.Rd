@@ -4,8 +4,14 @@
 \alias{plotForestSplit}
 \title{Create forest plot}
 \usage{
-plotForestSplit(srv, data, subject = NULL, title = "",
-  col = c("royalblue", "darkblue", "royalblue"), split = NULL)
+plotForestSplit(
+  srv,
+  data,
+  subject = NULL,
+  title = "",
+  col = c("royalblue", "darkblue", "royalblue"),
+  split = NULL
+)
 }
 \description{
 Create forest plot

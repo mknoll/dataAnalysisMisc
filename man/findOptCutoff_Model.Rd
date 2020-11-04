@@ -4,9 +4,17 @@
 \alias{findOptCutoff_Model}
 \title{Find two differening groups in survival data}
 \usage{
-findOptCutoff_Model(data, srv, frm0 = "srv~1", frm = "srv~GRP",
-  stdVar = "VAL", delta = 0.1, minGrpSize = 1, subjVar = NULL,
-  dist = NULL)
+findOptCutoff_Model(
+  data,
+  srv,
+  frm0 = "srv~1",
+  frm = "srv~GRP",
+  stdVar = "VAL",
+  delta = 0.1,
+  minGrpSize = 1,
+  subjVar = NULL,
+  dist = NULL
+)
 }
 \arguments{
 \item{data}{data.frame, with variables in cols}

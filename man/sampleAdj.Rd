@@ -4,8 +4,15 @@
 \alias{sampleAdj}
 \title{Sample clusters from adjacence matrix}
 \usage{
-sampleAdj(adj, size = 5, n = 5, maxTry = 1000, starTopo = 1,
-  type = 1, seed = -1)
+sampleAdj(
+  adj,
+  size = 5,
+  n = 5,
+  maxTry = 1000,
+  starTopo = 1,
+  type = 1,
+  seed = -1
+)
 }
 \arguments{
 \item{adj}{Adjazenzmatrix}

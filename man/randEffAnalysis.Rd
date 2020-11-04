@@ -4,9 +4,18 @@
 \alias{randEffAnalysis}
 \title{Model based analysis with random effects}
 \usage{
-randEffAnalysis(data, pheno, frm0 = as.formula(VAL ~ 1 + (1 | ID)),
-  frm = as.formula(VAL ~ GRP + (1 | ID)), type = "lm", rand = NULL,
-  nCores = NULL, reCalcREML = T, complete.cases = T, transf = F)
+randEffAnalysis(
+  data,
+  pheno,
+  frm0 = as.formula(VAL ~ 1 + (1 | ID)),
+  frm = as.formula(VAL ~ GRP + (1 | ID)),
+  type = "lm",
+  rand = NULL,
+  nCores = NULL,
+  reCalcREML = T,
+  complete.cases = T,
+  transf = F
+)
 }
 \arguments{
 \item{data}{data.frame containg a sample per column and 

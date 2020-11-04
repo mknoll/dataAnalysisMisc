@@ -4,8 +4,14 @@
 \alias{simLoc450k}
 \title{Calculate localtion sensitive similarity, 450k}
 \usage{
-simLoc450k(data, type = "both", n = 3, corM = "pearson",
-  cutPosCor = 0.9, cutNegCor = -0.9)
+simLoc450k(
+  data,
+  type = "both",
+  n = 3,
+  corM = "pearson",
+  cutPosCor = 0.9,
+  cutNegCor = -0.9
+)
 }
 \arguments{
 \item{type}{pos, neg, both}

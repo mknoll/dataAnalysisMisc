@@ -4,8 +4,14 @@
 \alias{plotForestMV}
 \title{Calculates multivariate analysis and creates a forest plot}
 \usage{
-plotForestMV(srv, data, subject = NULL, selection = F, title = "",
-  col = c("royalblue", "darkblue", "royalblue"))
+plotForestMV(
+  srv,
+  data,
+  subject = NULL,
+  selection = F,
+  title = "",
+  col = c("royalblue", "darkblue", "royalblue")
+)
 }
 \arguments{
 \item{srv}{Survival object as created by survival::Surv() function,

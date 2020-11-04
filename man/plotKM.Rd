@@ -4,9 +4,21 @@
 \alias{plotKM}
 \title{Plots a Kaplan Meier survival curve with number at risk table}
 \usage{
-plotKM(srv, grp, xlim = NULL, col = NULL, xyleg = NULL,
-  offsetNRisk = -0.2, yDelta = 0.1, nRiskCat = 4, pval = NULL,
-  mar = NULL, subject = NULL, dist = NULL, ...)
+plotKM(
+  srv,
+  grp,
+  xlim = NULL,
+  col = NULL,
+  xyleg = NULL,
+  offsetNRisk = -0.2,
+  yDelta = 0.1,
+  nRiskCat = 4,
+  pval = NULL,
+  mar = NULL,
+  subject = NULL,
+  dist = NULL,
+  ...
+)
 }
 \arguments{
 \item{srv}{Survival obejct as obtained by survival::Surv()}

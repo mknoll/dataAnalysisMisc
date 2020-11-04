@@ -4,8 +4,15 @@
 \alias{getMeans}
 \title{Get Means}
 \usage{
-getMeans(vec, eps = 10^-5, eps2 = -0.1, n = 1000, frac = 0.005,
-  log = T, bw = 0.1)
+getMeans(
+  vec,
+  eps = 10^-5,
+  eps2 = -0.1,
+  n = 1000,
+  frac = 0.005,
+  log = T,
+  bw = 0.1
+)
 }
 \description{
 Get Means

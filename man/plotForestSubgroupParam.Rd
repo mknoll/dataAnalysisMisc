@@ -4,8 +4,14 @@
 \alias{plotForestSubgroupParam}
 \title{Calculated univariate analysis and creates a forest plot}
 \usage{
-plotForestSubgroupParam(srv, data, ref = NULL, title = "",
-  dist = "weibull", col = c("royalblue", "darkblue", "royalblue"))
+plotForestSubgroupParam(
+  srv,
+  data,
+  ref = NULL,
+  title = "",
+  dist = "weibull",
+  col = c("royalblue", "darkblue", "royalblue")
+)
 }
 \arguments{
 \item{srv}{Survival object as created by survival::Surv() function,

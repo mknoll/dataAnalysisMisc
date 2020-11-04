@@ -4,8 +4,15 @@
 \alias{testSign}
 \title{Test significance}
 \usage{
-testSign(obj, pAdj = "none", pCut = 0.05, frm0 = NULL, frm = NULL,
-  singlePVar = "Pr...t..", ...)
+testSign(
+  obj,
+  pAdj = "none",
+  pCut = 0.05,
+  frm0 = NULL,
+  frm = NULL,
+  singlePVar = "Pr...t..",
+  ...
+)
 }
 \arguments{
 \item{obj}{fitModel object}

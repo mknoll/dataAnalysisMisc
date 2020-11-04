@@ -4,8 +4,19 @@
 \alias{boxGraph}
 \title{Plot some position preserving boxplots}
 \usage{
-boxGraph(y, x, fact = NULL, xSel = NA, xlim = NULL, ylim = NULL,
-  ylab = NA, main = "", lines = F, cols = NULL, colsSel = NULL)
+boxGraph(
+  y,
+  x,
+  fact = NULL,
+  xSel = NA,
+  xlim = NULL,
+  ylim = NULL,
+  ylab = NA,
+  main = "",
+  lines = F,
+  cols = NULL,
+  colsSel = NULL
+)
 }
 \description{
 Plot some position preserving boxplots
