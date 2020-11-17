@@ -118,6 +118,9 @@ plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "da
 	tabletext[i,1] <- paste(tabletext[i,1], tabletext[i,2], collapse="   ")
 	tabletext[i,1] <- gsub(" NA", "", tabletext[i,1])
 	#tabletext[i,1] <- gsub("NA", "", tabletext[i,1])
+	if (substr(tabletext[i,1], 1, 3) == "NA ") {
+	    tabletext[i,1] <- substr(tabletext[i,1], 3, nchar(tabletext[i,1]))
+	}
 	tabletext[i,1] <- ifelse(tabletext[i,1] == "NA", "", tabletext[i,1])
 	tabletext[i,6] <- gsub("NA/NA", "", tabletext[i,6])
 	if (!is.na(tabletext[i,5]) && i > 1) { tabletext[i,6] <- "" }
