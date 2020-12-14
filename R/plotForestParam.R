@@ -141,7 +141,25 @@ plotForestParam <- function(srv, data, subject=NULL, title="", col=c("royalblue"
     tabletext <- tabletext[,-2]
     tabletext[,3] <- gsub("NA-NA", "", tabletext[,3])
 
+    ### boldprint 
+    bp <- list()
+    for (i in 1:length(tabletext[,1])) {
+	bp[[i]] <-list()
+	for (j in 1:length(tabletext[1,])) {
+	    print(paste0("j: ", j))
+	    print(tabletext[i,j])
+	    if (j == 4 && !is.na(as.numeric(tabletext[i,j])) && (as.numeric(tabletext[i,j]) < 0.05 || tabletext[i,j] == "<0.001")) {
+		#bp[[i]][[j]] <- gpar(fontface="plain")
+		bp[[i]][[j]] <- gpar(fontface="bold")
+	    } else {
+		bp[[i]][[j]] <- gpar(fontface="plain")
+		#bp[[i]][[j]] <- gpar(fontface="bold")
+	    }
+	}
+    }
+
     forestplot(tabletext,
+	       txt_gp=fpTxtGp(label=bp),
 	       mean  = c(NA, as.numeric(as.character(uv[,3]))),
 	       lower = c(NA, as.numeric(as.character(uv[,4]))),
 	       upper = c(NA, as.numeric(as.character(uv[,5]))),
