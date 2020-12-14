@@ -128,17 +128,19 @@ plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "da
     tabletext <- tabletext[,-2]
     tabletext[,3] <- gsub("NA-NA", "", tabletext[,3])
 
-    print(tabletext)
     ### boldprint 
     bp <- list()
     for (i in 1:length(tabletext[,1])) {
 	bp[[i]] <-list()
 	for (j in 1:length(tabletext[1,])) {
-	    print(paste0("j: ", j))
-	    print(tabletext[i,j])
-	    if (j == 4 && !is.na(as.numeric(tabletext[i,j])) && (as.numeric(tabletext[i,j]) < 0.05 || tabletext[i,j] == "<0.001")) {
-		#bp[[i]][[j]] <- gpar(fontface="plain")
-		bp[[i]][[j]] <- gpar(fontface="bold")
+	    if (j == 4) {
+		if (!is.na(as.numeric(tabletext[i,j])) && (as.numeric(tabletext[i,j]) < 0.05)) {
+		    bp[[i]][[j]] <- gpar(fontface="bold")
+		} else if (!is.na(tabletext[i,j]) && tabletext[i,j] == "<0.001") {
+		    bp[[i]][[j]] <- gpar(fontface="bold")
+		} else {
+		    bp[[i]][[j]] <- gpar(fontface="plain")
+		}
 	    } else {
 		bp[[i]][[j]] <- gpar(fontface="plain")
 		#bp[[i]][[j]] <- gpar(fontface="bold")
