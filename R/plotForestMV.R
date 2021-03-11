@@ -17,9 +17,11 @@
 #' with automatic model selection.
 #' @param title Plot title
 #' @param col Color vector as expected by the forestplot() function
+#' @param MDPI adhere to MDPI requirements
 #' 
 #' @import forestplot
 #' @import survival
+#' @import grid
 #'
 #' @export
 #'
@@ -45,7 +47,7 @@
 #' 
 #' #Observatons from the same individual
 #' #plotForestMV(srv, data, subject=subjectIDs)
-plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c("royalblue", "darkblue", "royalblue")) {
+plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c("royalblue", "darkblue", "royalblue"), MDPI=F) {
     uv <- list()
     
     #preserve level names
@@ -140,12 +142,12 @@ plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c(
     }
     uv <- do.call(rbind, uv)
 
-    #tabletext<-cbind(c("", as.character(uv[,1])),
+    dash <- ifelse(MDPI, "–", "-")
     tabletext<-cbind(c(paste(fit$n, "/", fit$nevent), as.character(uv[,1])),
 		     c("", as.character(uv[,2])),
 		     c("Hazard Ratio", round(uv[,3],2)),
 		     c("95% CI", ifelse(uv[,4] == "", "", 
-					paste(format(round(uv[,4],2), nsmall=2), "-", 
+					paste(format(round(uv[,4],2), nsmall=2), dash, 
 					      format(round(uv[,5],2), nsmall=2), sep=""))),
 		     c("p-value", ifelse(round(uv[,6],3) == 0, "<0.001", round(uv[,6],3)))
 		     )

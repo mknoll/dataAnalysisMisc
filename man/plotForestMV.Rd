@@ -10,7 +10,8 @@ plotForestMV(
   subject = NULL,
   selection = F,
   title = "",
-  col = c("royalblue", "darkblue", "royalblue")
+  col = c("royalblue", "darkblue", "royalblue"),
+  MDPI = F
 )
 }
 \arguments{
@@ -27,6 +28,8 @@ with automatic model selection.}
 \item{title}{Plot title}
 
 \item{col}{Color vector as expected by the forestplot() function}
+
+\item{MDPI}{adhere to MDPI requirements}
 }
 \description{
 Calculates a multivariate analysis, either utilizing all

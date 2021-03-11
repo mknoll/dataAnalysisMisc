@@ -14,6 +14,7 @@
 #' @param pval xy coordinates of where to plot the pvalue
 #' @param mar margin parameter, calculated internally (default). Not used if mar 
 #' is set to anything different from NULL
+#' @param MDPI if set to T, adhere to MDPI requirements
 #' 
 #' @import survival
 #' @import pals
@@ -27,7 +28,9 @@
 #'	srv <- Surv(time, status)
 #' 	grp <- c(rep("A", 3), rep("B", 3))
 #' 	plotKM(srv, grp)
-plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, yDelta=0.1, nRiskCat=4, pval=NULL, mar=NULL, subject=NULL, dist=NULL, ...) {
+plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, 
+		   yDelta=0.1, nRiskCat=4, pval=NULL, mar=NULL, subject=NULL, 
+		   dist=NULL, MDPI=F, ...) {
     # number of groups 
     nGrp <- length(levels(factor(grp)))
     grp <- factor(grp)
@@ -100,7 +103,17 @@ plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, 
 	    print(str(summary(fitC)))
 	    p <- summary(fitC)$robscore[3][[1]]
 	}
-	p <- paste("p=",format(p, scientific=TRUE, digits=3), sep="")
+	if (MDPI) {
+	    str <- format(p, scientific=TRUE, digits=3)
+	    tmp <- strsplit(str, "e")[[1]]
+	    expression(tmp[1])
+	    res <- paste0("expression(",tmp[1],")")
+	    mystr <- paste0("p = ", tmp[1], " x 10")
+	    mystr2 <- tmp[2]
+	    p <- bquote(.(mystr)^.(mystr2))
+	} else {
+	    p <- paste("p=",format(p, scientific=TRUE, digits=3), sep="")
+	}
 	text(pval[1], pval[2], p, font=2, cex=0.8)
     }
 

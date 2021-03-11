@@ -17,6 +17,7 @@ plotKM(
   mar = NULL,
   subject = NULL,
   dist = NULL,
+  MDPI = F,
   ...
 )
 }
@@ -39,6 +40,8 @@ plotKM(
 
 \item{mar}{margin parameter, calculated internally (default). Not used if mar 
 is set to anything different from NULL}
+
+\item{MDPI}{if set to T, adhere to MDPI requirements}
 }
 \description{
 Creates Kaplan-Meier survival curves, prints a number at risk

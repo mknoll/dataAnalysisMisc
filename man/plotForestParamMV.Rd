@@ -12,7 +12,8 @@ plotForestParamMV(
   title = "",
   col = c("royalblue", "darkblue", "royalblue"),
   dist = "weibull",
-  recalc = F
+  recalc = F,
+  MDPI = F
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ with automatic model selection.}
 \item{col}{Color vector as expected by the forestplot() function}
 
 \item{recalc}{caluclate LRT per factor}
+
+\item{MDPI}{adhere to MDPI requirements}
 }
 \description{
 Calculates a multivariate analysis, either utilizing all

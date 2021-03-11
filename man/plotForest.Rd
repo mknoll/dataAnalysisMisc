@@ -11,7 +11,8 @@ plotForest(
   title = "",
   col = c("royalblue", "darkblue", "royalblue"),
   invalCut = 100,
-  removeInval = F
+  removeInval = F,
+  MDPI = F
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ will be treated as continous variable, factor and character as factors.}
 if HR exceeds the provided cutoff (e.g. if models do not converge)}
 
 \item{removeInval}{Retain as invalid identified levels (invalCut)}
+
+\item{MDPI}{adhere to MDPI requirements}
 }
 \description{
 The function creates a forest plot for a given 

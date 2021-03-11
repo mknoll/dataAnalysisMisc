@@ -19,13 +19,15 @@
 #' @param invalCut Cutoff to set HR, CI and p-values to empty values
 #' if HR exceeds the provided cutoff (e.g. if models do not converge)
 #' @param removeInval Retain as invalid identified levels (invalCut)
+#' @param MDPI adhere to MDPI requirements
 #' 
 #' @import forestplot
 #' @import survival
+#' @import grid
 #'
 #' @export
 plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "darkblue", "royalblue"), 
-		       invalCut=100, removeInval=F) {
+		       invalCut=100, removeInval=F, MDPI=F) {
     uv <- list()
     for (i in 1:length(data[1,])) {
 	# Add variable
@@ -102,11 +104,12 @@ plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "da
 	}
     }
 
+    dash <- ifelse(MDPI, "–", "-")
     tabletext<-cbind(c("", as.character(uv[,1])),
 		     c("", as.character(uv[,2])),
 		     c("Hazard Ratio", round(uv[,3],2)),
 		     c("95% CI", ifelse(uv[,4] == "", "", 
-					paste(format(round(uv[,4],2), nsmall=2), "-", 
+					paste(format(round(uv[,4],2), nsmall=2), dash, 
 					      format(round(uv[,5],2), nsmall=2), sep=""))),
 		     c("p-value", ifelse(round(uv[,6],3) == 0, "<0.001", round(uv[,6], 3))),
 		     c("n/nevent", paste(uv[,7], "/", uv[,8], sep=""))
