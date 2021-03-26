@@ -22,6 +22,7 @@
 #' 
 #' @import forestplot
 #' @import survival
+#' @import grid
 #'
 #' @export
 plotForestParam <- function(srv, data, subject=NULL, title="", col=c("royalblue", "darkblue", "royalblue"), 
