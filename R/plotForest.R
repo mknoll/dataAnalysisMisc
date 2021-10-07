@@ -20,6 +20,7 @@
 #' if HR exceeds the provided cutoff (e.g. if models do not converge)
 #' @param removeInval Retain as invalid identified levels (invalCut)
 #' @param MDPI adhere to MDPI requirements
+#' @param singleLine variable name and measruemnet in one line
 #' 
 #' @import forestplot
 #' @import survival
@@ -27,7 +28,7 @@
 #'
 #' @export
 plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "darkblue", "royalblue"), 
-		       invalCut=100, removeInval=F, MDPI=F) {
+		       invalCut=100, removeInval=F, MDPI=F, singleLine=F) {
     uv <- list()
     for (i in 1:length(data[1,])) {
 	# Add variable
@@ -130,6 +131,24 @@ plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "da
     }
     tabletext <- tabletext[,-2]
     tabletext[,3] <- gsub("NA-NA", "", tabletext[,3])
+
+    #### same height
+    if (singleLine) {
+	tbt <- list()
+	tbt[[length(tbt)+1]] <- tabletext[1,,drop=F]
+	for (i in 3:(length(tabletext[,1]))) {
+	    ln <- tabletext[(i-1),,drop=F]
+	    ln[,2:4] <- tabletext[i,2:4]
+	    tbt[[length(tbt)+1]] <- ln
+	    i <- i+1
+	}
+	tbt <- do.call(rbind, tbt)
+	sel <- which(!is.na(tbt[,2]))
+	#### adjust
+	tabletext <- tbt[sel,,drop=F]
+	uv <-uv[seq(from=2, to=length(uv[,1]), by=2),]
+    }
+
 
     ### boldprint 
     bp <- list()
