@@ -178,7 +178,7 @@ plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c(
 	}
     }
 
-    forestplot::forestplot(tabletext,
+    fp <- forestplot::forestplot(tabletext,
 			   txt_gp=fpTxtGp(label=bp),
 			   mean  = c(NA, as.numeric(as.character(uv[,3]))),
 			   lower = c(NA, as.numeric(as.character(uv[,4]))),
@@ -192,5 +192,6 @@ plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c(
 			   align=1,
 			   zero=1)
 
+    print(fp)
     return(uv)
 }
