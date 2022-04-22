@@ -28,7 +28,7 @@
 #'
 #' @export
 plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "darkblue", "royalblue"), 
-		       invalCut=100, removeInval=F, MDPI=F, singleLine=F) {
+		       invalCut=100, removeInval=F, MDPI=F, singleLine=F, plotNCol=T) {
     uv <- list()
     for (i in 1:length(data[1,])) {
 	# Add variable
@@ -149,6 +149,10 @@ plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "da
 	uv <-uv[seq(from=2, to=length(uv[,1]), by=2),]
     }
 
+    ## remove column with n
+    if (!plotNCol) {
+	tabletext <- tabletext[,1:(length(tabletext[1,])-1)]
+    }
 
     ### boldprint 
     bp <- list()

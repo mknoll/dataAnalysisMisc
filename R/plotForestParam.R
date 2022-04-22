@@ -27,7 +27,7 @@
 #'
 #' @export
 plotForestParam <- function(srv, data, subject=NULL, title="", col=c("royalblue", "darkblue", "royalblue"), 
-		       invalCut=100, removeInval=F, dist="weibull", singleLine=F) {
+		       invalCut=100, removeInval=F, dist="weibull", singleLine=F, plotNCol=T, boldPCut=0.05) {
     uv <- list()
     for (i in 1:length(data[1,])) {
 	print(colnames(data)[i])
@@ -160,13 +160,18 @@ plotForestParam <- function(srv, data, subject=NULL, title="", col=c("royalblue"
 	uv <-uv[seq(from=2, to=length(uv[,1]), by=2),]
     }
 
+    ## remove column with n
+    if (!plotNCol) {
+	tabletext <- tabletext[,1:(length(tabletext[1,])-1)]
+    }
+
     ### boldprint 
     bp <- list()
     for (i in 1:length(tabletext[,1])) {
 	bp[[i]] <-list()
 	for (j in 1:length(tabletext[1,])) {
 	    if (j == 4) {
-		if (!is.na(as.numeric(tabletext[i,j])) && (as.numeric(tabletext[i,j]) < 0.05)) {
+		if (!is.na(as.numeric(tabletext[i,j])) && (as.numeric(tabletext[i,j]) < boldPCut)) {
 		    bp[[i]][[j]] <- gpar(fontface="bold")
 		} else if (!is.na(tabletext[i,j]) && tabletext[i,j] == "<0.001") {
 		    bp[[i]][[j]] <- gpar(fontface="bold")
