@@ -30,7 +30,7 @@
 #' 	plotKM(srv, grp)
 plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, 
 		   yDelta=0.1, nRiskCat=4, pval=NULL, mar=NULL, subject=NULL, 
-		   dist=NULL, MDPI=F, ...) {
+		   dist=NULL, MDPI=F, plotFit=T, ...) {
     # number of groups 
     nGrp <- length(levels(factor(grp)))
     grp <- factor(grp)
@@ -64,7 +64,12 @@ plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2,
     }
 
     # plot KM
-    plot(survfit(srv~grp), mark.time=T, xlim=xlim, col=col, ...)
+    if (dist == "loglog") {
+	plot(survfit(srv~grp), mark.time=T, xlim=xlim, col=col, xaxt='n', ...)
+    } else {
+	plot(survfit(srv~grp), mark.time=T, xlim=xlim, col=col, ...)
+    }
+
     # plot parametric survival curves
     if (!is.null(dist)) {
 	warning("repeated measurements not implemented yet! Ignoring subject parameter!")
@@ -72,9 +77,25 @@ plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2,
 	for (i in 1:nGrp) {
 	    y <- predict(fitR, newdata=list(grp=levels(factor(grp))[i]), type="quantile", p=seq(.01,.99,by=.01))
 	    x <- seq(.99,.01,by=-.01)
-	    lines(y, x, col=col[i], lty=2, ...)
+	    if (plotFit) {
+		lines(y, x, col=col[i], lty=2, ...)
+	    }
 	    ww <- which(x == 0.5)
 	    print(paste("Median survival time [",levels(factor(grp))[i],"]: ", y[ww], sep=""))
+	}
+	##adjust xaxis ticks
+	if (dist == "loglog") {
+	    fit <- survfit(srv~grp)
+	    to <- floor(max(fit$time))
+	    if (!missing(xlim)) {
+		print(xlim)
+		to <-xlim[2]
+	    }
+	    xat <- c(0, to)                 
+	    xat <- seq(from=xat[1], to=xat[2], len=5)
+	    print(xat)
+	    axis(side=1, at=xat, labels = FALSE)                                          
+	    text(x=xat,  par("usr")[3]-0.05,  labels=round(exp(xat)), xpd=T,pos=1, las=2)     
 	}
     }
 

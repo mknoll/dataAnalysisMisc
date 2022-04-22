@@ -47,7 +47,7 @@
 #' 
 #' #Observatons from the same individual
 #' #plotForestMV(srv, data, subject=subjectIDs)
-plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c("royalblue", "darkblue", "royalblue"), MDPI=F) {
+plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c("royalblue", "darkblue", "royalblue"), MDPI=F, singleLine=F) {
     uv <- list()
     
     #preserve level names
@@ -157,6 +157,23 @@ plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c(
     }
     tabletext <- tabletext[,-2]
     tabletext[,3] <- gsub("NA-NA", "", tabletext[,3])
+
+    #### same height
+    if (singleLine) {
+	tbt <- list()
+	tbt[[length(tbt)+1]] <- tabletext[1,,drop=F]
+	for (i in 3:(length(tabletext[,1]))) {
+	    ln <- tabletext[(i-1),,drop=F]
+	    ln[,2:4] <- tabletext[i,2:4]
+	    tbt[[length(tbt)+1]] <- ln
+	    i <- i+1
+	}
+	tbt <- do.call(rbind, tbt)
+	sel <- which(!is.na(tbt[,2]))
+	#### adjust
+	tabletext <- tbt[sel,,drop=F]
+	uv <-uv[seq(from=2, to=length(uv[,1]), by=2),]
+    }
 
     ### boldprint 
     bp <- list()
