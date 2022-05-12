@@ -30,7 +30,7 @@
 #' 	plotKM(srv, grp)
 plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2, 
 		   yDelta=0.1, nRiskCat=4, pval=NULL, mar=NULL, subject=NULL, 
-		   dist=NULL, MDPI=F, plotFit=T, ...) {
+		   dist=NULL, MDPI=F, plotFit=T, adjAxis=F, ...) {
     # number of groups 
     nGrp <- length(levels(factor(grp)))
     grp <- factor(grp)
@@ -64,8 +64,12 @@ plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2,
     }
 
     # plot KM
-    if (dist == "loglog") {
-	plot(survfit(srv~grp), mark.time=T, xlim=xlim, col=col, xaxt='n', ...)
+    if (!is.null(dist) && dist == "loglog") {
+	if (adjAxis) {
+	    plot(survfit(srv~grp), mark.time=T, xlim=xlim, col=col, xaxt='n', ...)
+	} else {
+	    plot(survfit(srv~grp), mark.time=T, xlim=xlim, col=col, ...)
+	}
     } else {
 	plot(survfit(srv~grp), mark.time=T, xlim=xlim, col=col, ...)
     }
@@ -84,7 +88,7 @@ plotKM <- function(srv, grp, xlim=NULL, col=NULL, xyleg=NULL, offsetNRisk=-0.2,
 	    print(paste("Median survival time [",levels(factor(grp))[i],"]: ", y[ww], sep=""))
 	}
 	##adjust xaxis ticks
-	if (dist == "loglog") {
+	if (dist == "loglog" && adjAxis) {
 	    fit <- survfit(srv~grp)
 	    to <- floor(max(fit$time))
 	    if (!missing(xlim)) {
