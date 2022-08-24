@@ -108,7 +108,7 @@ plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c(
 					      HR=NA, 
 					      LOW=NA,
 					      UP=NA, 
-					      PVAL=NA)
+					      PVAL=NA, check.names=F)
 	    w <- which(substr(rownames(tbl), 1, nchar(colnames(data)[i])) == colnames(data)[i])
 	    sub <- tbl[w,,drop=F]
 	    #sub <- tbl[which(grepl(colnames(data)[i], rownames(tbl))),,drop=F]
@@ -119,7 +119,7 @@ plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c(
 						  HR=sub[j,2], 
 						  LOW=sub[j,8],
 						  UP=sub[j,9], 
-						  PVAL=sub[j,5])
+						  PVAL=sub[j,5], check.names=F)
 	    }
 	} else if (class(data[,i]) == "numeric") {
 	    uv [[length(uv)+1]] <- data.frame(name1=colnames(data)[i],
@@ -127,7 +127,7 @@ plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c(
 					      HR=NA, 
 					      LOW=NA,
 					      UP=NA, 
-					      PVAL=NA)
+					      PVAL=NA, check.names=F)
 	    w <- which(substr(rownames(tbl), 1, nchar(colnames(data)[i])) == colnames(data)[i])
 	    sub <- tbl[w,,drop=F]
 
@@ -137,7 +137,7 @@ plotForestMV <- function(srv, data, subject=NULL, selection=F, title="",  col=c(
 					      HR=sub[j,2], 
 					      LOW=sub[j,8],
 					      UP=sub[j,9], 
-					      PVAL=sub[j,5])
+					      PVAL=sub[j,5], check.names=F)
 	}
     }
     uv <- do.call(rbind, uv)

@@ -15,7 +15,7 @@ convGuideMatrix <- function(data, genename, fun=max) {
     print("Aggregate ... ")
     f <- split(data.frame(data), f=genename)
     # TODO: check NA values
-    f <- lapply(f, function(x) apply(x, 2, fun))
+    f <- lapply(f, function(x) apply(x, 2, function(y) {fun(y[which(!is.na(y))])} ))
 
     # convert to ranks per sample
     print("Convert to ranks .. ")
@@ -35,14 +35,14 @@ convGuideMatrix <- function(data, genename, fun=max) {
 
 #' @title Convert preproc gRNA libraray screen data per group
 #' @export
-convGuidePerGroup <- function(data, group) {
+convGuidePerGroup <- function(data, group, fun=max) {
     if (length(data[1,]) != length(group)) {
 	stop("Non-matching dimensions!")
     }
     ## split by group
     f <- split(data.frame(t(data)), f=group)
     f2 <- lapply(f, function(x) {
-		     y <- apply(x, 2, function(y) max(y, na.rm=T))
+		     y <- apply(x, 2, function(y) fun(y, na.rm=T))
 		     names(y) <- rownames(data)
 		     y
 })
