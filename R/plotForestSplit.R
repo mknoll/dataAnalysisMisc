@@ -90,7 +90,7 @@ plotForestSplit <- function(srv, data, subject=NULL, title="", col=c("royalblue"
     tabletext <- tabletext[,-c(2:3)]
     tabletext[,3] <- gsub("NA-NA", "", tabletext[,3])
 
-    forestplot(tabletext,
+    fp <- forestplot(tabletext,
 	       mean  = c(NA, as.numeric(as.character(uv[,4]))),
 	       lower = c(NA, as.numeric(as.character(uv[,5]))),
 	       upper = c(NA, as.numeric(as.character(uv[,6]))),
@@ -102,6 +102,7 @@ plotForestSplit <- function(srv, data, subject=NULL, title="", col=c("royalblue"
 	       col=fpColors(box=col[1],line=col[2], summary=col[3]),
 	       align=1,
 	       zero=1)
+    print(fp)
 
     return(uv)
 }
