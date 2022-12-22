@@ -29,6 +29,8 @@
 #' @export
 plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "darkblue", "royalblue"), 
 		       invalCut=100, removeInval=F, MDPI=F, singleLine=F, plotNCol=T) {
+
+
     uv <- list()
     for (i in 1:length(data[1,])) {
 	# Add variable
@@ -154,6 +156,7 @@ plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "da
 	tabletext <- tabletext[,1:(length(tabletext[1,])-1)]
     }
 
+
     ### boldprint 
     bp <- list()
     for (i in 1:length(tabletext[,1])) {
@@ -185,7 +188,7 @@ plotForest <- function(srv, data, subject=NULL, title="", col=c("royalblue", "da
 	       clip=c(0.1,3.2),
 	       xlog=F,
 	       col=fpColors(box=col[1],line=col[2], summary=col[3]),
-	       align=1,
+	       #align=1,
 	       zero=1)
     print(fp)
 

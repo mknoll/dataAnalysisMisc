@@ -196,7 +196,7 @@ plotForestParam <- function(srv, data, subject=NULL, title="", col=c("royalblue"
 	       clip=c(0.1,3.2),
 	       xlog=F,
 	       col=fpColors(box=col[1],line=col[2], summary=col[3]),
-	       align=1,
+	       #align=1,
 	       zero=1)
     print(fp)
 
