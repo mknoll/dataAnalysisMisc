@@ -89,6 +89,7 @@ plotForestParam <- function(srv, data, subject=NULL, title="", col=c("royalblue"
 		w <- which(!is.na(data[,i]) & !is.na(srv) & as.numeric(srv)[1:length(srv)] > 0)
 		fit <- survreg(srv[w]~data[w,i]+cluster(subject[w]), dist=dist)
 		rmI <- c(1, length(summary(fit)$table[,1]))    
+		######
 		tbl <- cbind(int(fit), 
 			     N=summary(fit)$n, 
 			     summary(fit)$table[-rmI,-3,drop=F])    
@@ -224,13 +225,15 @@ int <- function(fit, dist="loglog", z=1.96) {
 	len <- ifelse(length(v3) < len, length(v3), len)
 
 	ret <- data.frame(v1[1:len], v2[1:len],v3[1:len])
-	o <- order(ret[1,])
+	#o <- order(ret[1,])
+	o <- order(unlist(ret[2,])) #### ACHTUNG!!
 	ret <- ret[,o]
 	colnames(ret) <- c("LOW","EST","UP")
 	ret <- ret[-which(grepl("Intercept", rownames(ret))),,drop=F]
     } else if (dist == "weibull") {
 	ret <- ConvertWeibull(fit)$HR
-	o <- order(ret[1,])
+	#o <- order(ret[1,])
+	o <- order(unlist(ret[2,])) #### ACHTUNG!!
 	ret <- ret[,o,drop=F]
     }
     return(ret)
