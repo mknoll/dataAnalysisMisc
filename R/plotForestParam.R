@@ -232,8 +232,8 @@ int <- function(fit, dist="loglog", z=1.96) {
 	ret <- ret[-which(grepl("Intercept", rownames(ret))),,drop=F]
     } else if (dist == "weibull") {
 	ret <- ConvertWeibull(fit)$HR
-	#o <- order(ret[1,])
-	o <- order(unlist(ret[2,])) #### ACHTUNG!!
+	o <- order(ret[1,]) #### FIXME?
+	#o <- order(unlist(ret[2,])) #### ACHTUNG!!
 	ret <- ret[,o,drop=F]
     }
     return(ret)
