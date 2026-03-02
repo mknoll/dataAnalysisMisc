@@ -50,8 +50,8 @@ void startAdj(int *matrix, int *len, int *n, int *size, int *erg, int *maxTry, i
 	int success;
         do {
             versuche--;
-	    //success = findCluster(&m[0][0], visited, len[0], size[0], i, star[0], type[0]);
-	    success = findCluster(m, visited, len[0], size[0], i, star[0], type[0]);
+	    success = findCluster(&m[0][0], visited, len[0], size[0], i, star[0], type[0]);
+	    //success = findCluster(m, visited, len[0], size[0], i, star[0], type[0]);
         } while (!success && versuche > 0);
 	//printf("SUCCESS CLUSTER: %d\n", success);
     }
