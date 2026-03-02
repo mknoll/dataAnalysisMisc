@@ -37,9 +37,10 @@ void startAdj(int *matrix, int *len, int *n, int *size, int *erg, int *maxTry, i
     printf("No of connections: %d\n", nCon);
 
     //Visited-Matrix
-    //int visited[len[0]*len[0]];
-    int *visited = malloc(len[0]*len[0]*sizeof(visited));
-    memset(visited, 0, len[0]*len[0]*sizeof(visited));
+    //int *visited = malloc(len[0]*len[0]*sizeof(visited));
+    //memset(visited, 0, len[0]*len[0]*sizeof(visited));
+    int *visited = malloc(len[0]*len[0]*sizeof(int));
+    memset(visited, 0, len[0]*len[0]*sizeof(int));
 
     // Finde n zusammenhängende Cluster
     // 0 is used to mark not-visited cells
@@ -49,6 +50,7 @@ void startAdj(int *matrix, int *len, int *n, int *size, int *erg, int *maxTry, i
 	int success;
         do {
             versuche--;
+	    //success = findCluster(&m[0][0], visited, len[0], size[0], i, star[0], type[0]);
 	    success = findCluster(m, visited, len[0], size[0], i, star[0], type[0]);
         } while (!success && versuche > 0);
 	//printf("SUCCESS CLUSTER: %d\n", success);
