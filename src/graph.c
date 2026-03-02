@@ -68,7 +68,9 @@ void startAdj(int *matrix, int *len, int *n, int *size, int *erg, int *maxTry, i
 int findCluster(int *m, int *visited, int len, int size, int id, int star, int type) {
     //Finde zufälligen startpunkt
     int maxIndex = len*len;
-    int start = rand() % (maxIndex + 1);
+    //int start = rand() % (maxIndex + 1);
+    int start = rand() % maxIndex;
+
     int invStart; 
     printf("   -> Search Startindex: %d ", start);
     for (;start < maxIndex; start++) {
@@ -79,13 +81,17 @@ int findCluster(int *m, int *visited, int len, int size, int id, int star, int t
     invStart = len*(start%len)+start/len;
     printf("Found at: %d / %d. ", start, invStart);
     //Convert to row/index
-    int rowIndex=start % len;
-    int colIndex=start / len;
+    //int rowIndex=start % len;
+    //int colIndex=start / len;
+    int rowIndex = start / len;
+    int colIndex = start % len;
     printf("Converted to [%d,%d]\n.", rowIndex, colIndex);
 
     //Erzeuge Arbeitskopie von visited
-    int *tmpVisited = malloc(maxIndex*sizeof(tmpVisited));
-    memcpy(tmpVisited, visited, maxIndex*sizeof(tmpVisited));
+    int *tmpVisited = malloc(maxIndex*sizeof(int));
+    memcpy(tmpVisited, visited, maxIndex*sizeof(int));
+    //int *tmpVisited = malloc(maxIndex*sizeof(tmpVisited));
+    //memcpy(tmpVisited, visited, maxIndex*sizeof(tmpVisited));
 
     //Markiere startposition
     //printf("START: %d, INVST: %d\n", start, invStart);
@@ -96,7 +102,8 @@ int findCluster(int *m, int *visited, int len, int size, int id, int star, int t
     int success = findeNachbar(m, tmpVisited, start, invStart, len, size, 1, id, star, type);
     if (success == 1) {
 	printf("Copy back\n");
-	memcpy(visited, tmpVisited, maxIndex*sizeof(tmpVisited));
+	//memcpy(visited, tmpVisited, maxIndex*sizeof(tmpVisited));
+	memcpy(visited, tmpVisited, maxIndex*sizeof(int));
     }
     free(tmpVisited);
 
